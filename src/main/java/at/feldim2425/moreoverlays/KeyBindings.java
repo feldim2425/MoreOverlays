@@ -1,8 +1,10 @@
 package at.feldim2425.moreoverlays;
 
 import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
+import at.feldim2425.moreoverlays.itemsearch.GuiHandler;
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -28,8 +30,8 @@ public class KeyBindings {
     }
 
     @SideOnly(Side.CLIENT)
-    @SubscribeEvent(priority= EventPriority.NORMAL, receiveCanceled=true)
-    public void onEvent(InputEvent.KeyInputEvent event)
+    @SubscribeEvent(receiveCanceled=true)
+    public void onKeyEvent(InputEvent.KeyInputEvent event)
     {
         if(lightOverlay.isPressed()){
             LightOverlayHandler.toggleMode();
@@ -39,8 +41,13 @@ public class KeyBindings {
             ChunkBoundsHandler.toggleMode();
         }
 
-        if(invSearch.isPressed()){
+    }
 
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onGuiKeyEvent(GuiScreenEvent.KeyboardInputEvent.Post event){
+        if(Keyboard.isKeyDown(invSearch.getKeyCode()) && Proxy.isJeiInstalled()){
+            GuiHandler.toggleMode();
         }
     }
 }
