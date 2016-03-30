@@ -21,6 +21,13 @@ plugins {
 }
 */
 
+tasks.withType(JavaCompile){
+	options.compilerArgs += '-Xlint:-deprecation'
+
+    	sourceCompatibility = "1.8"
+   	targetCompatibility = "1.8"
+}
+
 file "build.properties" withReader {
     def prop = new Properties()
     prop.load(it)

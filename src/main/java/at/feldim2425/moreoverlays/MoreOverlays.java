@@ -10,12 +10,12 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = MoreOverlays.MOD_ID, version = MoreOverlays.VERSION, name = MoreOverlays.NAME, clientSideOnly = true)
+@Mod(modid = MoreOverlays.MOD_ID, version = MoreOverlays.VERSION, name = MoreOverlays.NAME, clientSideOnly = true, dependencies = "after:JEI@[2.28.12.180,);")
 public class MoreOverlays {
 
     public static final String MOD_ID = "moreoverlays";
     public static final String NAME = "MoreOverlays";
-    public static final String VERSION = "0.0.1";
+    public static final String VERSION = "0.1";
 
     @SidedProxy(clientSide = "at.feldim2425.moreoverlays.Proxy")
     public static Proxy proxy;
