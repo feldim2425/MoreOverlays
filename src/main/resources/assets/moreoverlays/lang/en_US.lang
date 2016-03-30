@@ -1,0 +1,9 @@
+# Keys
+key.moreoverlays.category=More Overlays
+key.moreoverlays.chunkbounds.desc=Show/Hide Chunk Boundaries
+key.moreoverlays.lightoverlay.desc=Show/Hide Dark Spots
+key.moreoverlays.invsearch.desc=Enable/Disable Inventory Item Search
+
+# Gui
+gui.moreoverlays.search.enabled=Item Search Enabled
+gui.moreoverlays.search.disabled=Item Search Disabled
