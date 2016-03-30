@@ -4,6 +4,7 @@ import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.Proxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -34,10 +35,11 @@ public class GuiHandler {
     private static boolean enabled = false;
 
     private static List<Integer> slotindexCache = null;
-    private int txtPosY = 0;
+    private static int txtPosY = 0;
+    private static boolean isCreative = false;
     private static String text = StatCollector.translateToLocal("gui."+ MoreOverlays.MOD_ID+".search.disabled");
-    private int guiOffsetX = 0;
-    private int guiOffsetY = 0;
+    private static int guiOffsetX = 0;
+    private static int guiOffsetY = 0;
 
 
     public static void init(){
@@ -47,7 +49,7 @@ public class GuiHandler {
 
     @SubscribeEvent
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
-        if(!(event.gui instanceof GuiContainer))
+        if(!(event.gui instanceof GuiContainer) || isCreative)
             return;
         txtPosY = event.gui.height - Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT - 3;
         GuiContainer gui = (GuiContainer) event.gui;
@@ -68,23 +70,7 @@ public class GuiHandler {
 
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
-        if(!(event.gui instanceof GuiContainer))
-            return;
-
-        GuiContainer gui = (GuiContainer) event.gui;
-
-        try {
-            Field left = gui.getClass().getField("guiLeft");
-            left.setAccessible(true);
-            guiOffsetX = left.getInt(gui);
-
-            Field top = gui.getClass().getField("guiTop");
-            top.setAccessible(true);
-            guiOffsetY = top.getInt(gui);
-        } catch (Exception e) {
-            MoreOverlays.logger.error("Something went wrong. Tried to load gui coords with java reflection");
-            e.printStackTrace();
-        }
+        isCreative = (event.gui instanceof GuiContainerCreative);
     }
 
     @SubscribeEvent
@@ -95,7 +81,7 @@ public class GuiHandler {
         int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
         Minecraft.getMinecraft().fontRendererObj.drawString(text,(event.gui.width-width)/2,txtPosY,0xffffff);
 
-        if(!enabled || slotindexCache==null || slotindexCache.isEmpty())
+        if(!enabled || isCreative || slotindexCache==null || slotindexCache.isEmpty())
             return;
         GuiContainer gui = (GuiContainer) event.gui;
 
@@ -155,7 +141,7 @@ public class GuiHandler {
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if(Minecraft.getMinecraft().thePlayer==null)
             return;
-        if(enabled && JeiModule.filter.getFilterText() != lastFilterText){
+        if(enabled && !isCreative && JeiModule.filter.getFilterText() != lastFilterText){
             lastFilterText = JeiModule.filter.getFilterText();
             if(itemCache!=null)
                 itemCache.clear();
@@ -164,7 +150,7 @@ public class GuiHandler {
             JeiModule.filter.getItemList().forEach((itemElement) -> itemCache.add(itemElement.getItemStack()));
         }
 
-        if(enabled && Minecraft.getMinecraft().thePlayer.openContainer!=null)
+        if(enabled && !isCreative && Minecraft.getMinecraft().thePlayer.openContainer!=null)
             checkSlots(Minecraft.getMinecraft().thePlayer.openContainer);
     }
 

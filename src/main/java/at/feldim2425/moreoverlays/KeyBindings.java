@@ -3,6 +3,8 @@ package at.feldim2425.moreoverlays;
 import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
 import at.feldim2425.moreoverlays.itemsearch.GuiHandler;
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -46,7 +48,7 @@ public class KeyBindings {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onGuiKeyEvent(GuiScreenEvent.KeyboardInputEvent.Post event){
-        if(Keyboard.isKeyDown(invSearch.getKeyCode()) && Proxy.isJeiInstalled()){
+        if(Keyboard.isKeyDown(invSearch.getKeyCode()) && Proxy.isJeiInstalled() && !(Minecraft.getMinecraft().currentScreen instanceof GuiContainerCreative)){
             GuiHandler.toggleMode();
         }
     }
