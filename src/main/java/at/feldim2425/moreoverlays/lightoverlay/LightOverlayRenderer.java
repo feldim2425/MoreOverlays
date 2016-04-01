@@ -11,23 +11,27 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class LightOverlayRenderer {
 
+    //private final static AxisAlignedBB NULL_BB = new AxisAlignedBB(0,0,0,0,0,0);
+    private final static EntityZombie dummy = new EntityZombie(null);
+    private final static AxisAlignedBB ZOMBIE_BB = new AxisAlignedBB(0.6D/2D, 0, 1.95D/2D, 1D-0.6D/2D, 1.95D, 1D-0.6D/2D);
     private final static int RANGE = 16;
     private static HashMap<BlockPos,Byte> overlayCache;
     private static RenderManager render = Minecraft.getMinecraft().getRenderManager();
@@ -42,8 +46,6 @@ public class LightOverlayRenderer {
         GL11.glLineWidth(2.0F);
         GlStateManager.translate(-render.viewerPosX , -render.viewerPosY, -render.viewerPosZ);
 
-
-        //renderCross(new BlockPos(0,0,0),1,1,1);
         Map.Entry<BlockPos, Byte>[] posSet = overlayCache.entrySet().toArray(new Map.Entry[overlayCache.size()]);
         for (int i=0;i<posSet.length;i++){
             Map.Entry<BlockPos, Byte> entry = posSet[i];
@@ -103,10 +105,8 @@ public class LightOverlayRenderer {
 
     private static byte getSpawnModeAt(BlockPos pos, Chunk chunk, World world){
         Block block = chunk.getBlock(pos.down());
-        Block block1 = chunk.getBlock(pos);
-        Block block2 = chunk.getBlock(pos.up());
 
-        if(block1!= Blocks.air || block2!=Blocks.air)
+        if(!checkCollision(pos,world))
             return 0;
 
         if(!block.canCreatureSpawn(world,pos.down(), EntityLiving.SpawnPlacementType.ON_GROUND) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos)>7)
@@ -116,6 +116,17 @@ public class LightOverlayRenderer {
             return 1;
 
         return 2;
+    }
+
+    private static boolean checkCollision(BlockPos pos, World world){
+        Block block1 = world.getBlockState(pos).getBlock();
+        Block block2 = world.getBlockState(pos.up()).getBlock();
+        if(block1.isAir(world,pos) && block2.isAir(world,pos))  //Don't check because Air has no Collision Box
+            return true;
+        else if(block1.isNormalCube(world,pos) || block2.isNormalCube(world,pos)) //Don't check because a check on normal Cubes will/should return false ( 99% collide ).
+            return false;
+        AxisAlignedBB bb = ZOMBIE_BB.offset(pos.getX(),pos.getY(),pos.getZ());
+        return world.getCollidingBoundingBoxes(dummy,bb).isEmpty() && !world.isAnyLiquid(bb);
     }
 
     private static void renderCross(BlockPos pos, float r, float g, float b){
