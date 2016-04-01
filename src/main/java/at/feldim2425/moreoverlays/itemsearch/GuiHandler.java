@@ -75,7 +75,7 @@ public class GuiHandler {
 
     @SubscribeEvent
     public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
-        if(!(event.gui instanceof GuiContainer))
+        if(!(event.gui instanceof GuiContainer) || isCreative)
             return;
 
         int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
