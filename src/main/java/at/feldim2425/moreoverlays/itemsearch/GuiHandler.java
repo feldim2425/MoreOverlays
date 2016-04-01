@@ -129,7 +129,7 @@ public class GuiHandler {
     }
 
     private static boolean isSearchedItem(ItemStack stack){
-        if(stack==null) return !itemCache.isEmpty();
+        if(stack==null) return false;
         for(ItemStack stack1 : itemCache){
             if (stack1.isItemEqual(stack))
                 return true;
