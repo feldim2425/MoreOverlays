@@ -28,7 +28,7 @@ import java.util.List;
 
 public class GuiHandler {
 
-    private static final int OVERLAY_ZLEVEL = 600;
+    private static final float OVERLAY_ZLEVEL = 299F;
 
     public static List<ItemStack> itemCache = null;
     private static String lastFilterText = "";
@@ -129,7 +129,7 @@ public class GuiHandler {
     }
 
     private static boolean isSearchedItem(ItemStack stack){
-        if(stack==null) return false;
+        if(stack==null) return !itemCache.isEmpty();
         for(ItemStack stack1 : itemCache){
             if (stack1.isItemEqual(stack))
                 return true;
