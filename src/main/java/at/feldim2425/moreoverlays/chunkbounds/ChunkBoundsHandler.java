@@ -30,7 +30,5 @@ public class ChunkBoundsHandler {
 
     public static void toggleMode() {
         enabled = !enabled;
-        if(!enabled)
-            LightOverlayRenderer.clearCache();
     }
 }
