@@ -7,23 +7,26 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 public class KeyBindings {
 
-    public static KeyBinding lightOverlay = new KeyBinding("key."+MoreOverlays.MOD_ID+".lightoverlay.desc", Keyboard.KEY_F7, "key."+MoreOverlays.MOD_ID+".category");
-    public static KeyBinding chunkBounds= new KeyBinding("key."+MoreOverlays.MOD_ID+".chunkbounds.desc", Keyboard.KEY_F9, "key."+MoreOverlays.MOD_ID+".category");
-    public static KeyBinding invSearch = new KeyBinding("key."+MoreOverlays.MOD_ID+".invsearch.desc", Keyboard.KEY_Z, "key."+MoreOverlays.MOD_ID+".category");
+    public static KeyBinding lightOverlay = new KeyBinding("key." + MoreOverlays.MOD_ID + ".lightoverlay.desc", KeyConflictContext.IN_GAME, Keyboard.KEY_F7, "key." + MoreOverlays.MOD_ID + ".category");
+    public static KeyBinding chunkBounds = new KeyBinding("key." + MoreOverlays.MOD_ID + ".chunkbounds.desc", KeyConflictContext.IN_GAME, Keyboard.KEY_F9, "key." + MoreOverlays.MOD_ID + ".category");
+    public static KeyBinding invSearch = new KeyBinding("key." + MoreOverlays.MOD_ID + ".invsearch.desc", KeyConflictContext.GUI, Keyboard.KEY_Z, "key." + MoreOverlays.MOD_ID + ".category");
 
-    public static void init(){
+    public static void init() {
+        lightOverlay.setAllowsKeyModifiers();
+        chunkBounds.setAllowsKeyModifiers();
+        invSearch.setAllowsKeyModifiers();
+
         ClientRegistry.registerKeyBinding(lightOverlay);
         ClientRegistry.registerKeyBinding(chunkBounds);
         ClientRegistry.registerKeyBinding(invSearch);
@@ -32,14 +35,13 @@ public class KeyBindings {
     }
 
     @SideOnly(Side.CLIENT)
-    @SubscribeEvent(receiveCanceled=true)
-    public void onKeyEvent(InputEvent.KeyInputEvent event)
-    {
-        if(lightOverlay.isPressed()){
+    @SubscribeEvent(receiveCanceled = true)
+    public void onKeyEvent(InputEvent.KeyInputEvent event) {
+        if (lightOverlay.isPressed()) {
             LightOverlayHandler.toggleMode();
         }
 
-        if(chunkBounds.isPressed()){
+        if (chunkBounds.isPressed()) {
             ChunkBoundsHandler.toggleMode();
         }
 
@@ -47,8 +49,9 @@ public class KeyBindings {
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onGuiKeyEvent(GuiScreenEvent.KeyboardInputEvent.Post event){
-        if(Keyboard.isKeyDown(invSearch.getKeyCode()) && Proxy.isJeiInstalled() && !(Minecraft.getMinecraft().currentScreen instanceof GuiContainerCreative)){
+    public void onGuiKeyEvent(GuiScreenEvent.KeyboardInputEvent.Pre event) {
+        if(invSearch.isActiveAndMatches(Keyboard.getEventKey()) && Keyboard.getEventKeyState()){
+            event.setCanceled(true);
             GuiHandler.toggleMode();
         }
     }

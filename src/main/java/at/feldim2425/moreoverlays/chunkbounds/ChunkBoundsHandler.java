@@ -11,24 +11,24 @@ public class ChunkBoundsHandler {
 
     public static boolean enabled = false;
 
-    public static void init(){
+    public static void init() {
         MinecraftForge.EVENT_BUS.register(new ChunkBoundsHandler());
     }
 
     @SubscribeEvent
     public void renderWorldLastEvent(RenderWorldLastEvent event) {
-        if(enabled)
+        if (enabled)
             ChunkBoundsRenderer.renderOverlays();
     }
 
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if(Minecraft.getMinecraft().thePlayer==null)
+        if (Minecraft.getMinecraft().thePlayer == null)
             return;
     }
 
-    public static void toggleMode(){
+    public static void toggleMode() {
         enabled = !enabled;
         if(!enabled)
             LightOverlayRenderer.clearCache();

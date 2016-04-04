@@ -1,7 +1,5 @@
 package at.feldim2425.moreoverlays;
 
-import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -23,20 +21,20 @@ public class MoreOverlays {
     public static Logger logger = LogManager.getLogger(NAME);
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event){
-        if(proxy!=null)
+    public void preInit(FMLPreInitializationEvent event) {
+        if (proxy != null)
             proxy.preInit();
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        if(proxy!=null)
+        if (proxy != null)
             proxy.init();
     }
 
     @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event){
-        if(proxy!=null)
+    public void postInit(FMLPostInitializationEvent event) {
+        if (proxy != null)
             proxy.postInit();
     }
 }

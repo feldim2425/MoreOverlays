@@ -39,7 +39,7 @@ group= "at.feldim2425.moreoverlays" // http://maven.apache.org/guides/mini/guide
 archivesBaseName = "moreoverlays"
 
 minecraft {
-    version = "1.8.9-11.15.1.1808"
+    version = "1.9-12.16.0.1832-1.9"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -47,7 +47,7 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "stable_20"
+    mappings = "snapshot_20160312"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
@@ -62,7 +62,7 @@ dependencies {
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
       
-	 deobfCompile "mezz.jei:jei_1.8.9:${config.jei.version}"
+	 deobfCompile "mezz.jei:jei_1.9:${config.jei.version}"
 
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env

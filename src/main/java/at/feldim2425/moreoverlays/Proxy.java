@@ -7,9 +7,9 @@ import net.minecraftforge.fml.common.Loader;
 
 public class Proxy {
 
-    private static boolean enable_jei=false;
+    private static boolean enable_jei = false;
 
-    public void preInit(){
+    public void preInit() {
         enable_jei = Loader.isModLoaded("JEI");
 
         KeyBindings.init();
@@ -19,15 +19,15 @@ public class Proxy {
         GuiHandler.init();
     }
 
-    public void init(){
+    public void init() {
 
     }
 
-    public void postInit(){
+    public void postInit() {
 
     }
 
-    public static boolean isJeiInstalled(){
+    public static boolean isJeiInstalled() {
         return enable_jei;
     }
 }
