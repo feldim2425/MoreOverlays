@@ -3,8 +3,6 @@ package at.feldim2425.moreoverlays;
 import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
 import at.feldim2425.moreoverlays.itemsearch.GuiHandler;
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
