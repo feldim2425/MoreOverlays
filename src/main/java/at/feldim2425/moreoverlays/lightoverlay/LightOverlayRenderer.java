@@ -1,7 +1,6 @@
 package at.feldim2425.moreoverlays.lightoverlay;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -10,25 +9,22 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
-import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LightOverlayRenderer {
 
-    //private final static AxisAlignedBB NULL_BB = new AxisAlignedBB(0,0,0,0,0,0);
     private final static AxisAlignedBB TEST_BB = new AxisAlignedBB(0.6D/2D, 0, 0.6D/2D, 1D-0.6D/2D, 1D, 1D-0.6D/2D);
     private final static int RANGE = 16;
-    private static Map.Entry<BlockPos, Byte>[] nextCache;
     private static Map.Entry<BlockPos, Byte>[] overlayCache;
     private static RenderManager render = Minecraft.getMinecraft().getRenderManager();
 

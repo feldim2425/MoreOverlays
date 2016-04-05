@@ -1,7 +1,5 @@
 package at.feldim2425.moreoverlays;
 
-import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

@@ -1,6 +1,5 @@
 package at.feldim2425.moreoverlays.chunkbounds;
 
-import at.feldim2425.moreoverlays.lightoverlay.LightOverlayRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
