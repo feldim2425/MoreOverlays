@@ -1,0 +1,9 @@
+# Keys
+key.moreoverlays.category=More Overlays
+key.moreoverlays.chunkbounds.desc=Zeige/Verstecke Chunk Grenzen
+key.moreoverlays.lightoverlay.desc=Zeige/Verstecke dunkle Stellen
+key.moreoverlays.invsearch.desc=Aktiviere/Deaktiviere Itemsuche
+
+# Gui
+gui.moreoverlays.search.enabled=Itemsuche Aktiviert
+gui.moreoverlays.search.disabled=Itemsuche Deaktiviert
