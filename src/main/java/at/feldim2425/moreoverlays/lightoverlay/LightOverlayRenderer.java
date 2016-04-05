@@ -1,23 +1,19 @@
 package at.feldim2425.moreoverlays.lightoverlay;
 
-import com.google.common.collect.BiMap;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
@@ -30,15 +26,15 @@ import java.util.*;
 public class LightOverlayRenderer {
 
     //private final static AxisAlignedBB NULL_BB = new AxisAlignedBB(0,0,0,0,0,0);
-    private final static EntityZombie dummy = new EntityZombie(null);
-    private final static AxisAlignedBB ZOMBIE_BB = new AxisAlignedBB(0.6D/2D, 0, 1.95D/2D, 1D-0.6D/2D, 1.95D, 1D-0.6D/2D);
+    private final static AxisAlignedBB TEST_BB = new AxisAlignedBB(0.6D/2D, 0, 0.6D/2D, 1D-0.6D/2D, 1D, 1D-0.6D/2D);
     private final static int RANGE = 16;
-    private static HashMap<BlockPos,Byte> overlayCache;
+    private static Map.Entry<BlockPos, Byte>[] nextCache;
+    private static Map.Entry<BlockPos, Byte>[] overlayCache;
     private static RenderManager render = Minecraft.getMinecraft().getRenderManager();
 
 
     public static void renderOverlays(){
-        if(overlayCache==null || overlayCache.isEmpty())
+        if(overlayCache==null)
             return;
         GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
@@ -46,16 +42,15 @@ public class LightOverlayRenderer {
         GL11.glLineWidth(2.0F);
         GlStateManager.translate(-render.viewerPosX , -render.viewerPosY, -render.viewerPosZ);
 
-        Map.Entry<BlockPos, Byte>[] posSet = overlayCache.entrySet().toArray(new Map.Entry[overlayCache.size()]);
-        for (int i=0;i<posSet.length;i++){
-            Map.Entry<BlockPos, Byte> entry = posSet[i];
-            byte mode = entry.getValue();
-            if(mode==0)
+        for (int i = 0; i < overlayCache.length; i++) {
+            Map.Entry<BlockPos, Byte> entry = overlayCache[i];
+            Byte mode = entry.getValue();
+            if (mode == null || mode == 0)
                 continue;
-            else if(mode==1)
-                renderCross(entry.getKey(),1,1,0);
-            else if(mode==2)
-                renderCross(entry.getKey(),1,0,0);
+            else if (mode == 1)
+                renderCross(entry.getKey(), 1, 1, 0);
+            else if (mode == 2)
+                renderCross(entry.getKey(), 1, 0, 0);
         }
 
         GlStateManager.enableLighting();
@@ -63,53 +58,45 @@ public class LightOverlayRenderer {
         GlStateManager.popMatrix();
     }
 
-
-
-
-
     public static void refreshCache(){
-        if(Minecraft.getMinecraft().thePlayer == null)
+        if (Minecraft.getMinecraft().thePlayer == null)
             return;
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         int px = (int) player.posX;
-        int py = Math.min(Math.max((int)player.posY, RANGE),player.worldObj.getHeight() - RANGE);
+        int py = Math.min(Math.max((int) player.posY, RANGE), player.worldObj.getHeight() - RANGE);
         int pz = (int) player.posZ;
 
-        int y1 = (py - RANGE < 0) ?  0 : -RANGE;
+        int y1 = (py - RANGE < 0) ? 0 : -RANGE;
         int y2 = (py + RANGE > player.worldObj.getHeight()) ? player.worldObj.getHeight() : RANGE;
 
-        HashMap<BlockPos,Byte> newCache = new HashMap<>();
-        for(int xo=-RANGE;xo<=RANGE;xo++){
-            for(int zo=-RANGE;zo<=RANGE;zo++){
+        HashMap<BlockPos, Byte> newCache = new HashMap<>();
+        for (int xo = -RANGE; xo <= RANGE; xo++) {
+            for (int zo = -RANGE; zo <= RANGE; zo++) {
                 BlockPos pos1 = new BlockPos(px + xo, py, pz + zo);
                 BiomeGenBase biome = player.worldObj.getBiomeGenForCoords(pos1);
 
-                if (biome.getSpawningChance()<=0 || biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty())
+                if (biome.getSpawningChance() <= 0 || biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty())
                     continue;
 
                 Chunk chunk = player.worldObj.getChunkFromBlockCoords(pos1);
-                for(int yo=y1;yo <= y2;yo++){
+                for (int yo = y1; yo <= y2; yo++) {
                     BlockPos pos = new BlockPos(px + xo, py + yo, pz + zo);
                     byte mode = getSpawnModeAt(pos, chunk, player.worldObj);
-                    if(mode!=0)
+                    if (mode != 0)
                         newCache.put(pos, mode);
                 }
             }
         }
 
-        if(overlayCache!=null)
-            overlayCache.clear();
-        overlayCache=newCache;
+        overlayCache = newCache.entrySet().toArray(new Map.Entry[newCache.size()]);
     }
 
     private static byte getSpawnModeAt(BlockPos pos, Chunk chunk, World world){
-        Block block = chunk.getBlock(pos.down());
-
-        if(!checkCollision(pos,world))
+        if(chunk.getLightFor(EnumSkyBlock.BLOCK, pos)>7 || !world.getBlockState(pos.down()).getBlock().canCreatureSpawn(world,pos.down(), EntityLiving.SpawnPlacementType.ON_GROUND))
             return 0;
 
-        if(!block.canCreatureSpawn(world,pos.down(), EntityLiving.SpawnPlacementType.ON_GROUND) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos)>7)
+        if(!checkCollision(pos,world))
             return 0;
 
         if(chunk.getLightFor(EnumSkyBlock.SKY, pos)>7)
@@ -120,13 +107,14 @@ public class LightOverlayRenderer {
 
     private static boolean checkCollision(BlockPos pos, World world){
         Block block1 = world.getBlockState(pos).getBlock();
-        Block block2 = world.getBlockState(pos.up()).getBlock();
-        if(block1.isAir(world,pos) && block2.isAir(world,pos))  //Don't check because Air has no Collision Box
-            return true;
-        else if(block1.isNormalCube(world,pos) || block2.isNormalCube(world,pos)) //Don't check because a check on normal Cubes will/should return false ( 99% collide ).
+
+        if(block1.isNormalCube(world,pos) || world.getBlockState(pos.up()).getBlock().isNormalCube(world,pos.up())) //Don't check because a check on normal Cubes will/should return false ( 99% collide ).
             return false;
-        AxisAlignedBB bb = ZOMBIE_BB.offset(pos.getX(),pos.getY(),pos.getZ());
-        return world.getCollidingBoundingBoxes(dummy,bb).isEmpty() && !world.isAnyLiquid(bb);
+        else if(world.isAirBlock(pos) && world.isAirBlock(pos.up()))  //Don't check because Air has no Collision Box
+            return true;
+
+        AxisAlignedBB bb = TEST_BB.offset(pos.getX(),pos.getY(),pos.getZ());
+        return world.func_147461_a(bb).isEmpty() && !world.isAnyLiquid(bb);
     }
 
     private static void renderCross(BlockPos pos, float r, float g, float b){
@@ -150,7 +138,6 @@ public class LightOverlayRenderer {
     }
 
     public static void clearCache(){
-        if(overlayCache!=null)
-            overlayCache.clear();
+        overlayCache=null;
     }
 }
