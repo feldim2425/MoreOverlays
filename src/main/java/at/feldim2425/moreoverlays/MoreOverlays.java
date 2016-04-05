@@ -13,7 +13,7 @@ public class MoreOverlays {
 
     public static final String MOD_ID = "moreoverlays";
     public static final String NAME = "MoreOverlays";
-    public static final String VERSION = "0.3";
+    public static final String VERSION = "0.4";
 
     @SidedProxy(clientSide = "at.feldim2425.moreoverlays.Proxy")
     public static Proxy proxy;
