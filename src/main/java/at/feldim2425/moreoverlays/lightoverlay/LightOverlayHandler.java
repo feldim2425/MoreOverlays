@@ -1,5 +1,6 @@
 package at.feldim2425.moreoverlays.lightoverlay;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -22,8 +23,11 @@ public class LightOverlayHandler {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (enabled)
+        if(Minecraft.getMinecraft().theWorld!=null && enabled && event.phase == TickEvent.Phase.END &&
+                (Minecraft.getMinecraft().currentScreen==null || !Minecraft.getMinecraft().currentScreen.doesGuiPauseGame())){
             LightOverlayRenderer.refreshCache();
+        }
+
     }
 
     public static void toggleMode() {
