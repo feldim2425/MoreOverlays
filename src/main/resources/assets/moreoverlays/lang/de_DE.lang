@@ -7,3 +7,5 @@ key.moreoverlays.invsearch.desc=Aktiviere/Deaktiviere Itemsuche
 # Gui
 gui.moreoverlays.search.enabled=Itemsuche Aktiviert
 gui.moreoverlays.search.disabled=Itemsuche Deaktiviert
+gui.config.moreoverlays.tile=MoreOverlays Einstellungen
+config.moreoverlays.category.lightoverlay=Licht-Overlay
