@@ -21,10 +21,6 @@ public class KeyBindings {
     public static KeyBinding invSearch = new KeyBinding("key." + MoreOverlays.MOD_ID + ".invsearch.desc", KeyConflictContext.GUI, Keyboard.KEY_Z, "key." + MoreOverlays.MOD_ID + ".category");
 
     public static void init() {
-        lightOverlay.setAllowsKeyModifiers();
-        chunkBounds.setAllowsKeyModifiers();
-        invSearch.setAllowsKeyModifiers();
-
         ClientRegistry.registerKeyBinding(lightOverlay);
         ClientRegistry.registerKeyBinding(chunkBounds);
         ClientRegistry.registerKeyBinding(invSearch);
