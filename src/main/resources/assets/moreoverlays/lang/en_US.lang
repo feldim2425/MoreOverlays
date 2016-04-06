@@ -7,3 +7,5 @@ key.moreoverlays.invsearch.desc=Enable/Disable Inventory Item Search
 # Gui
 gui.moreoverlays.search.enabled=Item Search Enabled
 gui.moreoverlays.search.disabled=Item Search Disabled
+gui.config.moreoverlays.tile=MoreOverlays Settings
+config.moreoverlays.category.lightoverlay=Lightoverlay

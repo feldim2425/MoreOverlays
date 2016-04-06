@@ -14,9 +14,9 @@ public class Config {
     public static void loadValues(){
 
         config.setCategoryComment("lightoverlay","Settings for the light / mobspawn overlay");
-        light_UpRange = config.get("lightoverlay","uprange",4,"Range of the lightoverlay (positive Y) [ Default: 4 ]").getInt();
-        light_DownRange =  config.get("lightoverlay","downrange",16,"Range of the lightoverlay (negative Y) [ Default: 16 ]").getInt();
-        light_HRange =  config.get("lightoverlay","hrange",16,"Range of the lightoverlay (Horizontal N,E,S,W) [ Default: 16 ]").getInt();
+        light_UpRange = config.get("lightoverlay","uprange",4,"Range of the lightoverlay (positive Y)").getInt();
+        light_DownRange =  config.get("lightoverlay","downrange",16,"Range of the lightoverlay (negative Y)").getInt();
+        light_HRange =  config.get("lightoverlay","hrange",16,"Range of the lightoverlay (Horizontal N,E,S,W)").getInt();
 
         if(config.hasChanged())
             config.save();
