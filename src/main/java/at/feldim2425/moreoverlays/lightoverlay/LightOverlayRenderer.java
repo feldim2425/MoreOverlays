@@ -1,5 +1,6 @@
 package at.feldim2425.moreoverlays.lightoverlay;
 
+import at.feldim2425.moreoverlays.config.Config;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -59,16 +60,16 @@ public class LightOverlayRenderer {
             return;
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        int px = (int) player.posX;
-        int py = Math.min(Math.max((int) player.posY, RANGE), player.worldObj.getHeight() - RANGE);
-        int pz = (int) player.posZ;
+        int px = (int) player.posX-1;
+        int py = Math.min(Math.max((int) player.posY, 0), player.worldObj.getHeight()-1);
+        int pz = (int) player.posZ-1;
 
-        int y1 = (py - RANGE < 0) ? 0 : -RANGE;
-        int y2 = (py + RANGE > player.worldObj.getHeight()) ? player.worldObj.getHeight() : RANGE;
+        int y1 = (py - Config.light_DownRange < 0) ? 0 : py-Config.light_DownRange;
+        int y2 = (py + Config.light_UpRange > player.worldObj.getHeight()-1) ? player.worldObj.getHeight()-1 : py+Config.light_UpRange;
 
         HashMap<BlockPos, Byte> newCache = new HashMap<>();
-        for (int xo = -RANGE; xo <= RANGE; xo++) {
-            for (int zo = -RANGE; zo <= RANGE; zo++) {
+        for (int xo = -Config.light_HRange; xo <= Config.light_HRange; xo++) {
+            for (int zo = -Config.light_HRange; zo <= Config.light_HRange; zo++) {
                 BlockPos pos1 = new BlockPos(px + xo, py, pz + zo);
                 BiomeGenBase biome = player.worldObj.getBiomeGenForCoords(pos1);
 
@@ -76,8 +77,8 @@ public class LightOverlayRenderer {
                     continue;
 
                 Chunk chunk = player.worldObj.getChunkFromBlockCoords(pos1);
-                for (int yo = y1; yo <= y2; yo++) {
-                    BlockPos pos = new BlockPos(px + xo, py + yo, pz + zo);
+                for (int y = y1; y <= y2; y++) {
+                    BlockPos pos = new BlockPos(px + xo, y, pz + zo);
                     byte mode = getSpawnModeAt(pos, chunk, player.worldObj);
                     if (mode != 0)
                         newCache.put(pos, mode);
