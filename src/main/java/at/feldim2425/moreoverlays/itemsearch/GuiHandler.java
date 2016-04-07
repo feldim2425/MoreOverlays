@@ -63,14 +63,14 @@ public class GuiHandler {
             top.setAccessible(true);
             guiOffsetY = top.getInt(gui);
         } catch (Exception e) {
-            MoreOverlays.logger.error("Something went wrong. Tried to load gui coords with java reflection");
-            e.printStackTrace();
+            MoreOverlays.logger.error("Something went wrong. Tried to load gui coords with java reflection. Gui class: "+gui.getClass().getName());
         }
     }
 
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
         isCreative = (event.getGui() instanceof GuiContainerCreative);
+        text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search."+( enabled ? "enabled" : "disabled"));
     }
 
     @SubscribeEvent
