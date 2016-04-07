@@ -60,9 +60,9 @@ public class LightOverlayRenderer {
             return;
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        int px = (int) player.posX-1;
+        int px = (int) Math.floor(player.posX);
         int py = Math.min(Math.max((int) player.posY, 0), player.worldObj.getHeight()-1);
-        int pz = (int) player.posZ-1;
+        int pz = (int) Math.floor(player.posZ);
 
         int y1 = (py - Config.light_DownRange < 0) ? 0 : py-Config.light_DownRange;
         int y2 = (py + Config.light_UpRange > player.worldObj.getHeight()-1) ? player.worldObj.getHeight()-1 : py+Config.light_UpRange;
