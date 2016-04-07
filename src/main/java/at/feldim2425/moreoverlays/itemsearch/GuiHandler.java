@@ -3,6 +3,7 @@ package at.feldim2425.moreoverlays.itemsearch;
 import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.Proxy;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
@@ -48,7 +49,7 @@ public class GuiHandler {
 
     @SubscribeEvent
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
-        if(!(event.gui instanceof GuiContainer) || isCreative)
+        if (!canShowIn(event.gui))
             return;
         txtPosY = event.gui.height - Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT - 3;
         GuiContainer gui = (GuiContainer) event.gui;
@@ -62,8 +63,7 @@ public class GuiHandler {
             top.setAccessible(true);
             guiOffsetY = top.getInt(gui);
         } catch (Exception e) {
-            MoreOverlays.logger.error("Something went wrong. Tried to load gui coords with java reflection");
-            e.printStackTrace();
+            MoreOverlays.logger.error("Something went wrong. Tried to load gui coords with java reflection. Gui class: "+gui.getClass().getName());
         }
     }
 
@@ -74,7 +74,7 @@ public class GuiHandler {
 
     @SubscribeEvent
     public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
-        if(!(event.gui instanceof GuiContainer) || isCreative)
+        if (!canShowIn(event.gui))
             return;
 
         int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
@@ -114,6 +114,10 @@ public class GuiHandler {
         GlStateManager.popMatrix();
     }
 
+    private static boolean canShowIn(GuiScreen gui){
+        return (gui instanceof GuiContainer) && !isCreative;
+    }
+
     private static void checkSlots(Container container){
         if(slotindexCache==null)
             slotindexCache = new ArrayList<>();
@@ -138,18 +142,18 @@ public class GuiHandler {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if(Minecraft.getMinecraft().thePlayer==null)
+        if (event.phase != TickEvent.Phase.END || Minecraft.getMinecraft().thePlayer == null || !canShowIn(Minecraft.getMinecraft().currentScreen))
             return;
-        if(enabled && !isCreative && JeiModule.filter.getFilterText() != lastFilterText){
+        if (enabled && !JeiModule.filter.getFilterText().equals(lastFilterText)) {
             lastFilterText = JeiModule.filter.getFilterText();
-            if(itemCache!=null)
+            if (itemCache != null)
                 itemCache.clear();
             else
                 itemCache = new ArrayList<>();
             JeiModule.filter.getItemList().forEach((itemElement) -> itemCache.add(itemElement.getItemStack()));
         }
 
-        if(enabled && !isCreative && Minecraft.getMinecraft().thePlayer.openContainer!=null)
+        if (enabled && Minecraft.getMinecraft().thePlayer.openContainer != null)
             checkSlots(Minecraft.getMinecraft().thePlayer.openContainer);
     }
 
