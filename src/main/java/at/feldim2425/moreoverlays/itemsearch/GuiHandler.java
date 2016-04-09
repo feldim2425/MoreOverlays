@@ -20,6 +20,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
@@ -169,6 +170,7 @@ public class GuiHandler {
             else
                 itemCache = new ArrayList<>();
             JeiModule.filter.getItemList().forEach((itemElement) -> itemCache.add(itemElement.getItemStack()));
+            emptyFilter = lastFilterText.replace(" ","").isEmpty();
             text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.enabled");
         } else {
             lastFilterText = "";
