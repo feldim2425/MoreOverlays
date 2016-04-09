@@ -32,6 +32,7 @@ public class GuiHandler {
 
     public static List<ItemStack> itemCache = null;
     private static String lastFilterText = "";
+    private static boolean emptyFilter = true;
     private static boolean enabled = false;
 
     private static List<Integer> slotindexCache = null;
@@ -133,7 +134,7 @@ public class GuiHandler {
     }
 
     private static boolean isSearchedItem(ItemStack stack) {
-        if (stack == null) return false;
+        if (stack == null) return emptyFilter;
         for (ItemStack stack1 : itemCache) {
             if (stack1.isItemEqual(stack))
                 return true;
@@ -152,6 +153,7 @@ public class GuiHandler {
             else
                 itemCache = new ArrayList<>();
             JeiModule.filter.getItemList().forEach((itemElement) -> itemCache.add(itemElement.getItemStack()));
+            emptyFilter = lastFilterText.replace(" ","").isEmpty();
         }
 
         if (enabled && Minecraft.getMinecraft().thePlayer.openContainer != null)
