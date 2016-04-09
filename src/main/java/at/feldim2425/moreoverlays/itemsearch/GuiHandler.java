@@ -168,6 +168,7 @@ public class GuiHandler {
             else
                 itemCache = new ArrayList<>();
             JeiModule.filter.getItemList().forEach((itemElement) -> itemCache.add(itemElement.getItemStack()));
+            emptyFilter = lastFilterText.replace(" ","").isEmpty();
             text = StatCollector.translateToLocal("gui."+ MoreOverlays.MOD_ID+".search.enabled");
         }
         else {
