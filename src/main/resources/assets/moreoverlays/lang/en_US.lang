@@ -8,4 +8,7 @@ key.moreoverlays.invsearch.desc=Enable/Disable Inventory Item Search
 gui.moreoverlays.search.enabled=Item Search Enabled
 gui.moreoverlays.search.disabled=Item Search Disabled
 gui.config.moreoverlays.tile=MoreOverlays Settings
+
+# Config-GUI
 config.moreoverlays.category.lightoverlay=Lightoverlay
+config.moreoverlays.category.chunkbounds=Chunk bounds

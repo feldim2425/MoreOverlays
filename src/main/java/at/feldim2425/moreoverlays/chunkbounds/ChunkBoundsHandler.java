@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ChunkBoundsHandler {
 
-    public static boolean enabled = false;
+    public static byte mode = 0;
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(new ChunkBoundsHandler());
@@ -14,11 +14,13 @@ public class ChunkBoundsHandler {
 
     @SubscribeEvent
     public void renderWorldLastEvent(RenderWorldLastEvent event) {
-        if (enabled)
+        if (mode!=0)
             ChunkBoundsRenderer.renderOverlays();
     }
 
-    public static void toggleMode() {
-        enabled = !enabled;
+    public static void toggleMode(){
+        mode++;
+        if(mode>2)
+            mode=0;
     }
 }
