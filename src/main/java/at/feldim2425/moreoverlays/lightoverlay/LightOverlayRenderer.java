@@ -105,9 +105,9 @@ public class LightOverlayRenderer {
     private static boolean checkCollision(BlockPos pos, World world){
         Block block1 = world.getBlockState(pos).getBlock();
 
-        if(block1.isNormalCube(world,pos) || world.getBlockState(pos.up()).getBlock().isNormalCube(world,pos.up())) //Don't check because a check on normal Cubes will/should return false ( 99% collide ).
+        if(block1.isNormalCube(world,pos) || (!Config.light_IgnoreLayer && world.getBlockState(pos.up()).getBlock().isNormalCube(world,pos.up()))) //Don't check because a check on normal Cubes will/should return false ( 99% collide ).
             return false;
-        else if(world.isAirBlock(pos) && world.isAirBlock(pos.up()))  //Don't check because Air has no Collision Box
+        else if(world.isAirBlock(pos) && (!Config.light_IgnoreLayer || world.isAirBlock(pos.up())))  //Don't check because Air has no Collision Box
             return true;
 
         AxisAlignedBB bb = TEST_BB.offset(pos.getX(),pos.getY(),pos.getZ());
