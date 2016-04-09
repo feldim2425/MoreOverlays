@@ -1,5 +1,6 @@
 package at.feldim2425.moreoverlays.chunkbounds;
 
+import at.feldim2425.moreoverlays.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -34,27 +35,34 @@ public class ChunkBoundsRenderer {
         int z1 = z0 + 16;
         int z2 = z0 + 8;
 
-        GlStateManager.color(1,0,0);
-        renderEdge(x0, z0, h);
-        renderEdge(x1, z1, h);
-        renderEdge(x1, z0, h);
-        renderEdge(x0, z1, h);
+        int radius = Config.chunk_EdgeRadius * 16;
 
-        GlStateManager.color(1,1,0);
-        renderEdge(x2, z2, h);
+        GlStateManager.color(1, 0, 0);
+        for(int xo=-16-radius; xo<=radius; xo+=16){
+            for(int yo=-16-radius; yo<=radius; yo+=16){
+                renderEdge(x0-xo, z0-yo, h);
+            }
+        }
 
-        GlStateManager.color(0,1,0);
-        renderHGrid(x0,z0+0.005, x1,z0+0.005, h1,h2);
-        renderVXGrid(x0, x1, z0+0.005, h1,h2);
+        if(Config.chunk_ShowMiddle) {
+            GlStateManager.color(1, 1, 0);
+            renderEdge(x2, z2, h);
+        }
 
-        renderHGrid(x1-0.005,z0, x1-0.005,z1, h1,h2);
-        renderVZGrid(x1-0.005, z0,z1,  h1,h2);
+        if(ChunkBoundsHandler.mode==2) {
+            GlStateManager.color(0, 1, 0);
+            renderHGrid(x0, z0 + 0.005, x1, z0 + 0.005, h1, h2);
+            renderVXGrid(x0, x1, z0 + 0.005, h1, h2);
 
-        renderHGrid(x1,z1-0.005, x0,z1-0.005, h1,h2);
-        renderVXGrid(x0, x1, z1-0.005, h1,h2);
+            renderHGrid(x1 - 0.005, z0, x1 - 0.005, z1, h1, h2);
+            renderVZGrid(x1 - 0.005, z0, z1, h1, h2);
 
-        renderHGrid(x0+0.005,z1, x0+0.005,z0, h1,h2);
-        renderVZGrid(x0+0.005, z0,z1,  h1,h2);
+            renderHGrid(x1, z1 - 0.005, x0, z1 - 0.005, h1, h2);
+            renderVXGrid(x0, x1, z1 - 0.005, h1, h2);
+
+            renderHGrid(x0 + 0.005, z1, x0 + 0.005, z0, h1, h2);
+            renderVZGrid(x0 + 0.005, z0, z1, h1, h2);
+        }
 
         GlStateManager.enableLighting();
         GlStateManager.enableTexture2D();

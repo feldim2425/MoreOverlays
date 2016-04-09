@@ -8,18 +8,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class ChunkBoundsHandler {
 
-    public static boolean enabled = false;
+    public static byte mode = 0;
 
     public static void init(){
         MinecraftForge.EVENT_BUS.register(new ChunkBoundsHandler());
     }
-
-    @SubscribeEvent
-    public void renderWorldLastEvent(RenderWorldLastEvent event) {
-        if(enabled)
-            ChunkBoundsRenderer.renderOverlays();
-    }
-
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
@@ -27,7 +20,15 @@ public class ChunkBoundsHandler {
             return;
     }
 
+    @SubscribeEvent
+    public void renderWorldLastEvent(RenderWorldLastEvent event) {
+        if (mode!=0)
+            ChunkBoundsRenderer.renderOverlays();
+    }
+
     public static void toggleMode(){
-        enabled = !enabled;
+        mode++;
+        if(mode>2)
+            mode=0;
     }
 }

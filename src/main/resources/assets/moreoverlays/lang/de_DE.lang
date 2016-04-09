@@ -8,4 +8,8 @@ key.moreoverlays.invsearch.desc=Aktiviere/Deaktiviere Itemsuche
 gui.moreoverlays.search.enabled=Itemsuche Aktiviert
 gui.moreoverlays.search.disabled=Itemsuche Deaktiviert
 gui.config.moreoverlays.tile=MoreOverlays Einstellungen
+
+# Config-GUI
 config.moreoverlays.category.lightoverlay=Licht-Overlay
+config.moreoverlays.category.chunkbounds=Chunk Grenzen
+
