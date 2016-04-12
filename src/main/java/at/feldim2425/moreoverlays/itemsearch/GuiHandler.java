@@ -131,9 +131,8 @@ public class GuiHandler {
     }
 
     private static boolean canShowIn(GuiScreen gui){
-        return (gui instanceof GuiContainer) && !isCreative;
+        return (gui instanceof GuiContainer) && !isCreative && ((GuiContainer) gui).inventorySlots!=null && !((GuiContainer) gui).inventorySlots.inventorySlots.isEmpty();
     }
-
     private static void checkSlots(Container container){
         if(slotindexCache==null)
             slotindexCache = new ArrayList<>();
