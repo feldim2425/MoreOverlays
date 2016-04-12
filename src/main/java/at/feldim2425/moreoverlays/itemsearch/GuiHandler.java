@@ -57,22 +57,31 @@ public class GuiHandler {
         txtPosY = event.getGui().height - Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT - 3;
         GuiContainer gui = (GuiContainer) event.getGui();
         try {
-            Field left = gui.getClass().getField("guiLeft");
+            Field left = gui.getClass().getField("field_147003_i"); //Obfuscated -> guiLeft
             left.setAccessible(true);
             guiOffsetX = left.getInt(gui);
 
-            Field top = gui.getClass().getField("guiTop");
+            Field top = gui.getClass().getField("field_147009_r"); //Obfuscated -> guiTop
             top.setAccessible(true);
             guiOffsetY = top.getInt(gui);
-        } catch (Exception e) {
+        } catch (IllegalAccessException e) {
             MoreOverlays.logger.error("Something went wrong. Tried to load gui coords with java reflection. Gui class: "+gui.getClass().getName());
-            String fields = "Fields >>>  ";
-            for(Field f : gui.getClass().getFields()){
-                if(f.getType() == Integer.TYPE)
-                    fields+=f.getName()+" ; ";
-            }
-            MoreOverlays.logger.info(fields);
             e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+
+            try{
+                Field left = gui.getClass().getField("guiLeft");
+                left.setAccessible(true);
+                guiOffsetX = left.getInt(gui);
+
+                Field top = gui.getClass().getField("guiTop");
+                top.setAccessible(true);
+                guiOffsetY = top.getInt(gui);
+            } catch (IllegalAccessException | NoSuchFieldException e1) {
+                MoreOverlays.logger.error("Something went wrong. Tried to load gui coords with java reflection. Gui class: "+gui.getClass().getName());
+                e1.printStackTrace();
+            }
+
         }
     }
 
