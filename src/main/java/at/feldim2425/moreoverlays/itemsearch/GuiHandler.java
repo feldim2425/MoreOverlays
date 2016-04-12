@@ -3,6 +3,7 @@ package at.feldim2425.moreoverlays.itemsearch;
 import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.Proxy;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -55,7 +56,6 @@ public class GuiHandler {
             return;
         txtPosY = event.getGui().height - Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT - 3;
         GuiContainer gui = (GuiContainer) event.getGui();
-
         try {
             Field left = gui.getClass().getField("guiLeft");
             left.setAccessible(true);
@@ -66,6 +66,13 @@ public class GuiHandler {
             guiOffsetY = top.getInt(gui);
         } catch (Exception e) {
             MoreOverlays.logger.error("Something went wrong. Tried to load gui coords with java reflection. Gui class: "+gui.getClass().getName());
+            String fields = "Fields >>>  ";
+            for(Field f : gui.getClass().getFields()){
+                if(f.getType() == Integer.TYPE)
+                    fields+=f.getName()+" ; ";
+            }
+            MoreOverlays.logger.info(fields);
+            e.printStackTrace();
         }
     }
 
