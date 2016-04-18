@@ -107,11 +107,19 @@ public class LightOverlayRenderer {
 
         if(block1.isNormalCube(world,pos) || (!Config.light_IgnoreLayer && world.getBlockState(pos.up()).getBlock().isNormalCube(world,pos.up()))) //Don't check because a check on normal Cubes will/should return false ( 99% collide ).
             return false;
-        else if(world.isAirBlock(pos) && (!Config.light_IgnoreLayer || world.isAirBlock(pos.up())))  //Don't check because Air has no Collision Box
+        else if(world.isAirBlock(pos) && (Config.light_IgnoreLayer || world.isAirBlock(pos.up())))  //Don't check because Air has no Collision Box
             return true;
 
         AxisAlignedBB bb = TEST_BB.offset(pos.getX(),pos.getY(),pos.getZ());
-        return world.func_147461_a(bb).isEmpty() && !world.isAnyLiquid(bb);
+        if(world.func_147461_a(bb).isEmpty() && !world.isAnyLiquid(bb)){
+            if(Config.light_IgnoreLayer)
+                return true;
+            else {
+                AxisAlignedBB bb2 = bb.offset(0,1,0);
+                return world.func_147461_a(bb2).isEmpty() && !world.isAnyLiquid(bb2);
+            }
+        }
+        return false;
     }
 
     private static void renderCross(BlockPos pos, float r, float g, float b){
