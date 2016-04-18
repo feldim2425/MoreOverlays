@@ -14,6 +14,8 @@ public class Config {
     public static int chunk_EdgeRadius;
     public static boolean chunk_ShowMiddle;
 
+    public static boolean itemsearch_DisableText;
+
     public static void loadValues(){
 
         config.setCategoryComment("lightoverlay","Settings for the light / mobspawn overlay");
@@ -26,6 +28,9 @@ public class Config {
         chunk_EdgeRadius = config.get("chunkbounds","radius", 1, "Radius (in Chunks) to show the edges (red line)").getInt();
         chunk_ShowMiddle = config.get("chunkbounds","middle", true, "Show the middle of the current Chunk (yellow line)").getBoolean();
 
+        config.setCategoryComment("itemsearch","Settings for the item search feature");
+        itemsearch_DisableText = config.get("itemsearch","disabletext", true, "Show 'Item Search Disabled'\nIf set to 'false' the text will only show if the Item Search is enabled").getBoolean();
+
         if(config.hasChanged())
             config.save();
     }
@@ -33,5 +38,6 @@ public class Config {
     public static void getCategories(List<String> list){
         list.add("lightoverlay");
         list.add("chunkbounds");
+        list.add("itemsearch");
     }
 }

@@ -2,6 +2,7 @@ package at.feldim2425.moreoverlays.itemsearch;
 
 import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.Proxy;
+import at.feldim2425.moreoverlays.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -52,7 +53,7 @@ public class GuiHandler {
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
         if (!canShowIn(event.gui))
             return;
-        txtPosY = event.gui.height - Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT - 3;
+        txtPosY = event.gui.height  - 19 + (16-Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT)/2;
         GuiContainer gui = (GuiContainer) event.gui;
         try {
             Field left = gui.getClass().getField("field_147003_i"); //Obfuscated -> guiLeft
@@ -93,8 +94,10 @@ public class GuiHandler {
         if (!canShowIn(event.gui))
             return;
 
-        int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text,(event.gui.width-width)/2,txtPosY,0xffffff);
+        if(enabled || Config.itemsearch_DisableText) {
+            int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+            Minecraft.getMinecraft().fontRendererObj.drawString(text, (event.gui.width - width) / 2, txtPosY, 0xffffff);
+        }
 
         if(!enabled || isCreative || slotindexCache==null || slotindexCache.isEmpty())
             return;
