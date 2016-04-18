@@ -12,3 +12,4 @@ gui.config.moreoverlays.tile=MoreOverlays Settings
 # Config-GUI
 config.moreoverlays.category.lightoverlay=Lightoverlay
 config.moreoverlays.category.chunkbounds=Chunk bounds
+config.moreoverlays.category.itemsearch=Item Search

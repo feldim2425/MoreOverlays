@@ -2,8 +2,8 @@ package at.feldim2425.moreoverlays.itemsearch;
 
 import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.Proxy;
+import at.feldim2425.moreoverlays.config.Config;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -21,7 +21,6 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
@@ -54,7 +53,7 @@ public class GuiHandler {
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
         if (!canShowIn(event.getGui()))
             return;
-        txtPosY = event.getGui().height - Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT - 3;
+        txtPosY = event.getGui().height  - 19 + (16-Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT)/2;
         GuiContainer gui = (GuiContainer) event.getGui();
         try {
             Field left = gui.getClass().getField("field_147003_i"); //Obfuscated -> guiLeft
@@ -96,8 +95,12 @@ public class GuiHandler {
         if (!canShowIn(event.getGui()))
             return;
 
-        int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, (event.getGui().width - width) / 2, txtPosY, 0xffffff);
+
+        if(enabled || Config.itemsearch_DisableText) {
+            int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+            Minecraft.getMinecraft().fontRendererObj.drawString(text, (event.getGui().width - width) / 2, txtPosY, 0xffffff);
+        }
+
 
         if (!enabled || isCreative || slotindexCache == null || slotindexCache.isEmpty())
             return;
