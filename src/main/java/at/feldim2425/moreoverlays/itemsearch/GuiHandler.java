@@ -3,6 +3,7 @@ package at.feldim2425.moreoverlays.itemsearch;
 import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.Proxy;
 import at.feldim2425.moreoverlays.config.Config;
+import at.feldim2425.moreoverlays.utils.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -19,6 +20,8 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.opengl.GL11;
@@ -37,13 +40,13 @@ public class GuiHandler {
     private static boolean emptyFilter = true;
     private static boolean enabled = false;
 
+    private static List<String> tooltip = new ArrayList<>();
     private static List<Integer> slotindexCache = null;
     private static int txtPosY = 0;
     private static boolean isCreative = false;
     private static String text = StatCollector.translateToLocal("gui."+ MoreOverlays.MOD_ID+".search.disabled");
     private static int guiOffsetX = 0;
     private static int guiOffsetY = 0;
-
     private static long highlightTicks = 0;
 
 
@@ -90,6 +93,15 @@ public class GuiHandler {
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
         isCreative = (event.gui instanceof GuiContainerCreative);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onTooltip(ItemTooltipEvent event) {
+        if(enabled && !slotindexCache.isEmpty()){ //Not the best way but it works
+            tooltip.clear();
+            tooltip.addAll(event.toolTip);
+            event.toolTip.clear();
+        }
     }
 
     @SubscribeEvent
@@ -147,10 +159,16 @@ public class GuiHandler {
 
         tess.draw();
 
-        RenderHelper.disableStandardItemLighting();
         GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
         GlStateManager.popMatrix();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+        if(!tooltip.isEmpty()) {
+            GuiUtil.drawHoverText(tooltip, event.mouseX, event.mouseY, event.gui.width, event.gui.height, Minecraft.getMinecraft().fontRendererObj);
+            tooltip.clear();
+        }
+
+        GlStateManager.disableBlend();
     }
 
     private static boolean canShowIn(GuiScreen gui){
