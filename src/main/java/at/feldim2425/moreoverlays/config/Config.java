@@ -15,6 +15,7 @@ public class Config {
     public static boolean chunk_ShowMiddle;
 
     public static boolean itemsearch_DisableText;
+    public static boolean itemsearch_FadeoutText;
 
 
     public static void loadValues(){
@@ -31,6 +32,7 @@ public class Config {
 
         config.setCategoryComment("itemsearch","Settings for the item search feature");
         itemsearch_DisableText = config.get("itemsearch","disabletext", true, "Show 'Item Search Disabled'\nIf set to 'false' the text will only show if the Item Search is enabled").getBoolean();
+        itemsearch_FadeoutText = config.get("itemsearch","fadouttext", true, "Show the 'Item Search' text only for one secound and fade out").getBoolean();
 
         if(config.hasChanged())
             config.save();
