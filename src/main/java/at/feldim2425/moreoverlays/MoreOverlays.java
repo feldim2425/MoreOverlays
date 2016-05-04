@@ -1,7 +1,6 @@
 package at.feldim2425.moreoverlays;
 
 import at.feldim2425.moreoverlays.config.ConfigHandler;
-import at.feldim2425.moreoverlays.config.GuiFactory;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
