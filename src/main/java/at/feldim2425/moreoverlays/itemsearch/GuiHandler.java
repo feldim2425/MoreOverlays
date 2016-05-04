@@ -30,6 +30,7 @@ import java.util.List;
 public class GuiHandler {
 
     private static final float OVERLAY_ZLEVEL = 299F;
+    private static final int TEXT_FADEOUT = 20;
 
     public static List<ItemStack> itemCache = null;
     private static String lastFilterText = "";
@@ -42,6 +43,8 @@ public class GuiHandler {
     private static String text = StatCollector.translateToLocal("gui."+ MoreOverlays.MOD_ID+".search.disabled");
     private static int guiOffsetX = 0;
     private static int guiOffsetY = 0;
+
+    private static long highlightTicks = 0;
 
 
     public static void init(){
@@ -94,9 +97,27 @@ public class GuiHandler {
         if (!canShowIn(event.gui))
             return;
 
-        if(enabled || Config.itemsearch_DisableText) {
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.enableAlpha();
+        GlStateManager.color(1,1,1,1);
+
+        if((enabled || Config.itemsearch_DisableText) && (highlightTicks>0 || !Config.itemsearch_FadeoutText)) {
+            int alpha = 255;
+            if(Config.itemsearch_FadeoutText) {
+                alpha = (int) (((float) highlightTicks / (float) TEXT_FADEOUT) * 256);
+                alpha = Math.max(0, Math.min(255, alpha));
+            }
             int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
-            Minecraft.getMinecraft().fontRendererObj.drawString(text, (event.gui.width - width) / 2, txtPosY, 0xffffff);
+            int color = 0x00ffffff | (alpha << 24);
+
+            GlStateManager.pushMatrix();
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+
+            Minecraft.getMinecraft().fontRendererObj.drawString(text, (event.gui.width - width) / 2, txtPosY, color);
+
+            GlStateManager.disableBlend();
+            GlStateManager.popMatrix();
         }
 
         if(!enabled || isCreative || slotindexCache==null || slotindexCache.isEmpty())
@@ -107,10 +128,9 @@ public class GuiHandler {
         WorldRenderer renderer = tess.getWorldRenderer();
 
         GlStateManager.pushMatrix();
-        RenderHelper.disableStandardItemLighting();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
-        GlStateManager.color(0,0,0,0.5F);
+        GlStateManager.color(0, 0, 0, 0.5F);
 
         renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
@@ -152,7 +172,7 @@ public class GuiHandler {
     private static boolean isSearchedItem(ItemStack stack){
         if (stack == null) return emptyFilter;
         for(ItemStack stack1 : itemCache){
-            if (stack1.isItemEqual(stack))
+            if (stack1.isItemEqual(stack) || (stack1.getItem() == stack.getItem() && stack1.getItem().isDamageable()))
                 return true;
         }
         return false;
@@ -174,6 +194,9 @@ public class GuiHandler {
 
         if (enabled && Minecraft.getMinecraft().thePlayer.openContainer != null)
             checkSlots(Minecraft.getMinecraft().thePlayer.openContainer);
+
+        if(highlightTicks>0)
+            highlightTicks--;
     }
 
     public static void toggleMode(){
@@ -194,5 +217,7 @@ public class GuiHandler {
                 itemCache.clear();
             text = StatCollector.translateToLocal("gui."+ MoreOverlays.MOD_ID+".search.disabled");
         }
+
+        highlightTicks = TEXT_FADEOUT;
     }
 }
