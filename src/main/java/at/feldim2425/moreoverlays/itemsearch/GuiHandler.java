@@ -216,7 +216,7 @@ public class GuiHandler {
 
         if (enabled && Minecraft.getMinecraft().thePlayer.openContainer != null)
             checkSlots(Minecraft.getMinecraft().thePlayer.openContainer);
-        else
+        else if(slotindexCache!=null)
             slotindexCache.clear();
 
         if(highlightTicks>0)
