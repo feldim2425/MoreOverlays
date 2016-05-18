@@ -15,7 +15,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
 
@@ -71,7 +71,7 @@ public class LightOverlayRenderer {
         for (int xo = -Config.light_HRange; xo <= Config.light_HRange; xo++) {
             for (int zo = -Config.light_HRange; zo <= Config.light_HRange; zo++) {
                 BlockPos pos1 = new BlockPos(px + xo, py, pz + zo);
-                BiomeGenBase biome = player.worldObj.getBiomeGenForCoords(pos1);
+                Biome biome = player.worldObj.getBiomeGenForCoords(pos1);
 
                 if (biome.getSpawningChance() <= 0 || biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty())
                     continue;
@@ -115,12 +115,12 @@ public class LightOverlayRenderer {
             return true;
 
         AxisAlignedBB bb = TEST_BB.offset(pos.getX(),pos.getY(),pos.getZ());
-        if(world.getCollisionBoxes(bb).isEmpty() && !world.isAnyLiquid(bb)){
+        if(world.getCollisionBoxes(bb).isEmpty() && !world.containsAnyLiquid(bb)){
             if(Config.light_IgnoreLayer)
                 return true;
             else {
                 AxisAlignedBB bb2 = bb.offset(0,1,0);
-                return world.getCollisionBoxes(bb2).isEmpty() && !world.isAnyLiquid(bb2);
+                return world.getCollisionBoxes(bb2).isEmpty() && !world.containsAnyLiquid(bb2);
             }
         }
         return false;

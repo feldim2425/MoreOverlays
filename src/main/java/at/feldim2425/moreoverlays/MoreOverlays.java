@@ -9,12 +9,12 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = MoreOverlays.MOD_ID, version = MoreOverlays.VERSION, name = MoreOverlays.NAME, clientSideOnly = true, dependencies = "required-after:Forge@[12.16.0.1841,);after:JEI@[3.2.6.180,);", guiFactory = "at.feldim2425.moreoverlays.config.GuiFactory")
+@Mod(modid = MoreOverlays.MOD_ID, version = MoreOverlays.VERSION, name = MoreOverlays.NAME, clientSideOnly = true, dependencies = "required-after:Forge@[12.16.1.1909,);after:JEI@[3.4.0.202,);", guiFactory = "at.feldim2425.moreoverlays.config.GuiFactory")
 public class MoreOverlays {
 
     public static final String MOD_ID = "moreoverlays";
     public static final String NAME = "MoreOverlays";
-    public static final String VERSION = "1.3.1";
+    public static final String VERSION = "1.3";
 
     @SidedProxy(clientSide = "at.feldim2425.moreoverlays.Proxy")
     public static Proxy proxy;
