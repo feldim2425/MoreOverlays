@@ -4,12 +4,13 @@ import at.feldim2425.moreoverlays.config.ConfigHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = MoreOverlays.MOD_ID, version = MoreOverlays.VERSION, name = MoreOverlays.NAME, clientSideOnly = true, dependencies = "required-after:Forge@[12.16.1.1909,);after:JEI@[3.4.0.202,);", guiFactory = "at.feldim2425.moreoverlays.config.GuiFactory")
+@Mod(modid = MoreOverlays.MOD_ID, version = MoreOverlays.VERSION, name = MoreOverlays.NAME, clientSideOnly = true, dependencies = "required-after:Forge@[12.17.0.1957,);after:JEI@[3.4.3.207,);", guiFactory = "at.feldim2425.moreoverlays.config.GuiFactory")
 public class MoreOverlays {
 
     public static final String MOD_ID = "moreoverlays";
