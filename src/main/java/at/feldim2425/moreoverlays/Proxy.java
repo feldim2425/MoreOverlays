@@ -1,7 +1,9 @@
 package at.feldim2425.moreoverlays;
 
+import at.feldim2425.moreoverlays.api.itemsearch.SlotHandler;
 import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
 import at.feldim2425.moreoverlays.itemsearch.GuiHandler;
+import at.feldim2425.moreoverlays.itemsearch.integration.MantleGuiModuleOverride;
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
 import net.minecraftforge.fml.common.Loader;
 
@@ -24,7 +26,8 @@ public class Proxy {
     }
 
     public void postInit() {
-
+        if(enable_jei && Loader.isModLoaded("mantle"))
+            SlotHandler.INSTANCE.addPositionOverride(new MantleGuiModuleOverride());
     }
 
     public static boolean isJeiInstalled() {
