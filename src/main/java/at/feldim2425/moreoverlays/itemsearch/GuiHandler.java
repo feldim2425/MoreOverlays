@@ -5,7 +5,6 @@ import at.feldim2425.moreoverlays.Proxy;
 import at.feldim2425.moreoverlays.api.itemsearch.IViewSlot;
 import at.feldim2425.moreoverlays.api.itemsearch.SlotHandler;
 import at.feldim2425.moreoverlays.config.Config;
-import at.feldim2425.moreoverlays.utils.GuiUtil;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.client.Minecraft;
@@ -17,7 +16,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
@@ -25,6 +23,7 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -170,7 +169,7 @@ public class GuiHandler {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         if(!tooltip.isEmpty()) {
-            GuiUtil.drawHoverText(tooltip, event.getMouseX(), event.getMouseY(), event.getGui().width, event.getGui().height, Minecraft.getMinecraft().fontRendererObj);
+            GuiUtils.drawHoveringText(tooltip, event.getMouseX(), event.getMouseY(), event.getGui().width, event.getGui().height, -1, Minecraft.getMinecraft().fontRendererObj);
             tooltip.clear();
         }
 
