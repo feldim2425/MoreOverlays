@@ -17,6 +17,14 @@ public class Config {
     public static boolean itemsearch_DisableText;
     public static boolean itemsearch_FadeoutText;
 
+    public static int render_chunkEdgeColor;
+    public static int render_chunkGridColor;
+    public static int render_chunkMiddleColor;
+    public static float render_chunkLineWidth;
+    public static int render_spawnAColor;
+    public static int render_spawnNColor;
+    public static float render_spawnLineWidth;
+
 
     public static void loadValues(){
 
@@ -34,6 +42,15 @@ public class Config {
         itemsearch_DisableText = config.get("itemsearch","disabletext", true, "Show 'Item Search Disabled'\nIf set to 'false' the text will only show if the Item Search is enabled").getBoolean();
         itemsearch_FadeoutText = config.get("itemsearch","fadouttext", true, "Show the 'Item Search' text only for one secound and fade out").getBoolean();
 
+        config.setCategoryComment("rendersettings","Settings for lines & colors\nValues: 0xRRGGBB (Hex)");
+        render_chunkEdgeColor = config.get("rendersettings","cedgecolor", 0xFF0000, "Color for the chunk edge").getInt();
+        render_chunkGridColor = config.get("rendersettings","cgridcolor", 0x00FF00, "Color for the chunk grid").getInt();
+        render_chunkMiddleColor = config.get("rendersettings","cmidcolor", 0xFFFF00, "Color for the middle chunk line").getInt();
+        render_chunkLineWidth = (float) config.get("rendersettings","clwidth", 1.5, "Line width for chunk boundaries").getDouble();
+        render_spawnAColor = config.get("rendersettings","sacolor", 0xFF0000, "Color the X that marks \"Spawns always possible\"").getInt();
+        render_spawnNColor = config.get("rendersettings","sncolor", 0xFFFF00, "Color the X that marks \"Spawns at night possible\"").getInt();
+        render_spawnLineWidth = (float) config.get("rendersettings","slwidth", 2 , "Line width for spawn indication").getDouble();
+
         if(config.hasChanged())
             config.save();
     }
@@ -42,5 +59,6 @@ public class Config {
         list.add("lightoverlay");
         list.add("chunkbounds");
         list.add("itemsearch");
+        list.add("rendersettings");
     }
 }

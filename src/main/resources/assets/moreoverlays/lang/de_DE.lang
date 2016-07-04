@@ -13,3 +13,4 @@ gui.config.moreoverlays.tile=MoreOverlays Einstellungen
 config.moreoverlays.category.lightoverlay=Licht-Overlay
 config.moreoverlays.category.chunkbounds=Chunk Grenzen
 config.moreoverlays.category.itemsearch=Item Suche
+config.moreoverlays.category.rendersettings=Render Einstellungen

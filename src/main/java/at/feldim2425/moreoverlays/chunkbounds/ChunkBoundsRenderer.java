@@ -24,7 +24,7 @@ public class ChunkBoundsRenderer {
         Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
         GlStateManager.pushMatrix();
         GlStateManager.disableLighting();
-        GL11.glLineWidth(1.5F);
+        GL11.glLineWidth(Config.render_chunkLineWidth);
         GlStateManager.translate(-render.viewerPosX, -render.viewerPosY, -render.viewerPosZ);
 
         int h = player.worldObj.getHeight();
@@ -41,7 +41,7 @@ public class ChunkBoundsRenderer {
 
         int radius = Config.chunk_EdgeRadius * 16;
 
-        GlStateManager.color(1, 0, 0);
+        GlStateManager.color( ((float)((Config.render_chunkEdgeColor>>16) & 0xFF))/255F, ((float)((Config.render_chunkEdgeColor>>8) & 0xFF))/255F, ((float)(Config.render_chunkEdgeColor & 0xFF))/255F);
         for(int xo=-16-radius; xo<=radius; xo+=16){
             for(int yo=-16-radius; yo<=radius; yo+=16){
                 renderEdge(x0-xo, z0-yo, h);
@@ -49,12 +49,12 @@ public class ChunkBoundsRenderer {
         }
 
         if(Config.chunk_ShowMiddle) {
-            GlStateManager.color(1, 1, 0);
+            GlStateManager.color(((float)((Config.render_chunkMiddleColor>>16) & 0xFF))/255F, ((float)((Config.render_chunkMiddleColor>>8) & 0xFF))/255F, ((float)(Config.render_chunkMiddleColor & 0xFF))/255F);
             renderEdge(x2, z2, h);
         }
 
         if(ChunkBoundsHandler.mode==2) {
-            GlStateManager.color(0, 1, 0);
+            GlStateManager.color(((float)((Config.render_chunkGridColor>>16) & 0xFF))/255F, ((float)((Config.render_chunkGridColor>>8) & 0xFF))/255F, ((float)(Config.render_chunkGridColor & 0xFF))/255F);
             renderHGrid(x0, z0 + 0.005, x1, z0 + 0.005, h1, h2);
             renderVXGrid(x0, x1, z0 + 0.005, h1, h2);
 
@@ -69,7 +69,7 @@ public class ChunkBoundsRenderer {
         }
 
         GlStateManager.enableLighting();
-        GlStateManager.enableTexture2D();
+        GlStateManager.enableAlpha();
         GlStateManager.popMatrix();
     }
 
