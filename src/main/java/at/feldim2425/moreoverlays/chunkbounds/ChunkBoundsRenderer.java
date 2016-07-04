@@ -1,5 +1,6 @@
 package at.feldim2425.moreoverlays.chunkbounds;
 
+import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -8,17 +9,20 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public class ChunkBoundsRenderer {
 
+    private final static ResourceLocation BLANK_TEX = new ResourceLocation(MoreOverlays.MOD_ID, "textures/blank.png");
     private static RenderManager render = Minecraft.getMinecraft().getRenderManager();
 
     public static void renderOverlays() {
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
+        GlStateManager.disableAlpha();
+        Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
         GlStateManager.pushMatrix();
-        GlStateManager.disableTexture2D();
         GlStateManager.disableLighting();
         GL11.glLineWidth(1.5F);
         GlStateManager.translate(-render.viewerPosX, -render.viewerPosY, -render.viewerPosZ);
