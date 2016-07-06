@@ -1,10 +1,7 @@
 package at.feldim2425.moreoverlays.itemsearch;
 
 import mezz.jei.ItemFilter;
-import mezz.jei.api.IJeiRuntime;
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.IModRegistry;
-import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.*;
 import mezz.jei.input.IKeyable;
 
 import javax.annotation.Nonnull;
@@ -13,6 +10,7 @@ import javax.annotation.Nonnull;
 public class JeiModule implements IModPlugin {
 
     public static ItemFilter filter;
+    public static IItemListOverlay overlay;
     public static IKeyable keyableOverlay;
 
     @Override
@@ -20,11 +18,11 @@ public class JeiModule implements IModPlugin {
         filter = new ItemFilter(registry.getItemRegistry());
     }
 
-
     @Override
     public void onRuntimeAvailable(@Nonnull IJeiRuntime jeiRuntime) {
         if(jeiRuntime.getItemListOverlay() instanceof IKeyable){
             keyableOverlay = (IKeyable)jeiRuntime.getItemListOverlay();
         }
+        overlay = jeiRuntime.getItemListOverlay();
     }
 }
