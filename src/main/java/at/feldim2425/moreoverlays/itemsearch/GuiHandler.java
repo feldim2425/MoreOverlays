@@ -31,6 +31,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -39,21 +40,21 @@ public class GuiHandler {
     private static final float OVERLAY_ZLEVEL = 299F;
     private static final int TEXT_FADEOUT = 20;
 
-    public static List<ItemStack> itemCache = null;
-    private static String lastFilterText = "";
-    private static boolean emptyFilter = true;
     private static boolean enabled = false;
 
+    private static List<ItemStack> itemCache = null;
+    private static String lastFilterText = "";
+    private static boolean emptyFilter = true;
     private static List<String> tooltip = new ArrayList<>();
     private static BiMap<Integer, IViewSlot> views = HashBiMap.create();
-    private static int txtPosY = 0;
-    private static boolean isCreative = false;
     private static String text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.disabled");
-    private static int guiOffsetX = 0;
-    private static int guiOffsetY = 0;
-    private static long highlightTicks = 0;
+    private static int highlightTicks = 0;
 
+    private int txtPosY = 0;
+    private boolean isCreative = false;
     private boolean handleTooltip = false;
+    private int guiOffsetX = 0;
+    private int guiOffsetY = 0;
 
 
     public static void init() {
@@ -157,7 +158,7 @@ public class GuiHandler {
 
         renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
-        for (Map.Entry<Integer, IViewSlot> slot : this.views.entrySet()) {
+        for (Map.Entry<Integer, IViewSlot> slot : views.entrySet()) {
             int px = slot.getValue().getRenderPosX(guiOffsetX, guiOffsetY);
             int py = slot.getValue().getRenderPosY(guiOffsetX, guiOffsetY);
             renderer.pos(px + 16 + guiOffsetX, py + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
@@ -180,11 +181,11 @@ public class GuiHandler {
         GlStateManager.disableBlend();
     }
 
-    private static boolean canShowIn(GuiScreen gui){
+    private boolean canShowIn(GuiScreen gui){
         return (gui instanceof GuiContainer) && !isCreative && ((GuiContainer) gui).inventorySlots!=null && !((GuiContainer) gui).inventorySlots.inventorySlots.isEmpty();
     }
 
-    private static void checkSlots(GuiContainer container) {
+    private void checkSlots(GuiContainer container) {
         if (views == null)
             views = HashBiMap.create();
         else
@@ -197,8 +198,8 @@ public class GuiHandler {
         }
     }
 
-    private static boolean isSearchedItem(ItemStack stack) {
         if (stack == null) return emptyFilter;
+    private boolean isSearchedItem(ItemStack stack) {
         for (ItemStack stack1 : itemCache) {
             if (stack1.isItemEqual(stack) || (stack1.getItem() == stack.getItem() && stack1.getItem().isDamageable()))
                 return true;
