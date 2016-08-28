@@ -4,7 +4,7 @@
   "name": "MoreOverlays",
   "description": "Adds some overlays from NEI (Mob spawns, Chunk Bounds, Item Search)",
   "version": "${version}",
-  "mcversion": "1.9.4",
+  "mcversion": "1.10.2",
   "url": "",
   "updateUrl": "",
   "authorList": ["feldim2425"],
