@@ -1,5 +1,6 @@
 package at.feldim2425.moreoverlays.lightoverlay;
 
+import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.config.Config;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
@@ -24,6 +26,7 @@ import java.util.Map;
 
 public class LightOverlayRenderer {
 
+    private final static ResourceLocation BLANK_TEX = new ResourceLocation(MoreOverlays.MOD_ID, "textures/blank.png");
     private final static AxisAlignedBB TEST_BB = new AxisAlignedBB(0.6D/2D, 0, 0.6D/2D, 1D-0.6D/2D, 1D, 1D-0.6D/2D);
     private static Map.Entry<BlockPos, Byte>[] overlayCache;
     private static RenderManager render = Minecraft.getMinecraft().getRenderManager();
@@ -32,11 +35,19 @@ public class LightOverlayRenderer {
     public static void renderOverlays() {
         if (overlayCache == null)
             return;
+        Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
         GlStateManager.pushMatrix();
-        GlStateManager.disableTexture2D();
         GlStateManager.disableLighting();
-        GL11.glLineWidth(2.0F);
+        GL11.glLineWidth(Config.render_spawnLineWidth);
         GlStateManager.translate(-render.viewerPosX, -render.viewerPosY, -render.viewerPosZ);
+
+        float ar = ((float)((Config.render_spawnAColor>>16) & 0xFF))/255F;
+        float ag = ((float)((Config.render_spawnAColor>>8) & 0xFF))/255F;
+        float ab = ((float)(Config.render_spawnAColor & 0xFF))/255F;
+
+        float nr = ((float)((Config.render_spawnNColor>>16) & 0xFF))/255F;
+        float ng = ((float)((Config.render_spawnNColor>>8) & 0xFF))/255F;
+        float nb = ((float)(Config.render_spawnNColor & 0xFF))/255F;
 
         for (int i = 0; i < overlayCache.length; i++) {
             Map.Entry<BlockPos, Byte> entry = overlayCache[i];
@@ -44,13 +55,12 @@ public class LightOverlayRenderer {
             if (mode == null || mode == 0)
                 continue;
             else if (mode == 1)
-                renderCross(entry.getKey(), 1, 1, 0);
+                renderCross(entry.getKey(), nr, ng, nb);
             else if (mode == 2)
-                renderCross(entry.getKey(), 1, 0, 0);
+                renderCross(entry.getKey(), ar, ag, ab);
         }
 
         GlStateManager.enableLighting();
-        GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
     }
 

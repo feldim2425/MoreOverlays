@@ -206,8 +206,8 @@ public class GuiHandler {
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END || Minecraft.getMinecraft().thePlayer == null || !canShowIn(Minecraft.getMinecraft().currentScreen))
             return;
-        if (enabled && !JeiModule.filter.getFilterText().equals(lastFilterText)) {
-            lastFilterText = JeiModule.filter.getFilterText();
+        if (enabled && !JeiModule.overlay.getFilterText().equals(lastFilterText)) {
+            lastFilterText = JeiModule.overlay.getFilterText();
             if (itemCache != null)
                 itemCache.clear();
             else
@@ -228,7 +228,7 @@ public class GuiHandler {
     public static void toggleMode() {
         enabled = !enabled;
         if (enabled) {
-            lastFilterText = JeiModule.filter.getFilterText();
+            lastFilterText = JeiModule.overlay.getFilterText();
             if (itemCache != null)
                 itemCache.clear();
             else

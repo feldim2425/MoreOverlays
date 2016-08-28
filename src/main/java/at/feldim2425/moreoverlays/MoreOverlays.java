@@ -10,12 +10,14 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = MoreOverlays.MOD_ID, version = MoreOverlays.VERSION, name = MoreOverlays.NAME, clientSideOnly = true, dependencies = "required-after:Forge@[12.17.0.1957,);after:JEI@[3.4.3.207,);", guiFactory = "at.feldim2425.moreoverlays.config.GuiFactory")
+@Mod(modid = MoreOverlays.MOD_ID, updateJSON = MoreOverlays.UPDATE_JSON, version = MoreOverlays.VERSION, name = MoreOverlays.NAME, clientSideOnly = true, dependencies = "required-after:Forge@[12.17.0.1976,);after:JEI@[3.6.8.224,);", guiFactory = "at.feldim2425.moreoverlays.config.GuiFactory")
 public class MoreOverlays {
 
     public static final String MOD_ID = "moreoverlays";
     public static final String NAME = "MoreOverlays";
-    public static final String VERSION = "1.4";
+    public static final String VERSION = "1.6";
+    public static final String UPDATE_JSON = "https://raw.githubusercontent.com/feldim2425/Mod_Update-JSONs/master/MoreOverlays.json";
+
 
     @SidedProxy(clientSide = "at.feldim2425.moreoverlays.Proxy")
     public static Proxy proxy;
