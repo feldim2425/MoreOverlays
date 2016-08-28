@@ -53,6 +53,8 @@ public class GuiHandler {
     private static int guiOffsetY = 0;
     private static long highlightTicks = 0;
 
+    private boolean handleTooltip = false;
+
 
     public static void init() {
         if (Proxy.isJeiInstalled())
@@ -103,7 +105,7 @@ public class GuiHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltip(ItemTooltipEvent event) {
-        if(enabled && !views.isEmpty()){ //Not the best way but it works
+        if(enabled && !views.isEmpty() && handleTooltip){ //Not the best way but it works
             tooltip.clear();
             tooltip.addAll(event.getToolTip());
             event.getToolTip().clear();
@@ -142,6 +144,8 @@ public class GuiHandler {
         if (!enabled || isCreative || views == null || views.isEmpty())
             return;
         GuiContainer gui = (GuiContainer) event.getGui();
+
+        handleTooltip = gui.getSlotUnderMouse()!=null;
 
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer renderer = tess.getBuffer();
