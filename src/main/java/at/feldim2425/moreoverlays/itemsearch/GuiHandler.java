@@ -198,8 +198,9 @@ public class GuiHandler {
         }
     }
 
-        if (stack == null) return emptyFilter;
     private boolean isSearchedItem(ItemStack stack) {
+        if(emptyFilter) return true;
+        else if(stack==null) return false;
         for (ItemStack stack1 : itemCache) {
             if (stack1.isItemEqual(stack) || (stack1.getItem() == stack.getItem() && stack1.getItem().isDamageable()))
                 return true;
