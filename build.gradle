@@ -63,6 +63,7 @@ dependencies {
     //compile "some.group:artifact:version"
       
 	deobfCompile "mezz.jei:jei_1.10.2:${config.jei.version}"
+	deobfCompile "slimeknights.mantle:Mantle:1.10.2-${config.mantle.version}"
 
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env

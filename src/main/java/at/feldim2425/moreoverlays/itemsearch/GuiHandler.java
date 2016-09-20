@@ -42,7 +42,6 @@ public class GuiHandler {
 
     private static boolean enabled = false;
 
-    private static List<ItemStack> itemCache = null;
     private static String lastFilterText = "";
     private static boolean emptyFilter = true;
     private static List<String> tooltip = new ArrayList<>();
@@ -201,7 +200,7 @@ public class GuiHandler {
     private boolean isSearchedItem(ItemStack stack) {
         if(emptyFilter) return true;
         else if(stack==null) return false;
-        for (ItemStack stack1 : itemCache) {
+        for (ItemStack stack1 : JeiModule.overlay.getFilteredStacks()) {
             if (stack1.isItemEqual(stack) || (stack1.getItem() == stack.getItem() && stack1.getItem().isDamageable()))
                 return true;
         }
@@ -214,11 +213,6 @@ public class GuiHandler {
             return;
         if (enabled && !JeiModule.overlay.getFilterText().equals(lastFilterText)) {
             lastFilterText = JeiModule.overlay.getFilterText();
-            if (itemCache != null)
-                itemCache.clear();
-            else
-                itemCache = new ArrayList<>();
-            JeiModule.filter.getItemList().forEach((itemElement) -> itemCache.add(itemElement.getItemStack()));
             emptyFilter = lastFilterText.replace(" ","").isEmpty();
         }
 
@@ -235,17 +229,10 @@ public class GuiHandler {
         enabled = !enabled;
         if (enabled) {
             lastFilterText = JeiModule.overlay.getFilterText();
-            if (itemCache != null)
-                itemCache.clear();
-            else
-                itemCache = new ArrayList<>();
-            JeiModule.filter.getItemList().forEach((itemElement) -> itemCache.add(itemElement.getItemStack()));
             emptyFilter = lastFilterText.replace(" ","").isEmpty();
             text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.enabled");
         } else {
             lastFilterText = "";
-            if (itemCache != null)
-                itemCache.clear();
             text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.disabled");
         }
         highlightTicks=TEXT_FADEOUT;
