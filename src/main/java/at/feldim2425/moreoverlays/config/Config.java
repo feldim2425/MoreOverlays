@@ -14,7 +14,7 @@ public class Config {
     public static int chunk_EdgeRadius;
     public static boolean chunk_ShowMiddle;
 
-    public static boolean itemsearch_DisableText;
+    public static boolean itemsearch_ShowItemSearchKey;
     public static boolean itemsearch_FadeoutText;
 
     public static int render_chunkEdgeColor;
@@ -39,8 +39,8 @@ public class Config {
         chunk_ShowMiddle = config.get("chunkbounds","middle", true, "Show the middle of the current Chunk (yellow line)").getBoolean();
 
         config.setCategoryComment("itemsearch","Settings for the item search feature");
-        itemsearch_DisableText = config.get("itemsearch","disabletext", true, "Show 'Item Search Disabled'\nIf set to 'false' the text will only show if the Item Search is enabled").getBoolean();
         itemsearch_FadeoutText = config.get("itemsearch","fadouttext", true, "Show the 'Item Search' text only for one secound and fade out").getBoolean();
+        itemsearch_ShowItemSearchKey = config.get("itemsearch","showkey", true, "If the Item Search is enabled show the key to disable it").getBoolean();
 
         config.setCategoryComment("rendersettings","Settings for lines & colors\nValues: 0xRRGGBB (Hex)");
         render_chunkEdgeColor = config.get("rendersettings","cedgecolor", 0xFF0000, "Color for the chunk edge").getInt();
