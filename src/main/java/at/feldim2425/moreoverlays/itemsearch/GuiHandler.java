@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -47,14 +48,13 @@ public class GuiHandler {
 
     private static String lastFilterText = "";
     private static boolean emptyFilter = true;
-    private static List<String> tooltip = new ArrayList<>();
     private static BiMap<Integer, IViewSlot> views = HashBiMap.create();
     private static String text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.disabled");
     private static int highlightTicks = 0;
 
     private int txtPosY = 0;
     private boolean isCreative = false;
-    private boolean handleTooltip = false;
+    private boolean allowRender = false;
     private int guiOffsetX = 0;
     private int guiOffsetY = 0;
 
@@ -93,20 +93,37 @@ public class GuiHandler {
             text += " - [" + KeyBindings.invSearch.getKeyModifier().getLocalizedComboName(KeyBindings.invSearch.getKeyCode()) + "]";
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onTooltip(ItemTooltipEvent event) {
-        if(enabled && !views.isEmpty() && handleTooltip){ //Not the best way but it works
-            tooltip.clear();
-            tooltip.addAll(event.getToolTip());
-            event.getToolTip().clear();
-        }
+    @SubscribeEvent
+    public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Pre event) {
+        GuiScreen guiscr = Minecraft.getMinecraft().currentScreen;
+        if(canShowIn(guiscr))
+            allowRender = true;
     }
 
     @SubscribeEvent
     public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
-        if (!canShowIn(event.getGui()))
-            return;
+        GuiScreen guiscr = Minecraft.getMinecraft().currentScreen;
+        if(allowRender && canShowIn(guiscr))
+        {
+            allowRender = false;
+            drawSlotOverlay((GuiContainer) guiscr);
+        }
+    }
 
+    @SubscribeEvent
+    public void onRenderTooltip(RenderTooltipEvent.Pre event) {
+        GuiScreen guiscr = Minecraft.getMinecraft().currentScreen;
+        if(allowRender && canShowIn(guiscr)) {
+            GuiContainer gui = (GuiContainer) guiscr;
+            if(gui.getSlotUnderMouse()!=null && gui.getSlotUnderMouse().getHasStack() && gui.getSlotUnderMouse().getStack().equals(event.getStack())) {
+                allowRender = false;
+                drawSlotOverlay((GuiContainer) guiscr);
+            }
+        }
+    }
+
+    private void drawSlotOverlay(GuiContainer gui)
+    {
         RenderHelper.disableStandardItemLighting();
         GlStateManager.enableAlpha();
         GlStateManager.color(1,1,1,1);
@@ -124,7 +141,7 @@ public class GuiHandler {
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
-            Minecraft.getMinecraft().fontRendererObj.drawString(text, (event.getGui().width - width) / 2, txtPosY, color);
+            Minecraft.getMinecraft().fontRendererObj.drawString(text, (gui.width - width) / 2, txtPosY, color);
 
             GlStateManager.disableBlend();
             GlStateManager.popMatrix();
@@ -133,9 +150,6 @@ public class GuiHandler {
 
         if (!enabled || isCreative || views == null || views.isEmpty())
             return;
-        GuiContainer gui = (GuiContainer) event.getGui();
-
-        handleTooltip = gui.getSlotUnderMouse()!=null;
 
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer renderer = tess.getBuffer();
@@ -161,11 +175,6 @@ public class GuiHandler {
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-        if(!tooltip.isEmpty()) {
-            GuiUtils.drawHoveringText(tooltip, event.getMouseX(), event.getMouseY(), event.getGui().width, event.getGui().height, -1, Minecraft.getMinecraft().fontRendererObj);
-            tooltip.clear();
-        }
 
         GlStateManager.disableBlend();
     }
