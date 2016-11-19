@@ -18,7 +18,7 @@ public class ChunkBoundsRenderer {
     private static RenderManager render = Minecraft.getMinecraft().getRenderManager();
 
     public static void renderOverlays() {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = Minecraft.getMinecraft().player;
 
         GlStateManager.disableAlpha();
         Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
@@ -27,7 +27,7 @@ public class ChunkBoundsRenderer {
         GL11.glLineWidth(Config.render_chunkLineWidth);
         GlStateManager.translate(-render.viewerPosX, -render.viewerPosY, -render.viewerPosZ);
 
-        int h = player.worldObj.getHeight();
+        int h = player.world.getHeight();
         int h0 = (int) player.posY;
         int h1 = Math.min(h, Math.max(h0 - 16, 0));
         int h2 = Math.min(h, Math.max(h0 + 16, 0));

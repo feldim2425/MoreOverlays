@@ -198,7 +198,7 @@ public class GuiHandler {
 
     private boolean isSearchedItem(ItemStack stack) {
         if(emptyFilter) return true;
-        else if(stack==null) return false;
+        else if(stack.isEmpty()) return false;
         for (ItemStack stack1 : JeiModule.overlay.getFilteredStacks()) {
             if (stack1.isItemEqual(stack) || (stack1.getItem() == stack.getItem() && stack1.getItem().isDamageable()))
                 return true;
@@ -208,7 +208,7 @@ public class GuiHandler {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || Minecraft.getMinecraft().thePlayer == null || !canShowIn(Minecraft.getMinecraft().currentScreen))
+        if (event.phase != TickEvent.Phase.END || Minecraft.getMinecraft().player == null || !canShowIn(Minecraft.getMinecraft().currentScreen))
             return;
         if (enabled && !JeiModule.overlay.getFilterText().equals(lastFilterText)) {
             lastFilterText = JeiModule.overlay.getFilterText();

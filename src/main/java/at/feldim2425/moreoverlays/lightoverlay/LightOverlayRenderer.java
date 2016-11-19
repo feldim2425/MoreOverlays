@@ -66,30 +66,30 @@ public class LightOverlayRenderer {
 
 
     public synchronized static void refreshCache() {
-        if (Minecraft.getMinecraft().thePlayer == null)
+        if (Minecraft.getMinecraft().player == null)
             return;
 
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = Minecraft.getMinecraft().player;
         int px = (int) Math.floor(player.posX);
-        int py = Math.min(Math.max((int) player.posY, 0), player.worldObj.getHeight()-1);
+        int py = Math.min(Math.max((int) player.posY, 0), player.world.getHeight()-1);
         int pz = (int) Math.floor(player.posZ);
 
         int y1 = (py - Config.light_DownRange < 0) ? 0 : py-Config.light_DownRange;
-        int y2 = (py + Config.light_UpRange > player.worldObj.getHeight()-1) ? player.worldObj.getHeight()-1 : py+Config.light_UpRange;
+        int y2 = (py + Config.light_UpRange > player.world.getHeight()-1) ? player.world.getHeight()-1 : py+Config.light_UpRange;
 
         HashMap<BlockPos, Byte> newCache = new HashMap<>();
         for (int xo = -Config.light_HRange; xo <= Config.light_HRange; xo++) {
             for (int zo = -Config.light_HRange; zo <= Config.light_HRange; zo++) {
                 BlockPos pos1 = new BlockPos(px + xo, py, pz + zo);
-                Biome biome = player.worldObj.getBiomeGenForCoords(pos1);
+                Biome biome = player.world.getBiome(pos1);
 
                 if (biome.getSpawningChance() <= 0 || biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty())
                     continue;
 
-                Chunk chunk = player.worldObj.getChunkFromBlockCoords(pos1);
+                Chunk chunk = player.world.getChunkFromBlockCoords(pos1);
                 for (int y = y1; y <= y2; y++) {
                     BlockPos pos = new BlockPos(px + xo, y, pz + zo);
-                    byte mode = getSpawnModeAt(pos, chunk, player.worldObj);
+                    byte mode = getSpawnModeAt(pos, chunk, player.world);
                     if (mode != 0)
                         newCache.put(pos, mode);
                 }
@@ -125,12 +125,12 @@ public class LightOverlayRenderer {
             return true;
 
         AxisAlignedBB bb = TEST_BB.offset(pos.getX(),pos.getY(),pos.getZ());
-        if(world.getCollisionBoxes(bb).isEmpty() && !world.containsAnyLiquid(bb)){
+        if(world.getCollisionBoxes(null, bb).isEmpty() && !world.containsAnyLiquid(bb)){
             if(Config.light_IgnoreLayer)
                 return true;
             else {
                 AxisAlignedBB bb2 = bb.offset(0,1,0);
-                return world.getCollisionBoxes(bb2).isEmpty() && !world.containsAnyLiquid(bb2);
+                return world.getCollisionBoxes(null, bb2).isEmpty() && !world.containsAnyLiquid(bb2);
             }
         }
         return false;

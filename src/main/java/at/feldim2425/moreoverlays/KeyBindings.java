@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 
 import java.lang.reflect.Field;
@@ -63,7 +64,7 @@ public class KeyBindings {
 
     private static boolean checkFocus(GuiScreen gui){
         //Check JEI Filter Focus
-        if(Proxy.isJeiInstalled() && JeiModule.keyableOverlay!=null && JeiModule.keyableOverlay.hasKeyboardFocus())
+        if(Proxy.isJeiInstalled() && JeiModule.hasJEIFocus())
             return true;
 
         /*

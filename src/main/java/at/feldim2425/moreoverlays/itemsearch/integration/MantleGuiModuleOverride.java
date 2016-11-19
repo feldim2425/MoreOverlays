@@ -34,12 +34,12 @@ public class MantleGuiModuleOverride implements IOverrideSlotPos {
 
         @Override
         public int getRenderPosX(int guiLeft, int guiTop) {
-            return -guiLeft + gui.cornerX + slot.xDisplayPosition;
+            return -guiLeft + gui.cornerX + slot.xPos;
         }
 
         @Override
         public int getRenderPosY(int guiLeft, int guiTop) {
-            return -guiTop + gui.cornerY + slot.yDisplayPosition;
+            return -guiTop + gui.cornerY + slot.yPos;
         }
 
         @Override

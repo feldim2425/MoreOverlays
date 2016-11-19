@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = MoreOverlays.MOD_ID, updateJSON = MoreOverlays.UPDATE_JSON, version = MoreOverlays.VERSION, name = MoreOverlays.NAME, clientSideOnly = true, dependencies = "required-after:Forge@[12.18.1.2075,);after:JEI@[3.9.6.258,);", guiFactory = "at.feldim2425.moreoverlays.config.GuiFactory")
+@Mod(modid = MoreOverlays.MOD_ID, updateJSON = MoreOverlays.UPDATE_JSON, version = MoreOverlays.VERSION, name = MoreOverlays.NAME, clientSideOnly = true, dependencies = "required-after:forge@[13.19.0.2153,);after:jei@[4.0.1.193,);", guiFactory = "at.feldim2425.moreoverlays.config.GuiFactory")
 public class MoreOverlays {
 
     public static final String MOD_ID = "moreoverlays";

@@ -12,7 +12,7 @@ public class Proxy {
     private static boolean enable_jei = false;
 
     public void preInit() {
-        enable_jei = Loader.isModLoaded("JEI");
+        enable_jei = Loader.isModLoaded("jei");
 
         KeyBindings.init();
 

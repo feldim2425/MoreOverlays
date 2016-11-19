@@ -23,7 +23,7 @@ public class LightOverlayHandler {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if(Minecraft.getMinecraft().theWorld!=null && enabled && event.phase == TickEvent.Phase.END &&
+        if(Minecraft.getMinecraft().world!=null && enabled && event.phase == TickEvent.Phase.END &&
                 (Minecraft.getMinecraft().currentScreen==null || !Minecraft.getMinecraft().currentScreen.doesGuiPauseGame())){
             LightOverlayRenderer.refreshCache();
         }

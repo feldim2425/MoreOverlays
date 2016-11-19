@@ -18,12 +18,12 @@ public class DefaultSlotView implements IViewSlot {
 
     @Override
     public int getRenderPosX(int guiLeft, int guiTop) {
-        return slot.xDisplayPosition;
+        return slot.xPos;
     }
 
     @Override
     public int getRenderPosY(int guiLeft, int guiTop) {
-        return slot.yDisplayPosition;
+        return slot.yPos;
     }
 
     @Override
