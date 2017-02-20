@@ -2,6 +2,7 @@ package at.feldim2425.moreoverlays;
 
 import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
 import at.feldim2425.moreoverlays.itemsearch.GuiHandler;
+import at.feldim2425.moreoverlays.itemsearch.GuiRenderer;
 import at.feldim2425.moreoverlays.itemsearch.JeiModule;
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
 import net.minecraft.client.Minecraft;
@@ -57,7 +58,7 @@ public class KeyBindings {
 
         if(invSearch.isActiveAndMatches(Keyboard.getEventKey()) && Keyboard.getEventKeyState() && Proxy.isJeiInstalled() &&
                 (screen instanceof GuiContainer) && !(screen instanceof GuiContainerCreative) && !checkFocus(screen)){
-            GuiHandler.toggleMode();
+            GuiRenderer.INSTANCE.toggleMode();
         }
     }
 
