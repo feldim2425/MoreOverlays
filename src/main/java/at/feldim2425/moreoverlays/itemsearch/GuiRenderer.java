@@ -57,7 +57,7 @@ public class GuiRenderer {
         if (!canShowIn(gui))
             return;
         highlightTicks = 0;
-        txtPosY = gui.height  - 19 + (16- Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT)/2;
+        txtPosY = gui.height  - 19 + (16- Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT)/2;
         try {
             Field left = ReflectionHelper.findField(GuiContainer.class, "field_147003_i", "guiLeft"); //Obfuscated -> guiLeft
             left.setAccessible(true);
@@ -117,14 +117,14 @@ public class GuiRenderer {
                 alpha = (int) (((float) highlightTicks / (float) TEXT_FADEOUT) * 256);
                 alpha = Math.max(0, Math.min(255, alpha));
             }
-            int width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+            int width = Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
             int color = 0x00ffffff | (alpha << 24);
 
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
-            Minecraft.getMinecraft().fontRendererObj.drawString(text, (gui.width - width) / 2, txtPosY, color);
+            Minecraft.getMinecraft().fontRenderer.drawString(text, (gui.width - width) / 2, txtPosY, color);
 
             GlStateManager.disableBlend();
             GlStateManager.popMatrix();
@@ -181,7 +181,7 @@ public class GuiRenderer {
 
     private boolean isSearchedItem(ItemStack stack) {
         if(emptyFilter) return true;
-        else if(stack.isEmpty()) return false;
+        else if(stack.getItem() == null) return false;
         for (ItemStack stack1 : JeiModule.overlay.getFilteredStacks()) {
             if (stack1.isItemEqual(stack) || (stack1.getItem() == stack.getItem() && stack1.getItem().isDamageable()))
                 return true;
