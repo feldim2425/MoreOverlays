@@ -100,7 +100,7 @@ public class LightOverlayRenderer {
     }
 
     private static byte getSpawnModeAt(BlockPos pos, Chunk chunk, World world){
-        if(chunk.getLightFor(EnumSkyBlock.BLOCK, pos)>7)
+        if(chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= Config.light_SaveLevel)
             return 0;
 
         IBlockState state= world.getBlockState(pos.down());
@@ -110,7 +110,7 @@ public class LightOverlayRenderer {
         if(!checkCollision(pos,world))
             return 0;
 
-        if(chunk.getLightFor(EnumSkyBlock.SKY, pos)>7)
+        if(chunk.getLightFor(EnumSkyBlock.SKY, pos) >= Config.light_SaveLevel)
             return 1;
 
         return 2;
