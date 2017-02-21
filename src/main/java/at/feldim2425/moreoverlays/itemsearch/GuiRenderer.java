@@ -8,8 +8,10 @@ import at.feldim2425.moreoverlays.api.itemsearch.SlotHandler;
 import at.feldim2425.moreoverlays.config.Config;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import mezz.jei.api.JEIPlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
@@ -27,6 +29,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
@@ -38,6 +41,7 @@ public class GuiRenderer {
 
     private static final float OVERLAY_ZLEVEL = 299F;
     private static final int TEXT_FADEOUT = 20;
+    private static final int FRAME_RADIUS = 1;
 
     private static boolean enabled = false;
 
@@ -81,17 +85,65 @@ public class GuiRenderer {
 
     public void preDraw() {
         GuiScreen guiscr = Minecraft.getMinecraft().currentScreen;
-        if(canShowIn(guiscr))
+
+        GuiTextField textField = JeiModule.getJEITextField();
+
+        if(canShowIn(guiscr)) {
             allowRender = true;
+            if(textField!=null && enabled) {
+                drawSearchFrame(textField);
+            }
+        }
     }
 
     public void postDraw() {
         GuiScreen guiscr = Minecraft.getMinecraft().currentScreen;
+
         if(allowRender && canShowIn(guiscr))
         {
             allowRender = false;
             drawSlotOverlay((GuiContainer) guiscr);
         }
+    }
+
+    private void drawSearchFrame(GuiTextField textField)
+    {
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableDepth();
+        GlStateManager.disableTexture2D();
+        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.pushMatrix();
+        Tessellator tess = Tessellator.getInstance();
+        VertexBuffer buffer = tess.getBuffer();
+        GlStateManager.color(1, 1, 0, 1);
+
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+        buffer.pos(textField.xPosition + textField.width + FRAME_RADIUS, textField.yPosition - FRAME_RADIUS, 1000).endVertex();
+        buffer.pos(textField.xPosition - FRAME_RADIUS,textField.yPosition - FRAME_RADIUS, 1000).endVertex();
+        buffer.pos(textField.xPosition - FRAME_RADIUS, textField.yPosition, 1000).endVertex();
+        buffer.pos(textField.xPosition + textField.width + FRAME_RADIUS, textField.yPosition, 1000).endVertex();
+
+        buffer.pos(textField.xPosition, textField.yPosition, 1000).endVertex();
+        buffer.pos(textField.xPosition - FRAME_RADIUS,textField.yPosition, 1000).endVertex();
+        buffer.pos(textField.xPosition - FRAME_RADIUS, textField.yPosition+textField.height, 1000).endVertex();
+        buffer.pos(textField.xPosition, textField.yPosition+textField.height, 1000).endVertex();
+
+        buffer.pos(textField.xPosition + textField.width + FRAME_RADIUS, textField.yPosition +textField.height, 1000).endVertex();
+        buffer.pos(textField.xPosition - FRAME_RADIUS,textField.yPosition +textField.height, 1000).endVertex();
+        buffer.pos(textField.xPosition - FRAME_RADIUS, textField.yPosition +textField.height + FRAME_RADIUS, 1000).endVertex();
+        buffer.pos(textField.xPosition + textField.width + FRAME_RADIUS, textField.yPosition +textField.height + FRAME_RADIUS, 1000).endVertex();
+
+        buffer.pos(textField.xPosition + textField.width+ FRAME_RADIUS, textField.yPosition, 1000).endVertex();
+        buffer.pos(textField.xPosition  + textField.width ,textField.yPosition, 1000).endVertex();
+        buffer.pos(textField.xPosition  + textField.width, textField.yPosition+textField.height, 1000).endVertex();
+        buffer.pos(textField.xPosition + textField.width + FRAME_RADIUS, textField.yPosition+textField.height, 1000).endVertex();
+
+        tess.draw();
+        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+        GlStateManager.enableTexture2D();
     }
 
     public void renderTooltip(ItemStack stack) {
@@ -128,6 +180,7 @@ public class GuiRenderer {
 
             GlStateManager.disableBlend();
             GlStateManager.popMatrix();
+
         }
 
 
@@ -162,7 +215,7 @@ public class GuiRenderer {
         GlStateManager.disableBlend();
     }
 
-    private boolean canShowIn(GuiScreen gui){
+    public boolean canShowIn(GuiScreen gui){
         return (gui instanceof GuiContainer) && !isCreative && ((GuiContainer) gui).inventorySlots!=null && !((GuiContainer) gui).inventorySlots.inventorySlots.isEmpty();
     }
 
