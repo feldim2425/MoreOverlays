@@ -28,12 +28,12 @@ public class KeyBindings {
 
     public static KeyBinding lightOverlay = new KeyBinding("key." + MoreOverlays.MOD_ID + ".lightoverlay.desc", KeyConflictContext.IN_GAME, Keyboard.KEY_F7, "key." + MoreOverlays.MOD_ID + ".category");
     public static KeyBinding chunkBounds = new KeyBinding("key." + MoreOverlays.MOD_ID + ".chunkbounds.desc", KeyConflictContext.IN_GAME, Keyboard.KEY_F9, "key." + MoreOverlays.MOD_ID + ".category");
-    public static KeyBinding invSearch = new KeyBinding("key." + MoreOverlays.MOD_ID + ".invsearch.desc", KeyConflictContext.GUI, Keyboard.KEY_Z, "key." + MoreOverlays.MOD_ID + ".category");
+    //public static KeyBinding invSearch = new KeyBinding("key." + MoreOverlays.MOD_ID + ".invsearch.desc", KeyConflictContext.GUI, Keyboard.KEY_Z, "key." + MoreOverlays.MOD_ID + ".category");
 
     public static void init() {
         ClientRegistry.registerKeyBinding(lightOverlay);
         ClientRegistry.registerKeyBinding(chunkBounds);
-        ClientRegistry.registerKeyBinding(invSearch);
+        //ClientRegistry.registerKeyBinding(invSearch);
 
         MinecraftForge.EVENT_BUS.register(new KeyBindings());
     }
@@ -51,7 +51,7 @@ public class KeyBindings {
 
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onGuiKeyEvent(GuiScreenEvent.KeyboardInputEvent.Post event) {
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
@@ -60,11 +60,11 @@ public class KeyBindings {
                 (screen instanceof GuiContainer) && !(screen instanceof GuiContainerCreative) && !checkFocus(screen)){
             GuiRenderer.INSTANCE.toggleMode();
         }
-    }
+    }*/
 
     private static boolean checkFocus(GuiScreen gui){
         //Check JEI Filter Focus
-        if(Proxy.isJeiInstalled() && JeiModule.keyableOverlay!=null && JeiModule.keyableOverlay.hasKeyboardFocus())
+        if(Proxy.isJeiInstalled() && JeiModule.hasJEIFocus())
             return true;
 
         /*
