@@ -10,6 +10,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
@@ -31,6 +32,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
@@ -41,19 +43,45 @@ import java.util.Map;
 
 public class GuiHandler {
 
+    private long firstClick = 0;
+
     public static void init() {
         if (Proxy.isJeiInstalled())
             MinecraftForge.EVENT_BUS.register(new GuiHandler());
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
+        JeiModule.updateModule();
         GuiRenderer.INSTANCE.guiInit(event.getGui());
     }
 
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
        GuiRenderer.INSTANCE.guiOpen(event.getGui());
+    }
+
+    @SubscribeEvent
+    public void onGuiClick(GuiScreenEvent.MouseInputEvent.Pre event) {
+        GuiTextField searchField = JeiModule.getJEITextField();
+        if(searchField!=null && Mouse.getEventButton() == 0 && Mouse.getEventButtonState() && GuiRenderer.INSTANCE.canShowIn(event.getGui()))
+        {
+            GuiScreen guiScreen = event.getGui();
+            int x = Mouse.getEventX() * guiScreen.width / guiScreen.mc.displayWidth;
+            int y = guiScreen.height - Mouse.getEventY() * guiScreen.height / guiScreen.mc.displayHeight - 1;
+
+            if (x > searchField.xPosition && x < searchField.xPosition + searchField.width && y > searchField.yPosition && y < searchField.yPosition + searchField.height) {
+                long now = System.currentTimeMillis();
+                if(now-firstClick < 1000)
+                {
+                    GuiRenderer.INSTANCE.toggleMode();
+                    firstClick = 0;
+                }
+                else {
+                    firstClick = now;
+                }
+            }
+        }
     }
 
     @SubscribeEvent
