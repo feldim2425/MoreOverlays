@@ -48,10 +48,10 @@ public class GuiRenderer {
     private static String lastFilterText = "";
     private static boolean emptyFilter = true;
     private static BiMap<Integer, IViewSlot> views = HashBiMap.create();
-    private static String text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.disabled");
+    //private static String text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.disabled");
     private static int highlightTicks = 0;
 
-    private int txtPosY = 0;
+    //private int txtPosY = 0;
     private boolean isCreative = false;
     private boolean allowRender = false;
     private int guiOffsetX = 0;
@@ -61,7 +61,7 @@ public class GuiRenderer {
         if (!canShowIn(gui))
             return;
         highlightTicks = 0;
-        txtPosY = gui.height  - 19 + (16- Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT)/2;
+        //txtPosY = gui.height  - 19 + (16- Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT)/2;
         try {
             Field left = ReflectionHelper.findField(GuiContainer.class, "field_147003_i", "guiLeft"); //Obfuscated -> guiLeft
             left.setAccessible(true);
@@ -78,9 +78,9 @@ public class GuiRenderer {
 
     public void guiOpen(GuiScreen gui) {
         isCreative = (gui instanceof GuiContainerCreative);
-        text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search."+( enabled ? "enabled" : "disabled"));
+        /*text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search."+( enabled ? "enabled" : "disabled"));
         if(enabled && Config.itemsearch_ShowItemSearchKey)
-            text += " - [" + KeyBindings.invSearch.getKeyModifier().getLocalizedComboName(KeyBindings.invSearch.getKeyCode()) + "]";
+            text += " - [" + KeyBindings.invSearch.getKeyModifier().getLocalizedComboName(KeyBindings.invSearch.getKeyCode()) + "]";*/
     }
 
     public void preDraw() {
@@ -163,7 +163,7 @@ public class GuiRenderer {
         GlStateManager.enableAlpha();
         GlStateManager.color(1,1,1,1);
 
-        if(highlightTicks>0 || !Config.itemsearch_FadeoutText || (Config.itemsearch_ShowItemSearchKey && enabled)) {
+        /*if(highlightTicks>0 || !Config.itemsearch_FadeoutText || (Config.itemsearch_ShowItemSearchKey && enabled)) {
             int alpha = 255;
             if(Config.itemsearch_FadeoutText && !(Config.itemsearch_ShowItemSearchKey && enabled)) {
                 alpha = (int) (((float) highlightTicks / (float) TEXT_FADEOUT) * 256);
@@ -181,7 +181,7 @@ public class GuiRenderer {
             GlStateManager.disableBlend();
             GlStateManager.popMatrix();
 
-        }
+        }*/
 
 
         if (!enabled || isCreative || views == null || views.isEmpty())
@@ -264,12 +264,12 @@ public class GuiRenderer {
         if (enabled) {
             lastFilterText = JeiModule.overlay.getFilterText();
             emptyFilter = lastFilterText.replace(" ","").isEmpty();
-            text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.enabled");
+            /*text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.enabled");
             if(Config.itemsearch_ShowItemSearchKey)
-                text += " - [" + KeyBindings.invSearch.getKeyModifier().getLocalizedComboName(KeyBindings.invSearch.getKeyCode()) + "]";
+                text += " - [" + KeyBindings.invSearch.getKeyModifier().getLocalizedComboName(KeyBindings.invSearch.getKeyCode()) + "]";*/
         } else {
             lastFilterText = "";
-            text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.disabled");
+            //text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.disabled");
         }
         highlightTicks=TEXT_FADEOUT;
     }
