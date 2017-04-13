@@ -2,8 +2,7 @@ package at.feldim2425.moreoverlays.itemsearch;
 
 import at.feldim2425.moreoverlays.MoreOverlays;
 import mezz.jei.api.*;
-import mezz.jei.gui.ItemListOverlay;
-import mezz.jei.gui.ItemListOverlayInternal;
+import mezz.jei.gui.overlay.ItemListOverlay;
 import net.minecraft.client.gui.GuiTextField;
 
 import javax.annotation.Nonnull;
@@ -13,7 +12,7 @@ import java.lang.reflect.Field;
 public class JeiModule extends BlankModPlugin {
 
     public static IItemListOverlay overlay;
-    private static ItemListOverlayInternal overlayInternal;
+    private static ItemListOverlay overlayInternal;
     private static GuiTextField textField;
 
     @Override
@@ -24,10 +23,10 @@ public class JeiModule extends BlankModPlugin {
 
     public static void updateModule()
     {
-        if(overlay instanceof ItemListOverlay && ((ItemListOverlay) overlay).getInternal()!=null) {
-            overlayInternal = ((ItemListOverlay) overlay).getInternal();
+        if(overlay instanceof ItemListOverlay) {
+            overlayInternal = ((ItemListOverlay) overlay);
             try {
-                Field searchField = ItemListOverlayInternal.class.getDeclaredField("searchField");
+                Field searchField = ItemListOverlay.class.getDeclaredField("searchField");
                 searchField.setAccessible(true);
                 textField = (GuiTextField) searchField.get(overlayInternal);
             } catch (NoSuchFieldException | IllegalAccessException e) {
