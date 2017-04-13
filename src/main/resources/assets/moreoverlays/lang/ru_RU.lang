@@ -1,11 +1,14 @@
-config.moreoverlays.category.chunkbounds=Границы чанков
-config.moreoverlays.category.itemsearch=Поиск предметов
-config.moreoverlays.category.lightoverlay=Метки темноты
-config.moreoverlays.category.rendersettings=Настройки графики
-gui.config.moreoverlays.tile=Настройки MoreOverlays
-gui.moreoverlays.search.disabled=Поиск предметов запрещён
-gui.moreoverlays.search.enabled=Поиск предметов разрешён
+# Keys
 key.moreoverlays.category=MoreOverlays
 key.moreoverlays.chunkbounds.desc=Показать/Спрятать границы чанков
-key.moreoverlays.invsearch.desc=Разрешить/Запретить поиск предметов
 key.moreoverlays.lightoverlay.desc=Показать/Спрятать метки темноты
+
+# Gui
+gui.config.moreoverlays.tile=Настройки MoreOverlays
+
+
+# Config-GUI
+config.moreoverlays.category.chunkbounds=Границы чанков
+config.moreoverlays.category.lightoverlay=Метки темноты
+config.moreoverlays.category.rendersettings=Настройки графики
+
