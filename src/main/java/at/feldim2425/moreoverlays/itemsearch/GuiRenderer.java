@@ -234,8 +234,14 @@ public class GuiRenderer {
 
     private boolean isSearchedItem(ItemStack stack) {
         if(emptyFilter) return true;
-        else if(stack.getItem() == null) return false;
-        for (ItemStack stack1 : JeiModule.overlay.getFilteredStacks()) {
+        else if(stack.isEmpty()) return false;
+        ItemStack stack1;
+        for (Object ingredient : JeiModule.filter.getFilteredIngredients()) {
+            if(ingredient instanceof ItemStack)
+                stack1 = (ItemStack) ingredient;
+            else
+                continue;
+
             if (stack1.isItemEqual(stack) || (stack1.getItem() == stack.getItem() && stack1.getItem().isDamageable()))
                 return true;
         }
@@ -245,8 +251,8 @@ public class GuiRenderer {
     public void tick() {
         if (!canShowIn(Minecraft.getMinecraft().currentScreen))
             return;
-        if (enabled && !JeiModule.overlay.getFilterText().equals(lastFilterText)) {
-            lastFilterText = JeiModule.overlay.getFilterText();
+        if (enabled && !JeiModule.filter.getFilterText().equals(lastFilterText)) {
+            lastFilterText = JeiModule.filter.getFilterText();
             emptyFilter = lastFilterText.replace(" ","").isEmpty();
         }
 
@@ -262,7 +268,7 @@ public class GuiRenderer {
     public void toggleMode() {
         enabled = !enabled;
         if (enabled) {
-            lastFilterText = JeiModule.overlay.getFilterText();
+            lastFilterText = JeiModule.filter.getFilterText();
             emptyFilter = lastFilterText.replace(" ","").isEmpty();
             /*text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.enabled");
             if(Config.itemsearch_ShowItemSearchKey)
