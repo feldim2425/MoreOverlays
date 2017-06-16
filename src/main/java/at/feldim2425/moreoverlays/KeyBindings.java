@@ -1,26 +1,18 @@
 package at.feldim2425.moreoverlays;
 
 import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
-import at.feldim2425.moreoverlays.itemsearch.GuiHandler;
-import at.feldim2425.moreoverlays.itemsearch.GuiRenderer;
 import at.feldim2425.moreoverlays.itemsearch.JeiModule;
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
-import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 
 import java.lang.reflect.Field;

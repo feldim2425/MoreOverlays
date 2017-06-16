@@ -2,7 +2,6 @@ package at.feldim2425.moreoverlays.itemsearch.integration;
 
 import at.feldim2425.moreoverlays.api.itemsearch.IOverrideSlotPos;
 import at.feldim2425.moreoverlays.api.itemsearch.IViewSlot;
-import at.feldim2425.moreoverlays.api.itemsearch.SlotHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import slimeknights.mantle.client.gui.GuiMultiModule;

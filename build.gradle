@@ -9,7 +9,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -39,7 +39,7 @@ group= "at.feldim2425.moreoverlays" // http://maven.apache.org/guides/mini/guide
 archivesBaseName = "moreoverlays"
 
 minecraft {
-    version = "1.11.2-13.20.0.2315"
+    version = "14.21.0.2330"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -47,7 +47,7 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20170608"
+    mappings = "snapshot_20170615"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
@@ -62,7 +62,7 @@ dependencies {
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
       
-	deobfCompile "mezz.jei:jei_1.11.2:${config.jei.version}"
+	deobfCompile "mezz.jei:jei_1.12:${config.jei.version}"
 	deobfProvided "slimeknights.mantle:Mantle:1.11.2-${config.mantle.version}"
 
     // real examples

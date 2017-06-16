@@ -1,35 +1,23 @@
 package at.feldim2425.moreoverlays.itemsearch;
 
-import at.feldim2425.moreoverlays.KeyBindings;
 import at.feldim2425.moreoverlays.MoreOverlays;
-import at.feldim2425.moreoverlays.Proxy;
 import at.feldim2425.moreoverlays.api.itemsearch.IViewSlot;
 import at.feldim2425.moreoverlays.api.itemsearch.SlotHandler;
-import at.feldim2425.moreoverlays.config.Config;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import mezz.jei.api.JEIPlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
@@ -115,29 +103,29 @@ public class GuiRenderer {
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.pushMatrix();
         Tessellator tess = Tessellator.getInstance();
-        VertexBuffer buffer = tess.getBuffer();
+        BufferBuilder buffer = tess.getBuffer();
         GlStateManager.color(1, 1, 0, 1);
 
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-        buffer.pos(textField.xPosition + textField.width + FRAME_RADIUS, textField.yPosition - FRAME_RADIUS, 1000).endVertex();
-        buffer.pos(textField.xPosition - FRAME_RADIUS,textField.yPosition - FRAME_RADIUS, 1000).endVertex();
-        buffer.pos(textField.xPosition - FRAME_RADIUS, textField.yPosition, 1000).endVertex();
-        buffer.pos(textField.xPosition + textField.width + FRAME_RADIUS, textField.yPosition, 1000).endVertex();
+        buffer.pos(textField.x + textField.width + FRAME_RADIUS, textField.y - FRAME_RADIUS, 1000).endVertex();
+        buffer.pos(textField.x - FRAME_RADIUS,textField.y - FRAME_RADIUS, 1000).endVertex();
+        buffer.pos(textField.x - FRAME_RADIUS, textField.y, 1000).endVertex();
+        buffer.pos(textField.x + textField.width + FRAME_RADIUS, textField.y, 1000).endVertex();
 
-        buffer.pos(textField.xPosition, textField.yPosition, 1000).endVertex();
-        buffer.pos(textField.xPosition - FRAME_RADIUS,textField.yPosition, 1000).endVertex();
-        buffer.pos(textField.xPosition - FRAME_RADIUS, textField.yPosition+textField.height, 1000).endVertex();
-        buffer.pos(textField.xPosition, textField.yPosition+textField.height, 1000).endVertex();
+        buffer.pos(textField.x, textField.y, 1000).endVertex();
+        buffer.pos(textField.x - FRAME_RADIUS,textField.y, 1000).endVertex();
+        buffer.pos(textField.x - FRAME_RADIUS, textField.y+textField.height, 1000).endVertex();
+        buffer.pos(textField.x, textField.y+textField.height, 1000).endVertex();
 
-        buffer.pos(textField.xPosition + textField.width + FRAME_RADIUS, textField.yPosition +textField.height, 1000).endVertex();
-        buffer.pos(textField.xPosition - FRAME_RADIUS,textField.yPosition +textField.height, 1000).endVertex();
-        buffer.pos(textField.xPosition - FRAME_RADIUS, textField.yPosition +textField.height + FRAME_RADIUS, 1000).endVertex();
-        buffer.pos(textField.xPosition + textField.width + FRAME_RADIUS, textField.yPosition +textField.height + FRAME_RADIUS, 1000).endVertex();
+        buffer.pos(textField.x + textField.width + FRAME_RADIUS, textField.y +textField.height, 1000).endVertex();
+        buffer.pos(textField.x - FRAME_RADIUS,textField.y +textField.height, 1000).endVertex();
+        buffer.pos(textField.x - FRAME_RADIUS, textField.y +textField.height + FRAME_RADIUS, 1000).endVertex();
+        buffer.pos(textField.x + textField.width + FRAME_RADIUS, textField.y +textField.height + FRAME_RADIUS, 1000).endVertex();
 
-        buffer.pos(textField.xPosition + textField.width+ FRAME_RADIUS, textField.yPosition, 1000).endVertex();
-        buffer.pos(textField.xPosition  + textField.width ,textField.yPosition, 1000).endVertex();
-        buffer.pos(textField.xPosition  + textField.width, textField.yPosition+textField.height, 1000).endVertex();
-        buffer.pos(textField.xPosition + textField.width + FRAME_RADIUS, textField.yPosition+textField.height, 1000).endVertex();
+        buffer.pos(textField.x + textField.width+ FRAME_RADIUS, textField.y, 1000).endVertex();
+        buffer.pos(textField.x  + textField.width ,textField.y, 1000).endVertex();
+        buffer.pos(textField.x  + textField.width, textField.y+textField.height, 1000).endVertex();
+        buffer.pos(textField.x + textField.width + FRAME_RADIUS, textField.y+textField.height, 1000).endVertex();
 
         tess.draw();
         GlStateManager.color(1, 1, 1, 1);
@@ -188,7 +176,7 @@ public class GuiRenderer {
             return;
 
         Tessellator tess = Tessellator.getInstance();
-        VertexBuffer renderer = tess.getBuffer();
+        BufferBuilder renderer = tess.getBuffer();
 
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
