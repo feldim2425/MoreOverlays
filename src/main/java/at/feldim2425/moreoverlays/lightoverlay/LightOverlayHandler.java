@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class LightOverlayHandler {
 
-    public static boolean enabled = false;
+    private static boolean enabled = false;
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(new LightOverlayHandler());
@@ -28,6 +28,14 @@ public class LightOverlayHandler {
             LightOverlayRenderer.refreshCache();
         }
 
+    }
+
+    public static boolean isEnabled() {
+        return enabled;
+    }
+
+    public static void setEnabled(boolean enabled) {
+        LightOverlayHandler.enabled = enabled;
     }
 
     public static void toggleMode() {
