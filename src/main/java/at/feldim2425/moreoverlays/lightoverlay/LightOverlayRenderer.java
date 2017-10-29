@@ -19,16 +19,19 @@ import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class LightOverlayRenderer {
 
     private final static ResourceLocation BLANK_TEX = new ResourceLocation(MoreOverlays.MOD_ID, "textures/blank.png");
     private final static AxisAlignedBB TEST_BB = new AxisAlignedBB(0.6D/2D, 0, 0.6D/2D, 1D-0.6D/2D, 1D, 1D-0.6D/2D);
-    private static Map.Entry<BlockPos, Byte>[] overlayCache;
+    private static List<Pair<BlockPos, Byte>> overlayCache = new LinkedList<>();
     private static RenderManager render = Minecraft.getMinecraft().getRenderManager();
 
 
@@ -48,15 +51,16 @@ public class LightOverlayRenderer {
         float ng = ((float)((Config.render_spawnNColor>>8) & 0xFF))/255F;
         float nb = ((float)(Config.render_spawnNColor & 0xFF))/255F;
 
-        for (int i = 0; i < overlayCache.length; i++) {
-            Map.Entry<BlockPos, Byte> entry = overlayCache[i];
-            Byte mode = entry.getValue();
-            if (mode == null || mode == 0)
-                continue;
-            else if (mode == 1)
-                renderCross(entry.getKey(), nr, ng, nb);
-            else if (mode == 2)
-                renderCross(entry.getKey(), ar, ag, ab);
+        synchronized (overlayCache) {
+            for (Pair<BlockPos, Byte> entry : overlayCache) {
+                Byte mode = entry.getValue();
+                if (mode == null || mode == 0)
+                    continue;
+                else if (mode == 1)
+                    renderCross(entry.getKey(), nr, ng, nb);
+                else if (mode == 2)
+                    renderCross(entry.getKey(), ar, ag, ab);
+            }
         }
 
         GlStateManager.popMatrix();
@@ -75,26 +79,26 @@ public class LightOverlayRenderer {
         int y1 = (py - Config.light_DownRange < 0) ? 0 : py-Config.light_DownRange;
         int y2 = (py + Config.light_UpRange > player.world.getHeight()-1) ? player.world.getHeight()-1 : py+Config.light_UpRange;
 
-        HashMap<BlockPos, Byte> newCache = new HashMap<>();
-        for (int xo = -Config.light_HRange; xo <= Config.light_HRange; xo++) {
-            for (int zo = -Config.light_HRange; zo <= Config.light_HRange; zo++) {
-                BlockPos pos1 = new BlockPos(px + xo, py, pz + zo);
-                Biome biome = player.world.getBiome(pos1);
+        synchronized (overlayCache) {
+            overlayCache.clear();
+            for (int xo = -Config.light_HRange; xo <= Config.light_HRange; xo++) {
+                for (int zo = -Config.light_HRange; zo <= Config.light_HRange; zo++) {
+                    BlockPos pos1 = new BlockPos(px + xo, py, pz + zo);
+                    Biome biome = player.world.getBiome(pos1);
 
-                if (biome.getSpawningChance() <= 0 || biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty())
-                    continue;
+                    if (biome.getSpawningChance() <= 0 || biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty())
+                        continue;
 
-                Chunk chunk = player.world.getChunkFromBlockCoords(pos1);
-                for (int y = y1; y <= y2; y++) {
-                    BlockPos pos = new BlockPos(px + xo, y, pz + zo);
-                    byte mode = getSpawnModeAt(pos, chunk, player.world);
-                    if (mode != 0)
-                        newCache.put(pos, mode);
+                    Chunk chunk = player.world.getChunkFromBlockCoords(pos1);
+                    for (int y = y1; y <= y2; y++) {
+                        BlockPos pos = new BlockPos(px + xo, y, pz + zo);
+                        byte mode = getSpawnModeAt(pos, chunk, player.world);
+                        if (mode != 0)
+                            overlayCache.add(Pair.of(pos, mode));
+                    }
                 }
             }
         }
-
-        overlayCache = newCache.entrySet().toArray(new Map.Entry[newCache.size()]);
     }
 
     private static byte getSpawnModeAt(BlockPos pos, Chunk chunk, World world){
