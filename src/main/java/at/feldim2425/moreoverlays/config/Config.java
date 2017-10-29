@@ -1,6 +1,11 @@
 package at.feldim2425.moreoverlays.config;
 
+import net.minecraft.init.Items;
+
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static at.feldim2425.moreoverlays.config.ConfigHandler.config;
 
@@ -15,6 +20,7 @@ public class Config {
     public static int chunk_EdgeRadius;
     public static boolean chunk_ShowMiddle;
 
+    public static Set<String> itemsearch_matchNbt;
     //public static boolean itemsearch_ShowItemSearchKey;
     //public static boolean itemsearch_FadeoutText;
 
@@ -40,7 +46,10 @@ public class Config {
         chunk_EdgeRadius = config.get("chunkbounds","radius", 1, "Radius (in Chunks) to show the edges (red line)").getInt();
         chunk_ShowMiddle = config.get("chunkbounds","middle", true, "Show the middle of the current Chunk (yellow line)").getBoolean();
 
-        //config.setCategoryComment("itemsearch","Settings for the item search feature");
+        config.setCategoryComment("itemsearch","Settings for the item search feature");
+        String[] item_useNBT = config.get("itemsearch","matchNBT",new String[]{Items.ENCHANTED_BOOK.getRegistryName().toString()}, "Items where the NBT of an Item matters and should not be ignored").getStringList();
+        itemsearch_matchNbt = new HashSet<>();
+        Arrays.asList(item_useNBT).forEach((item) -> itemsearch_matchNbt.add(item));
         //itemsearch_FadeoutText = config.get("itemsearch","fadouttext", true, "Show the 'Item Search' text only for one secound and fade out").getBoolean();
         //itemsearch_ShowItemSearchKey = config.get("itemsearch","showkey", true, "If the Item Search is enabled show the key to disable it").getBoolean();
 
@@ -60,7 +69,7 @@ public class Config {
     public static void getCategories(List<String> list){
         list.add("lightoverlay");
         list.add("chunkbounds");
-        //list.add("itemsearch");
+        list.add("itemsearch");
         list.add("rendersettings");
     }
 }

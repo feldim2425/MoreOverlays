@@ -3,6 +3,7 @@ package at.feldim2425.moreoverlays.itemsearch;
 import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.api.itemsearch.IViewSlot;
 import at.feldim2425.moreoverlays.api.itemsearch.SlotHandler;
+import at.feldim2425.moreoverlays.config.Config;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.client.Minecraft;
@@ -230,10 +231,17 @@ public class GuiRenderer {
             else
                 continue;
 
-            if (stack1.isItemEqual(stack) || (stack1.getItem() == stack.getItem() && stack1.getItem().isDamageable()))
+            if ((stack1.isItemEqual(stack) || (stack1.isItemEqualIgnoreDurability(stack1) && stack1.getItem().isDamageable()))
+                    && matchNBT(stack,stack1))
                 return true;
         }
         return false;
+    }
+    private boolean matchNBT(ItemStack a, ItemStack b){
+        if(!Config.itemsearch_matchNbt.contains(a.getItem().getRegistryName() == null ? "" : a.getItem().getRegistryName().toString())){
+            return true;
+        }
+        return a.hasTagCompound() == b.hasTagCompound() && (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
     }
 
     public void tick() {
