@@ -51,7 +51,7 @@ public class ChunkBoundsRenderer {
             renderEdge(x2, z2, h);
         }
 
-        if(ChunkBoundsHandler.mode==2) {
+        if(ChunkBoundsHandler.getMode() == ChunkBoundsHandler.RenderMode.GRID) {
             GlStateManager.color(((float)((Config.render_chunkGridColor>>16) & 0xFF))/255F, ((float)((Config.render_chunkGridColor>>8) & 0xFF))/255F, ((float)(Config.render_chunkGridColor & 0xFF))/255F);
             renderHGrid(x0, z0 + 0.005, x1, z0 + 0.005, h1, h2);
             renderVXGrid(x0, x1, z0 + 0.005, h1, h2);

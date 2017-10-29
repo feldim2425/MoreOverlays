@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ChunkBoundsHandler {
 
-    public static byte mode = 0;
+    private static RenderMode mode = RenderMode.NONE;
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(new ChunkBoundsHandler());
@@ -14,13 +14,36 @@ public class ChunkBoundsHandler {
 
     @SubscribeEvent
     public void renderWorldLastEvent(RenderWorldLastEvent event) {
-        if (mode!=0)
+        if (mode != RenderMode.NONE)
             ChunkBoundsRenderer.renderOverlays();
     }
 
+    public static RenderMode getMode() {
+        return mode;
+    }
+
+    public static void setMode(RenderMode mode) {
+        ChunkBoundsHandler.mode = mode;
+    }
+
     public static void toggleMode(){
-        mode++;
-        if(mode>2)
-            mode=0;
+        switch (mode){
+            case NONE:
+                mode = RenderMode.CORNERS;
+                break;
+            case CORNERS:
+                mode = RenderMode.GRID;
+                break;
+            case GRID:
+            default:
+                mode = RenderMode.NONE;
+                break;
+        }
+    }
+
+    public enum RenderMode{
+        NONE,
+        CORNERS,
+        GRID
     }
 }
