@@ -266,12 +266,8 @@ public class GuiRenderer {
         if (enabled) {
             lastFilterText = JeiModule.filter.getFilterText();
             emptyFilter = lastFilterText.replace(" ","").isEmpty();
-            /*text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.enabled");
-            if(Config.itemsearch_ShowItemSearchKey)
-                text += " - [" + KeyBindings.invSearch.getKeyModifier().getLocalizedComboName(KeyBindings.invSearch.getKeyCode()) + "]";*/
         } else {
             lastFilterText = "";
-            //text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.disabled");
         }
         highlightTicks=TEXT_FADEOUT;
     }
