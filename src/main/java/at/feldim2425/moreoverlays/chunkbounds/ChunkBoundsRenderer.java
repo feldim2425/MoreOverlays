@@ -20,10 +20,8 @@ public class ChunkBoundsRenderer {
     public static void renderOverlays() {
         EntityPlayer player = Minecraft.getMinecraft().player;
 
-        GlStateManager.disableAlpha();
         Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
         GlStateManager.pushMatrix();
-        GlStateManager.disableLighting();
         GL11.glLineWidth(Config.render_chunkLineWidth);
         GlStateManager.translate(-render.viewerPosX, -render.viewerPosY, -render.viewerPosZ);
 
@@ -68,8 +66,6 @@ public class ChunkBoundsRenderer {
             renderVZGrid(x0 + 0.005, z0, z1, h1, h2);
         }
 
-        GlStateManager.enableLighting();
-        GlStateManager.enableAlpha();
         GlStateManager.popMatrix();
     }
 

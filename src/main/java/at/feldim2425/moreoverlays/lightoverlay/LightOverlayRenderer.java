@@ -37,7 +37,6 @@ public class LightOverlayRenderer {
             return;
         Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
         GlStateManager.pushMatrix();
-        GlStateManager.disableLighting();
         GL11.glLineWidth(Config.render_spawnLineWidth);
         GlStateManager.translate(-render.viewerPosX, -render.viewerPosY, -render.viewerPosZ);
 
@@ -60,7 +59,6 @@ public class LightOverlayRenderer {
                 renderCross(entry.getKey(), ar, ag, ab);
         }
 
-        GlStateManager.enableLighting();
         GlStateManager.popMatrix();
     }
 
