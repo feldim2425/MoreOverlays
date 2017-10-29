@@ -18,14 +18,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class LightOverlayRenderer {
 
@@ -76,8 +73,8 @@ public class LightOverlayRenderer {
         int py = Math.min(Math.max((int) player.posY, 0), player.world.getHeight()-1);
         int pz = (int) Math.floor(player.posZ);
 
-        int y1 = (py - Config.light_DownRange < 0) ? 0 : py-Config.light_DownRange;
-        int y2 = (py + Config.light_UpRange > player.world.getHeight()-1) ? player.world.getHeight()-1 : py+Config.light_UpRange;
+        int y1 =  py-Config.light_DownRange;
+        int y2 =  py+Config.light_UpRange;
 
         synchronized (overlayCache) {
             overlayCache.clear();
@@ -89,10 +86,9 @@ public class LightOverlayRenderer {
                     if (biome.getSpawningChance() <= 0 || biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty())
                         continue;
 
-                    Chunk chunk = player.world.getChunkFromBlockCoords(pos1);
                     for (int y = y1; y <= y2; y++) {
                         BlockPos pos = new BlockPos(px + xo, y, pz + zo);
-                        byte mode = getSpawnModeAt(pos, chunk, player.world);
+                        byte mode = getSpawnModeAt(pos, player.world);
                         if (mode != 0)
                             overlayCache.add(Pair.of(pos, mode));
                     }
@@ -101,8 +97,8 @@ public class LightOverlayRenderer {
         }
     }
 
-    private static byte getSpawnModeAt(BlockPos pos, Chunk chunk, World world){
-        if(chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= Config.light_SaveLevel)
+    private static byte getSpawnModeAt(BlockPos pos, World world){
+        if(world.getLightFor(EnumSkyBlock.BLOCK, pos) >= Config.light_SaveLevel)
             return 0;
 
         IBlockState state= world.getBlockState(pos.down());
@@ -112,7 +108,7 @@ public class LightOverlayRenderer {
         if(!checkCollision(pos,world))
             return 0;
 
-        if(chunk.getLightFor(EnumSkyBlock.SKY, pos) >= Config.light_SaveLevel)
+        if(world.getLightFor(EnumSkyBlock.SKY, pos) >= Config.light_SaveLevel)
             return 1;
 
         return 2;
@@ -159,6 +155,6 @@ public class LightOverlayRenderer {
     }
 
     public static void clearCache() {
-        overlayCache=null;
+        overlayCache.clear();
     }
 }
