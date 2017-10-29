@@ -24,17 +24,11 @@ plugins {
 tasks.withType(JavaCompile){
 	options.compilerArgs += '-Xlint:-deprecation'
 
-    	sourceCompatibility = "1.8"
+    sourceCompatibility = "1.8"
    	targetCompatibility = "1.8"
 }
 
-file "build.properties" withReader {
-    def prop = new Properties()
-    prop.load(it)
-    ext.config = new ConfigSlurper().parse prop
-}
-
-version = "${config.moov.version}"
+version = "1.12"
 group= "at.feldim2425.moreoverlays" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "moreoverlays"
 
@@ -62,8 +56,8 @@ dependencies {
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
       
-	deobfCompile "mezz.jei:jei_1.12.1:${config.jei.version}"
-	deobfProvided "slimeknights.mantle:Mantle:1.11.2-${config.mantle.version}"
+	deobfCompile "mezz.jei:jei_1.12.2:4.7.11.102"
+	deobfProvided "slimeknights.mantle:Mantle:1.12-1.3.1.21"
 
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
