@@ -70,7 +70,7 @@ public class LightOverlayRenderer {
 
         EntityPlayer player = Minecraft.getMinecraft().player;
         int px = (int) Math.floor(player.posX);
-        int py = Math.min(Math.max((int) player.posY, 0), player.world.getHeight()-1);
+        int py = (int) Math.floor(player.posY);
         int pz = (int) Math.floor(player.posZ);
 
         int y1 =  py-Config.light_DownRange;
