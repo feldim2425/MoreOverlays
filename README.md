@@ -1,5 +1,5 @@
 # MoreOverlays
-![CurseForge](http://cf.way2muchnoise.eu/243478.svg)  ![CurseForge](http://cf.way2muchnoise.eu/versions/243478.svg)
+[![CurseForge](http://cf.way2muchnoise.eu/243478.svg)](https://minecraft.curseforge.com/projects/more-overlays)  [![CurseForge](http://cf.way2muchnoise.eu/versions/243478.svg)](https://minecraft.curseforge.com/projects/more-overlays)
 
 
 Adds some overlays from the 1.7.10 NEI
