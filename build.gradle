@@ -27,7 +27,7 @@ tasks.withType(JavaCompile) {
     targetCompatibility = "1.8"
 }
 
-version = "1.13"
+version = "1.14"
 group = "at.feldim2425.moreoverlays" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "moreoverlays"
 
