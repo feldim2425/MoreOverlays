@@ -231,7 +231,7 @@ public class GuiRenderer {
             else
                 continue;
 
-            if ((stack1.isItemEqual(stack) || (stack1.isItemEqualIgnoreDurability(stack1) && stack1.getItem().isDamageable()))
+            if ((stack1.isItemEqual(stack) || (stack1.isItemEqualIgnoreDurability(stack) && stack1.getItem().isDamageable()))
                     && matchNBT(stack,stack1))
                 return true;
         }
