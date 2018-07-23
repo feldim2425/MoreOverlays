@@ -24,14 +24,16 @@ public class LightOverlayHandler {
 
 	public static void toggleMode() {
 		enabled = !enabled;
-		if (!enabled)
+		if (!enabled) {
 			LightOverlayRenderer.clearCache();
+		}
 	}
 
 	@SubscribeEvent
 	public void renderWorldLastEvent(RenderWorldLastEvent event) {
-		if (enabled)
+		if (enabled) {
 			LightOverlayRenderer.renderOverlays();
+		}
 	}
 
 	@SubscribeEvent

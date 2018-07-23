@@ -22,6 +22,7 @@ public class ChunkBoundsRenderer {
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
 		GlStateManager.pushMatrix();
+		//GlStateManager.disableDepth();
 		GL11.glLineWidth(Config.render_chunkLineWidth);
 		GlStateManager.translate(-render.viewerPosX, -render.viewerPosY, -render.viewerPosZ);
 
@@ -65,7 +66,7 @@ public class ChunkBoundsRenderer {
 			renderHGrid(x0 + 0.005, z1, x0 + 0.005, z0, h1, h2);
 			renderVZGrid(x0 + 0.005, z0, z1, h1, h2);
 		}
-
+		GlStateManager.enableDepth();
 		GlStateManager.popMatrix();
 	}
 

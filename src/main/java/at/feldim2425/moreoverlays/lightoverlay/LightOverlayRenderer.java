@@ -28,13 +28,11 @@ public class LightOverlayRenderer {
 
 	private final static ResourceLocation BLANK_TEX = new ResourceLocation(MoreOverlays.MOD_ID, "textures/blank.png");
 	private final static AxisAlignedBB TEST_BB = new AxisAlignedBB(0.6D / 2D, 0, 0.6D / 2D, 1D - 0.6D / 2D, 1D, 1D - 0.6D / 2D);
-	private static List<Pair<BlockPos, Byte>> overlayCache = new LinkedList<>();
+	private static final List<Pair<BlockPos, Byte>> overlayCache = new LinkedList<>();
 	private static RenderManager render = Minecraft.getMinecraft().getRenderManager();
 
 
 	public static void renderOverlays() {
-		if (overlayCache == null)
-			return;
 		Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
 		GlStateManager.pushMatrix();
 		GL11.glLineWidth(Config.render_spawnLineWidth);
