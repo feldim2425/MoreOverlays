@@ -29,8 +29,7 @@ public class GuiRenderer {
 	public static final GuiRenderer INSTANCE = new GuiRenderer();
 
 	private static final float OVERLAY_ZLEVEL = 299F;
-	private static final int TEXT_FADEOUT = 20;
-	private static final int FRAME_RADIUS = 1;
+	private static final float FRAME_RADIUS = 1.0F;
 
 	private static boolean enabled = false;
 
@@ -38,7 +37,6 @@ public class GuiRenderer {
 	private static boolean emptyFilter = true;
 	private static BiMap<Integer, IViewSlot> views = HashBiMap.create();
 	//private static String text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.disabled");
-	private static int highlightTicks = 0;
 
 	//private int txtPosY = 0;
 	private boolean isCreative = false;
@@ -50,7 +48,6 @@ public class GuiRenderer {
 		if (!canShowIn(gui)) {
 			return;
 		}
-		highlightTicks = 0;
 		//txtPosY = gui.height  - 19 + (16- Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT)/2;
 		try {
 			Field left = ReflectionHelper.findField(GuiContainer.class, "field_147003_i", "guiLeft"); //Obfuscated -> guiLeft
@@ -103,26 +100,31 @@ public class GuiRenderer {
 		BufferBuilder buffer = tess.getBuffer();
 		GlStateManager.color(1, 1, 0, 1);
 
+		float x = textField.x + 2;
+		float y = textField.y + 2;
+		float width = textField.width - 4;
+		float height = textField.height - 4;
+
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		buffer.pos(textField.x + textField.width + FRAME_RADIUS, textField.y - FRAME_RADIUS, 1000).endVertex();
-		buffer.pos(textField.x - FRAME_RADIUS, textField.y - FRAME_RADIUS, 1000).endVertex();
-		buffer.pos(textField.x - FRAME_RADIUS, textField.y, 1000).endVertex();
-		buffer.pos(textField.x + textField.width + FRAME_RADIUS, textField.y, 1000).endVertex();
+		buffer.pos(x + width + FRAME_RADIUS, y - FRAME_RADIUS, 1000).endVertex();
+		buffer.pos(x - FRAME_RADIUS, y - FRAME_RADIUS, 1000).endVertex();
+		buffer.pos(x - FRAME_RADIUS, y, 1000).endVertex();
+		buffer.pos(x + width + FRAME_RADIUS, y, 1000).endVertex();
 
-		buffer.pos(textField.x, textField.y, 1000).endVertex();
-		buffer.pos(textField.x - FRAME_RADIUS, textField.y, 1000).endVertex();
-		buffer.pos(textField.x - FRAME_RADIUS, textField.y + textField.height, 1000).endVertex();
-		buffer.pos(textField.x, textField.y + textField.height, 1000).endVertex();
+		buffer.pos(x, y, 1000).endVertex();
+		buffer.pos(x - FRAME_RADIUS, y, 1000).endVertex();
+		buffer.pos(x - FRAME_RADIUS, y + height, 1000).endVertex();
+		buffer.pos(x, y + height, 1000).endVertex();
 
-		buffer.pos(textField.x + textField.width + FRAME_RADIUS, textField.y + textField.height, 1000).endVertex();
-		buffer.pos(textField.x - FRAME_RADIUS, textField.y + textField.height, 1000).endVertex();
-		buffer.pos(textField.x - FRAME_RADIUS, textField.y + textField.height + FRAME_RADIUS, 1000).endVertex();
-		buffer.pos(textField.x + textField.width + FRAME_RADIUS, textField.y + textField.height + FRAME_RADIUS, 1000).endVertex();
+		buffer.pos(x + width + FRAME_RADIUS, y + height, 1000).endVertex();
+		buffer.pos(x - FRAME_RADIUS, y + height, 1000).endVertex();
+		buffer.pos(x - FRAME_RADIUS, y + height + FRAME_RADIUS, 1000).endVertex();
+		buffer.pos(x + width + FRAME_RADIUS, y + height + FRAME_RADIUS, 1000).endVertex();
 
-		buffer.pos(textField.x + textField.width + FRAME_RADIUS, textField.y, 1000).endVertex();
-		buffer.pos(textField.x + textField.width, textField.y, 1000).endVertex();
-		buffer.pos(textField.x + textField.width, textField.y + textField.height, 1000).endVertex();
-		buffer.pos(textField.x + textField.width + FRAME_RADIUS, textField.y + textField.height, 1000).endVertex();
+		buffer.pos(x + width + FRAME_RADIUS, y, 1000).endVertex();
+		buffer.pos(x + width, y, 1000).endVertex();
+		buffer.pos(x + width, y + height, 1000).endVertex();
+		buffer.pos(x + width + FRAME_RADIUS, y + height, 1000).endVertex();
 
 		tess.draw();
 		GlStateManager.color(1, 1, 1, 1);
@@ -231,25 +233,19 @@ public class GuiRenderer {
 				continue;
 			}
 
-            if ((stack1.isItemEqual(stack) || (stack1.isItemEqualIgnoreDurability(stack) && stack1.getItem().isDamageable()))
-                    && matchNBT(stack,stack1))
-                return true;
+            if (stack1.isItemEqualIgnoreDurability(stack) && matchNBT(stack,stack1)) {
+				return true;
+			}
         }
         return false;
     }
+
     private boolean matchNBT(ItemStack a, ItemStack b){
         if(!Config.itemsearch_matchNbt.contains(a.getItem().getRegistryName() == null ? "" : a.getItem().getRegistryName().toString())){
             return true;
         }
         return a.hasTagCompound() == b.hasTagCompound() && (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
     }
-
-	private boolean matchNBT(ItemStack a, ItemStack b) {
-		if (!Config.itemsearch_matchNbt.contains(a.getItem().getRegistryName() == null ? "" : a.getItem().getRegistryName().toString())) {
-			return true;
-		}
-		return a.hasTagCompound() == b.hasTagCompound() && (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
-	}
 
 	public void tick() {
 		if (!canShowIn(Minecraft.getMinecraft().currentScreen))
@@ -265,10 +261,6 @@ public class GuiRenderer {
 		else if (views != null) {
 			views.clear();
 		}
-
-		if (highlightTicks > 0) {
-			highlightTicks--;
-		}
 	}
 
 	public void toggleMode() {
@@ -280,7 +272,6 @@ public class GuiRenderer {
 		else {
 			lastFilterText = "";
 		}
-		highlightTicks = TEXT_FADEOUT;
 	}
 
 	public boolean isEnabled() {
