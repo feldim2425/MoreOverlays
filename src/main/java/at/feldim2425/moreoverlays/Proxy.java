@@ -9,28 +9,28 @@ import net.minecraftforge.fml.common.Loader;
 
 public class Proxy {
 
-    private static boolean enable_jei = false;
+	private static boolean enable_jei = false;
 
-    public void preInit() {
-        enable_jei = Loader.isModLoaded("jei");
+	public static boolean isJeiInstalled() {
+		return enable_jei;
+	}
 
-        KeyBindings.init();
+	public void preInit() {
+		enable_jei = Loader.isModLoaded("jei");
 
-        LightOverlayHandler.init();
-        ChunkBoundsHandler.init();
-        GuiHandler.init();
-    }
+		KeyBindings.init();
 
-    public void init() {
+		LightOverlayHandler.init();
+		ChunkBoundsHandler.init();
+		GuiHandler.init();
+	}
 
-    }
+	public void init() {
 
-    public void postInit() {
-        if(enable_jei && Loader.isModLoaded("mantle"))
-            SlotHandler.INSTANCE.addPositionOverride(new MantleGuiModuleOverride());
-    }
+	}
 
-    public static boolean isJeiInstalled() {
-        return enable_jei;
-    }
+	public void postInit() {
+		if (enable_jei && Loader.isModLoaded("mantle"))
+			SlotHandler.INSTANCE.addPositionOverride(new MantleGuiModuleOverride());
+	}
 }

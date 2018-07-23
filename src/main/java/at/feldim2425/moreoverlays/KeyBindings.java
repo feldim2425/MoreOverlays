@@ -19,28 +19,41 @@ import java.lang.reflect.Field;
 
 public class KeyBindings {
 
-    public static KeyBinding lightOverlay = new KeyBinding("key." + MoreOverlays.MOD_ID + ".lightoverlay.desc", KeyConflictContext.IN_GAME, Keyboard.KEY_F7, "key." + MoreOverlays.MOD_ID + ".category");
-    public static KeyBinding chunkBounds = new KeyBinding("key." + MoreOverlays.MOD_ID + ".chunkbounds.desc", KeyConflictContext.IN_GAME, Keyboard.KEY_F9, "key." + MoreOverlays.MOD_ID + ".category");
+	public static KeyBinding lightOverlay = new KeyBinding("key." + MoreOverlays.MOD_ID + ".lightoverlay.desc", KeyConflictContext.IN_GAME, Keyboard.KEY_F7, "key." + MoreOverlays.MOD_ID + ".category");
+	public static KeyBinding chunkBounds = new KeyBinding("key." + MoreOverlays.MOD_ID + ".chunkbounds.desc", KeyConflictContext.IN_GAME, Keyboard.KEY_F9, "key." + MoreOverlays.MOD_ID + ".category");
 
-    public static void init() {
-        ClientRegistry.registerKeyBinding(lightOverlay);
-        ClientRegistry.registerKeyBinding(chunkBounds);
+	public static void init() {
+		ClientRegistry.registerKeyBinding(lightOverlay);
+		ClientRegistry.registerKeyBinding(chunkBounds);
 
-        MinecraftForge.EVENT_BUS.register(new KeyBindings());
-    }
+		MinecraftForge.EVENT_BUS.register(new KeyBindings());
+	}
 
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent(receiveCanceled = true)
-    public void onKeyEvent(InputEvent.KeyInputEvent event) {
-        if (lightOverlay.isPressed()) {
-            LightOverlayHandler.toggleMode();
-        }
+	private static boolean checkFocus(GuiScreen gui) {
+		//Check JEI Filter Focus
+		if (Proxy.isJeiInstalled() && JeiModule.hasJEIFocus())
+			return true;
 
-        if (chunkBounds.isPressed()) {
-            ChunkBoundsHandler.toggleMode();
-        }
+		/*
+		 * Check Gui Textfield focus
+		 * It checks every Field in the class if it contains a GuiTextField or a Object that is a instance of GuiTextField
+		 * Then it makes them Accessible and check if it is focused or not.
+		 * It should work with every Container. Also with GuiContainers from other mods
+		 */
+		Field[] fields = gui.getClass().getDeclaredFields();
+		for (Field field : fields) {
+			if (GuiTextField.class.isAssignableFrom(field.getType())) {
+				try {
+					field.setAccessible(true);
+					Object textField = field.get(gui);
+					if (textField != null && ((GuiTextField) textField).isFocused()) return true;
+				} catch (IllegalAccessException ignored) {
+				}
+			}
+		}
 
-    }
+		return false;
+	}
 
     /*@SideOnly(Side.CLIENT)
     @SubscribeEvent
@@ -53,28 +66,15 @@ public class KeyBindings {
         }
     }*/
 
-    private static boolean checkFocus(GuiScreen gui){
-        //Check JEI Filter Focus
-        if(Proxy.isJeiInstalled() && JeiModule.hasJEIFocus())
-            return true;
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent(receiveCanceled = true)
+	public void onKeyEvent(InputEvent.KeyInputEvent event) {
+		if (lightOverlay.isPressed()) {
+			LightOverlayHandler.toggleMode();
+		}
 
-        /*
-         * Check Gui Textfield focus
-         * It checks every Field in the class if it contains a GuiTextField or a Object that is a instance of GuiTextField
-         * Then it makes them Accessible and check if it is focused or not.
-         * It should work with every Container. Also with GuiContainers from other mods
-         */
-        Field[] fields = gui.getClass().getDeclaredFields();
-        for(Field field : fields){
-            if(GuiTextField.class.isAssignableFrom(field.getType())){
-                try {
-                    field.setAccessible(true);
-                    Object textField = field.get(gui);
-                    if(textField !=null && ((GuiTextField)textField).isFocused()) return true;
-                } catch (IllegalAccessException ignored) {}
-            }
-        }
-
-        return false;
-    }
+		if (chunkBounds.isPressed()) {
+			ChunkBoundsHandler.toggleMode();
+		}
+	}
 }

@@ -1,4 +1,3 @@
-
 // For those who want the bleeding edge
 buildscript {
     repositories {
@@ -21,21 +20,21 @@ plugins {
 }
 */
 
-tasks.withType(JavaCompile){
-	options.compilerArgs += '-Xlint:-deprecation'
+tasks.withType(JavaCompile) {
+    options.compilerArgs += '-Xlint:-deprecation'
 
     sourceCompatibility = "1.8"
-   	targetCompatibility = "1.8"
+    targetCompatibility = "1.8"
 }
 
 version = "1.13"
-group= "at.feldim2425.moreoverlays" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "at.feldim2425.moreoverlays" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "moreoverlays"
 
 minecraft {
-    version = "14.22.0.2452"
+    version = "14.23.4.2739"
     runDir = "run"
-    
+
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
@@ -55,9 +54,9 @@ dependencies {
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
-      
-	deobfCompile "mezz.jei:jei_1.12.2:4.7.11.102"
-	deobfProvided "slimeknights.mantle:Mantle:1.12-1.3.1.21"
+
+    deobfCompile "mezz.jei:jei_1.12.2:4.11.0.202"
+    deobfProvided "slimeknights.mantle:Mantle:1.12-1.3.1.21"
 
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
@@ -78,21 +77,21 @@ dependencies {
 }
 
 processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+        {
+            // this will ensure that this task is redone when the versions change.
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
+            // replace stuff in mcmod.info, nothing else
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
+
+                // replace version and mcversion
+                expand 'version': project.version, 'mcversion': project.minecraft.version
+            }
+
+            // copy everything else, thats not the mcmod.info
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }

@@ -8,39 +8,38 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class LightOverlayHandler {
 
-    private static boolean enabled = false;
+	private static boolean enabled = false;
 
-    public static void init() {
-        MinecraftForge.EVENT_BUS.register(new LightOverlayHandler());
-    }
+	public static void init() {
+		MinecraftForge.EVENT_BUS.register(new LightOverlayHandler());
+	}
 
-    @SubscribeEvent
-    public void renderWorldLastEvent(RenderWorldLastEvent event) {
-        if (enabled)
-            LightOverlayRenderer.renderOverlays();
-    }
+	public static boolean isEnabled() {
+		return enabled;
+	}
 
+	public static void setEnabled(boolean enabled) {
+		LightOverlayHandler.enabled = enabled;
+	}
 
-    @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if(Minecraft.getMinecraft().world!=null && enabled && event.phase == TickEvent.Phase.END &&
-                (Minecraft.getMinecraft().currentScreen==null || !Minecraft.getMinecraft().currentScreen.doesGuiPauseGame())){
-            LightOverlayRenderer.refreshCache();
-        }
+	public static void toggleMode() {
+		enabled = !enabled;
+		if (!enabled)
+			LightOverlayRenderer.clearCache();
+	}
 
-    }
+	@SubscribeEvent
+	public void renderWorldLastEvent(RenderWorldLastEvent event) {
+		if (enabled)
+			LightOverlayRenderer.renderOverlays();
+	}
 
-    public static boolean isEnabled() {
-        return enabled;
-    }
+	@SubscribeEvent
+	public void onClientTick(TickEvent.ClientTickEvent event) {
+		if (Minecraft.getMinecraft().world != null && enabled && event.phase == TickEvent.Phase.END &&
+				(Minecraft.getMinecraft().currentScreen == null || !Minecraft.getMinecraft().currentScreen.doesGuiPauseGame())) {
+			LightOverlayRenderer.refreshCache();
+		}
 
-    public static void setEnabled(boolean enabled) {
-        LightOverlayHandler.enabled = enabled;
-    }
-
-    public static void toggleMode() {
-        enabled = !enabled;
-        if (!enabled)
-            LightOverlayRenderer.clearCache();
-    }
+	}
 }

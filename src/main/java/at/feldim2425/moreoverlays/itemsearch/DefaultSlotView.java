@@ -5,29 +5,29 @@ import net.minecraft.inventory.Slot;
 
 public class DefaultSlotView implements IViewSlot {
 
-    private Slot slot;
+	private Slot slot;
 
-    public DefaultSlotView(Slot slot) {
-        this.slot=slot;
-    }
+	public DefaultSlotView(Slot slot) {
+		this.slot = slot;
+	}
 
-    @Override
-    public Slot getSlot() {
-        return slot;
-    }
+	@Override
+	public Slot getSlot() {
+		return slot;
+	}
 
-    @Override
-    public int getRenderPosX(int guiLeft, int guiTop) {
-        return slot.xPos;
-    }
+	@Override
+	public int getRenderPosX(int guiLeft, int guiTop) {
+		return slot.xPos;
+	}
 
-    @Override
-    public int getRenderPosY(int guiLeft, int guiTop) {
-        return slot.yPos;
-    }
+	@Override
+	public int getRenderPosY(int guiLeft, int guiTop) {
+		return slot.yPos;
+	}
 
-    @Override
-    public boolean canSearch() {
-        return true;
-    }
+	@Override
+	public boolean canSearch() {
+		return true;
+	}
 }

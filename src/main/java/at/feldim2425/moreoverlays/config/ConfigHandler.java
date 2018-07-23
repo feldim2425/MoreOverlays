@@ -13,25 +13,25 @@ import java.util.List;
 
 public class ConfigHandler {
 
-    public static final String CONFIG_FILENAME = "MoreOverlays.cfg";
-    public static Configuration config;
-    public static List<String> categories = new ArrayList<>();
+	public static final String CONFIG_FILENAME = "MoreOverlays.cfg";
+	public static Configuration config;
+	public static List<String> categories = new ArrayList<>();
 
-    public static void init(FMLPreInitializationEvent event){
-        File configFile = new File(event.getModConfigurationDirectory(), CONFIG_FILENAME);
-        config = new Configuration(configFile);
+	public static void init(FMLPreInitializationEvent event) {
+		File configFile = new File(event.getModConfigurationDirectory(), CONFIG_FILENAME);
+		config = new Configuration(configFile);
 
-        MinecraftForge.EVENT_BUS.register(new ConfigHandler());
-        config.load();
-        Config.getCategories(categories);
-        Config.loadValues();
-    }
+		MinecraftForge.EVENT_BUS.register(new ConfigHandler());
+		config.load();
+		Config.getCategories(categories);
+		Config.loadValues();
+	}
 
-    @SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event){
-        if(!event.getModID().equals(MoreOverlays.MOD_ID))
-            return;
-        Config.loadValues();
-    }
+	@SubscribeEvent
+	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+		if (!event.getModID().equals(MoreOverlays.MOD_ID))
+			return;
+		Config.loadValues();
+	}
 
 }

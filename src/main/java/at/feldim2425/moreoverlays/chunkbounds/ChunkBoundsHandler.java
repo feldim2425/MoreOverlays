@@ -6,44 +6,44 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ChunkBoundsHandler {
 
-    private static RenderMode mode = RenderMode.NONE;
+	private static RenderMode mode = RenderMode.NONE;
 
-    public static void init() {
-        MinecraftForge.EVENT_BUS.register(new ChunkBoundsHandler());
-    }
+	public static void init() {
+		MinecraftForge.EVENT_BUS.register(new ChunkBoundsHandler());
+	}
 
-    @SubscribeEvent
-    public void renderWorldLastEvent(RenderWorldLastEvent event) {
-        if (mode != RenderMode.NONE)
-            ChunkBoundsRenderer.renderOverlays();
-    }
+	public static RenderMode getMode() {
+		return mode;
+	}
 
-    public static RenderMode getMode() {
-        return mode;
-    }
+	public static void setMode(RenderMode mode) {
+		ChunkBoundsHandler.mode = mode;
+	}
 
-    public static void setMode(RenderMode mode) {
-        ChunkBoundsHandler.mode = mode;
-    }
+	public static void toggleMode() {
+		switch (mode) {
+			case NONE:
+				mode = RenderMode.CORNERS;
+				break;
+			case CORNERS:
+				mode = RenderMode.GRID;
+				break;
+			case GRID:
+			default:
+				mode = RenderMode.NONE;
+				break;
+		}
+	}
 
-    public static void toggleMode(){
-        switch (mode){
-            case NONE:
-                mode = RenderMode.CORNERS;
-                break;
-            case CORNERS:
-                mode = RenderMode.GRID;
-                break;
-            case GRID:
-            default:
-                mode = RenderMode.NONE;
-                break;
-        }
-    }
+	@SubscribeEvent
+	public void renderWorldLastEvent(RenderWorldLastEvent event) {
+		if (mode != RenderMode.NONE)
+			ChunkBoundsRenderer.renderOverlays();
+	}
 
-    public enum RenderMode{
-        NONE,
-        CORNERS,
-        GRID
-    }
+	public enum RenderMode {
+		NONE,
+		CORNERS,
+		GRID
+	}
 }
