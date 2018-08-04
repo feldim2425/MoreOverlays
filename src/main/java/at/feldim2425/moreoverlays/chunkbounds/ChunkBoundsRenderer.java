@@ -28,8 +28,8 @@ public class ChunkBoundsRenderer {
 
 		int h = player.world.getHeight();
 		int h0 = (int) player.posY;
-		int h1 = Math.min(h, Math.max(h0 - 16, 0));
-		int h2 = Math.min(h, Math.max(h0 + 16, 0));
+		int h1 = Math.min(h, h0 - 16);
+		int h2 = Math.min(h, h0 + 16);
 
 		int x0 = player.chunkCoordX * 16;
 		int x1 = x0 + 16;
