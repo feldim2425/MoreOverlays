@@ -30,6 +30,7 @@ public class ChunkBoundsRenderer {
 		int h0 = (int) player.posY;
 		int h1 = Math.min(h, h0 - 16);
 		int h2 = Math.min(h, h0 + 16);
+		int h3 = Math.min(h1, 0);
 
 		int x0 = player.chunkCoordX * 16;
 		int x1 = x0 + 16;
@@ -43,13 +44,13 @@ public class ChunkBoundsRenderer {
 		GlStateManager.color(((float) ((Config.render_chunkEdgeColor >> 16) & 0xFF)) / 255F, ((float) ((Config.render_chunkEdgeColor >> 8) & 0xFF)) / 255F, ((float) (Config.render_chunkEdgeColor & 0xFF)) / 255F);
 		for (int xo = -16 - radius; xo <= radius; xo += 16) {
 			for (int yo = -16 - radius; yo <= radius; yo += 16) {
-				renderEdge(x0 - xo, z0 - yo, h);
+				renderEdge(x0 - xo, z0 - yo, h3, h);
 			}
 		}
 
 		if (Config.chunk_ShowMiddle) {
 			GlStateManager.color(((float) ((Config.render_chunkMiddleColor >> 16) & 0xFF)) / 255F, ((float) ((Config.render_chunkMiddleColor >> 8) & 0xFF)) / 255F, ((float) (Config.render_chunkMiddleColor & 0xFF)) / 255F);
-			renderEdge(x2, z2, h);
+			renderEdge(x2, z2, h3, h);
 		}
 
 		if (ChunkBoundsHandler.getMode() == ChunkBoundsHandler.RenderMode.GRID) {
@@ -70,13 +71,13 @@ public class ChunkBoundsRenderer {
 		GlStateManager.popMatrix();
 	}
 
-	public static void renderEdge(double x, double z, double h) {
+	public static void renderEdge(double x, double z, double h3, double h) {
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder renderer = tess.getBuffer();
 
 		renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
 
-		renderer.pos(x, 0, z).endVertex();
+		renderer.pos(x, h3, z).endVertex();
 		renderer.pos(x, h, z).endVertex();
 
 		tess.draw();
