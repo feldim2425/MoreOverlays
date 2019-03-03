@@ -20,7 +20,7 @@ public class LightOverlayRendererZharkCustomSpawner extends LightOverlayRenderer
 		
 		EnvironmentSettings environment = CMSUtils.getEnvironment(world);
 		if (environment == null) {
-		  System.out.println("return");
+		  return true;
 		}
 		List<SpawnListEntry> possibleSpawns = CustomSpawner.instance().getPossibleCustomCreatures(world, environment.entitySpawnTypes.get("MONSTER"), x, y, z);
 

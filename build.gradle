@@ -27,12 +27,12 @@ tasks.withType(JavaCompile) {
     targetCompatibility = "1.8"
 }
 
-version = "1.14"
+version = "1.15"
 group = "at.feldim2425.moreoverlays" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "moreoverlays"
 
 minecraft {
-    version = "14.23.4.2739"
+    version = "1.12.2-14.23.5.2808"
     runDir = "run"
 
     // the mappings can be changed at any time, and must be in the following format.
