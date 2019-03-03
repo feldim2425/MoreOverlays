@@ -25,14 +25,14 @@ public class LightOverlayHandler {
 	public static void toggleMode() {
 		enabled = !enabled;
 		if (!enabled) {
-			LightOverlayRenderer.clearCache();
+			LightOverlayRenderer.instance().clearCache();
 		}
 	}
 
 	@SubscribeEvent
 	public void renderWorldLastEvent(RenderWorldLastEvent event) {
 		if (enabled) {
-			LightOverlayRenderer.renderOverlays();
+			LightOverlayRenderer.instance().renderOverlays();
 		}
 	}
 
@@ -40,7 +40,7 @@ public class LightOverlayHandler {
 	public void onClientTick(TickEvent.ClientTickEvent event) {
 		if (Minecraft.getMinecraft().world != null && enabled && event.phase == TickEvent.Phase.END &&
 				(Minecraft.getMinecraft().currentScreen == null || !Minecraft.getMinecraft().currentScreen.doesGuiPauseGame())) {
-			LightOverlayRenderer.refreshCache();
+			LightOverlayRenderer.instance().refreshCache();
 		}
 
 	}

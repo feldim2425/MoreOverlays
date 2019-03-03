@@ -18,21 +18,40 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class LightOverlayRenderer {
+public abstract class LightOverlayRenderer {
 
-	private final static ResourceLocation BLANK_TEX = new ResourceLocation(MoreOverlays.MOD_ID, "textures/blank.png");
-	private final static AxisAlignedBB TEST_BB = new AxisAlignedBB(0.6D / 2D, 0, 0.6D / 2D, 1D - 0.6D / 2D, 1D, 1D - 0.6D / 2D);
-	private static final List<Pair<BlockPos, Byte>> overlayCache = new LinkedList<>();
-	private static RenderManager render = Minecraft.getMinecraft().getRenderManager();
+	private static LightOverlayRenderer INSTANCE;
+	public static LightOverlayRenderer instance() {
+		if(INSTANCE == null) {
+			try {
+				Class.forName("drzhark.customspawner.CustomSpawner", false, LightOverlayRenderer.class.getClassLoader());
+				INSTANCE = new LightOverlayRendererZharkCustomSpawner();
+			}
+			catch (ClassNotFoundException e) {
+				INSTANCE = new LightOverlayRendererVanilla();
+			}
+		}
+			
+		return INSTANCE;
+	}
+	
+	private final ResourceLocation BLANK_TEX = new ResourceLocation(MoreOverlays.MOD_ID, "textures/blank.png");
+	private final AxisAlignedBB TEST_BB = new AxisAlignedBB(0.6D / 2D, 0, 0.6D / 2D, 1D - 0.6D / 2D, 1D, 1D - 0.6D / 2D);
+	private final List<Pair<BlockPos, Byte>> overlayCache = new LinkedList<>();
+	private RenderManager render = Minecraft.getMinecraft().getRenderManager();
 
+	protected abstract boolean checkIfBiomeSpawnlistIsEmpty(World world, int x, int y, int z);
+	
 
-	public static void renderOverlays() {
+	public void renderOverlays() {
 		Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
 		GlStateManager.pushMatrix();
 		GL11.glLineWidth(Config.render_spawnLineWidth);
@@ -62,7 +81,7 @@ public class LightOverlayRenderer {
 	}
 
 
-	public synchronized static void refreshCache() {
+	public synchronized void refreshCache() {
 		if (Minecraft.getMinecraft().player == null)
 			return;
 
@@ -78,10 +97,8 @@ public class LightOverlayRenderer {
 			overlayCache.clear();
 			for (int xo = -Config.light_HRange; xo <= Config.light_HRange; xo++) {
 				for (int zo = -Config.light_HRange; zo <= Config.light_HRange; zo++) {
-					BlockPos pos1 = new BlockPos(px + xo, py, pz + zo);
-					Biome biome = player.world.getBiome(pos1);
-
-					if (biome.getSpawningChance() <= 0 || biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty())
+					
+					if (checkIfBiomeSpawnlistIsEmpty(player.world, px + xo, py, pz + zo))
 						continue;
 
 					for (int y = y1; y <= y2; y++) {
@@ -95,7 +112,8 @@ public class LightOverlayRenderer {
 		}
 	}
 
-	private static byte getSpawnModeAt(BlockPos pos, World world) {
+	private byte getSpawnModeAt(BlockPos pos, World world) {
+
 		if (world.getLightFor(EnumSkyBlock.BLOCK, pos) >= Config.light_SaveLevel)
 			return 0;
 
@@ -108,11 +126,11 @@ public class LightOverlayRenderer {
 
 		if (world.getLightFor(EnumSkyBlock.SKY, pos) >= Config.light_SaveLevel)
 			return 1;
-
+		
 		return 2;
 	}
 
-	private static boolean checkCollision(BlockPos pos, World world) {
+	private boolean checkCollision(BlockPos pos, World world) {
 		IBlockState block1 = world.getBlockState(pos);
 
 		if (block1.isNormalCube() || (!Config.light_IgnoreLayer && world.getBlockState(pos.up()).isNormalCube())) //Don't check because a check on normal Cubes will/should return false ( 99% collide ).
@@ -132,7 +150,7 @@ public class LightOverlayRenderer {
 		return false;
 	}
 
-	private static void renderCross(BlockPos pos, float r, float g, float b) {
+	private void renderCross(BlockPos pos, float r, float g, float b) {
 		double y = pos.getY() + 0.005D;
 
 		double x0 = pos.getX();
@@ -152,7 +170,7 @@ public class LightOverlayRenderer {
 		tess.draw();
 	}
 
-	public static void clearCache() {
+	public void clearCache() {
 		overlayCache.clear();
 	}
 }
