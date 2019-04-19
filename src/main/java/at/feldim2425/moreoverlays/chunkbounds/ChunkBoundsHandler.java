@@ -21,18 +21,8 @@ public class ChunkBoundsHandler {
 	}
 
 	public static void toggleMode() {
-		switch (mode) {
-			case NONE:
-				mode = RenderMode.CORNERS;
-				break;
-			case CORNERS:
-				mode = RenderMode.GRID;
-				break;
-			case GRID:
-			default:
-				mode = RenderMode.NONE;
-				break;
-		}
+		RenderMode[] modes = RenderMode.values();
+		mode = modes[(mode.ordinal() + 1) % modes.length];
 	}
 
 	@SubscribeEvent
@@ -44,6 +34,7 @@ public class ChunkBoundsHandler {
 	public enum RenderMode {
 		NONE,
 		CORNERS,
-		GRID
+		GRID,
+		REGIONS
 	}
 }
