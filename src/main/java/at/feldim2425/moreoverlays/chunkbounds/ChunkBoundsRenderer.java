@@ -39,6 +39,17 @@ public class ChunkBoundsRenderer {
 		int z1 = z0 + 16;
 		int z2 = z0 + 8;
 
+		int regionX = player.chunkCoordX >> 4;
+		int regionY = player.chunkCoordY >> 4;
+		int regionZ = player.chunkCoordZ >> 4;
+		
+		int regionBorderX0 = regionX << 8;
+		int regionBorderY0 = regionY << 8;
+		int regionBorderZ0 = regionZ << 8;
+		int regionBorderX1 = ++regionX << 8;
+		int regionBorderY1 = ++regionY << 8;
+		int regionBorderZ1 = ++regionZ << 8;
+		
 		int radius = Config.chunk_EdgeRadius * 16;
 
 		GlStateManager.color(((float) ((Config.render_chunkEdgeColor >> 16) & 0xFF)) / 255F, ((float) ((Config.render_chunkEdgeColor >> 8) & 0xFF)) / 255F, ((float) (Config.render_chunkEdgeColor & 0xFF)) / 255F);
@@ -55,17 +66,15 @@ public class ChunkBoundsRenderer {
 
 		if (ChunkBoundsHandler.getMode() == ChunkBoundsHandler.RenderMode.GRID) {
 			GlStateManager.color(((float) ((Config.render_chunkGridColor >> 16) & 0xFF)) / 255F, ((float) ((Config.render_chunkGridColor >> 8) & 0xFF)) / 255F, ((float) (Config.render_chunkGridColor & 0xFF)) / 255F);
-			renderHGrid(x0, z0 + 0.005, x1, z0 + 0.005, h1, h2);
-			renderVXGrid(x0, x1, z0 + 0.005, h1, h2);
-
-			renderHGrid(x1 - 0.005, z0, x1 - 0.005, z1, h1, h2);
-			renderVZGrid(x1 - 0.005, z0, z1, h1, h2);
-
-			renderHGrid(x1, z1 - 0.005, x0, z1 - 0.005, h1, h2);
-			renderVXGrid(x0, x1, z1 - 0.005, h1, h2);
-
-			renderHGrid(x0 + 0.005, z1, x0 + 0.005, z0, h1, h2);
-			renderVZGrid(x0 + 0.005, z0, z1, h1, h2);
+			renderGrid(x0, h1, z0 - 0.005, x0, h2, z1 + 0.005, 1.0);
+			renderGrid(x1, h1, z0 - 0.005, x1, h2, z1 + 0.005, 1.0);
+			renderGrid(x0 - 0.005, h1, z0, x1 + 0.005, h2, z0, 1.0);
+			renderGrid(x0 - 0.005, h1, z1, x1 + 0.005, h2, z1, 1.0);
+		}
+		else if(ChunkBoundsHandler.getMode() == ChunkBoundsHandler.RenderMode.REGIONS) {
+			GlStateManager.color(((float) ((Config.render_chunkGridColor >> 16) & 0xFF)) / 255F, ((float) ((Config.render_chunkGridColor >> 8) & 0xFF)) / 255F, ((float) (Config.render_chunkGridColor & 0xFF)) / 255F);
+			renderGrid(regionBorderX0 - 0.005, regionBorderY0 - 0.005, regionBorderZ0 - 0.005, regionBorderX1 + 0.005,
+					regionBorderY1 + 0.005, regionBorderZ1 + 0.005, 16.0);
 		}
 		GlStateManager.enableDepth();
 		GlStateManager.popMatrix();
@@ -82,44 +91,41 @@ public class ChunkBoundsRenderer {
 
 		tess.draw();
 	}
-
-	// Horizontal
-	public static void renderHGrid(double x1, double z1, double x2, double z2, double h1, double h2) {
+	
+	public static void renderGrid(double x0, double y0, double z0, double x1, double y1, double z1, double step) {
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder renderer = tess.getBuffer();
-
+		
 		renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-
-		for (double h = h1; h <= h2; h++) {
-			renderer.pos(x1, h, z1).endVertex();
-			renderer.pos(x2, h, z2).endVertex();
+		for (double x = x0; x <= x1; x+=step) {
+			renderer.pos(x, y0, z0).endVertex();
+			renderer.pos(x, y1, z0).endVertex();
+			renderer.pos(x, y0, z1).endVertex();
+			renderer.pos(x, y1, z1).endVertex();
+			renderer.pos(x, y0, z0).endVertex();
+			renderer.pos(x, y0, z1).endVertex();
+			renderer.pos(x, y1, z0).endVertex();
+			renderer.pos(x, y1, z1).endVertex();
 		}
-
-		tess.draw();
-	}
-
-	// Vertical Z
-	public static void renderVZGrid(double x, double z1, double z2, double h1, double h2) {
-		Tessellator tess = Tessellator.getInstance();
-		BufferBuilder renderer = tess.getBuffer();
-
-		renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-		for (double z = z1 + 1; z < z2; z++) {
-			renderer.pos(x, h1, z).endVertex();
-			renderer.pos(x, h2, z).endVertex();
+		for (double y = y0; y <= y1; y+=step) {
+			renderer.pos(x0, y, z0).endVertex();
+			renderer.pos(x1, y, z0).endVertex();
+			renderer.pos(x0, y, z1).endVertex();
+			renderer.pos(x1, y, z1).endVertex();
+			renderer.pos(x0, y, z0).endVertex();
+			renderer.pos(x0, y, z1).endVertex();
+			renderer.pos(x1, y, z0).endVertex();
+			renderer.pos(x1, y, z1).endVertex();
 		}
-		tess.draw();
-	}
-
-	// Vertical X
-	public static void renderVXGrid(double x1, double x2, double z, double h1, double h2) {
-		Tessellator tess = Tessellator.getInstance();
-		BufferBuilder renderer = tess.getBuffer();
-
-		renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-		for (double x = x1 + 1; x < x2; x++) {
-			renderer.pos(x, h1, z).endVertex();
-			renderer.pos(x, h2, z).endVertex();
+		for (double z = z0; z <= z1; z+=step) {
+			renderer.pos(x0, y0, z).endVertex();
+			renderer.pos(x1, y0, z).endVertex();
+			renderer.pos(x0, y1, z).endVertex();
+			renderer.pos(x1, y1, z).endVertex();
+			renderer.pos(x0, y0, z).endVertex();
+			renderer.pos(x0, y1, z).endVertex();
+			renderer.pos(x1, y0, z).endVertex();
+			renderer.pos(x1, y1, z).endVertex();
 		}
 		tess.draw();
 	}
