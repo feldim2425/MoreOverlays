@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.common.Loader;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -81,7 +82,7 @@ public class LightOverlayRenderer {
 					BlockPos pos1 = new BlockPos(px + xo, py, pz + zo);
 					Biome biome = player.world.getBiome(pos1);
 
-					if (biome.getSpawningChance() <= 0 || biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty())
+					if (biome.getSpawningChance() <= 0 || biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty() && !Loader.instance().isModLoaded("customspawner"))
 						continue;
 
 					for (int y = y1; y <= y2; y++) {
