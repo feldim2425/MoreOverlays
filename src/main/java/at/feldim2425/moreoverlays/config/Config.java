@@ -69,12 +69,12 @@ public class Config {
 		chunk_ShowMiddle = config.get("chunkbounds", "middle", true, "Show the middle of the current Chunk (yellow line)").getBoolean();
 
 		config.setCategoryComment("rendersettings", "Settings for lines & colors\nValues: 0xRRGGBB (Hex)");
-		render_chunkEdgeColor = config.get("rendersettings", "chunk_edge_color", 0xFF0000, "Color for the chunk edge").getInt();
-		render_chunkGridColor = config.get("rendersettings", "chunk_grid_color", 0x00FF00, "Color for the chunk grid").getInt();
-		render_chunkMiddleColor = config.get("rendersettings", "chunk_mid_color", 0xFFFF00, "Color for the middle chunk line").getInt();
+		render_chunkEdgeColor = config.get("rendersettings", "chunk_edge_color", 0xBB2222, "Color for the chunk edge").getInt();
+		render_chunkGridColor = config.get("rendersettings", "chunk_grid_color", 0x228B22, "Color for the chunk grid").getInt();
+		render_chunkMiddleColor = config.get("rendersettings", "chunk_mid_color", 0xFDFD96, "Color for the middle chunk line").getInt();
 		render_chunkLineWidth = (float) config.get("rendersettings", "chunk_line_width", 1.5, "Line width for chunk boundaries").getDouble();
-		render_spawnAColor = config.get("rendersettings", "spawn_always_color", 0xFF0000, "Color the X that marks \"Spawns always possible\"").getInt();
-		render_spawnNColor = config.get("rendersettings", "spawn_night_color", 0xFFFF00, "Color the X that marks \"Spawns at night possible\"").getInt();
+		render_spawnAColor = config.get("rendersettings", "spawn_always_color", 0xBB2222, "Color the X that marks \"Spawns always possible\"").getInt();
+		render_spawnNColor = config.get("rendersettings", "spawn_night_color", 0xFDFD96, "Color the X that marks \"Spawns at night possible\"").getInt();
 		render_spawnLineWidth = (float) config.get("rendersettings", "spawn_line_width", 2, "Line width for spawn indication").getDouble();
 	}
 
