@@ -1,7 +1,6 @@
 package at.feldim2425.moreoverlays;
 
 import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
-import at.feldim2425.moreoverlays.itemsearch.JeiModule;
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -27,32 +26,6 @@ public class KeyBindings {
 		ClientRegistry.registerKeyBinding(chunkBounds);
 
 		MinecraftForge.EVENT_BUS.register(new KeyBindings());
-	}
-
-	private static boolean checkFocus(GuiScreen gui) {
-		//Check JEI Filter Focus
-		if (Proxy.isJeiInstalled() && JeiModule.hasJEIFocus())
-			return true;
-
-		/*
-		 * Check Gui Textfield focus
-		 * It checks every Field in the class if it contains a GuiTextField or a Object that is a instance of GuiTextField
-		 * Then it makes them Accessible and check if it is focused or not.
-		 * It should work with every Container. Also with GuiContainers from other mods
-		 */
-		Field[] fields = gui.getClass().getDeclaredFields();
-		for (Field field : fields) {
-			if (GuiTextField.class.isAssignableFrom(field.getType())) {
-				try {
-					field.setAccessible(true);
-					Object textField = field.get(gui);
-					if (textField != null && ((GuiTextField) textField).isFocused()) return true;
-				} catch (IllegalAccessException ignored) {
-				}
-			}
-		}
-
-		return false;
 	}
 
     /*@SideOnly(Side.CLIENT)

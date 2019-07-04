@@ -46,13 +46,6 @@ public class Config {
 		chunk_EdgeRadius = config.get("chunkbounds", "radius", 1, "Radius (in Chunks) to show the edges (red line)").getInt();
 		chunk_ShowMiddle = config.get("chunkbounds", "middle", true, "Show the middle of the current Chunk (yellow line)").getBoolean();
 
-		config.setCategoryComment("itemsearch", "Settings for the item search feature");
-		String[] item_useNBT = config.get("itemsearch", "matchNBT", new String[]{Items.ENCHANTED_BOOK.getRegistryName().toString()}, "Items where the NBT of an Item matters and should not be ignored").getStringList();
-		itemsearch_matchNbt = new HashSet<>();
-		itemsearch_matchNbt.addAll(Arrays.asList(item_useNBT));
-		//itemsearch_FadeoutText = config.get("itemsearch","fadouttext", true, "Show the 'Item Search' text only for one secound and fade out").getBoolean();
-		//itemsearch_ShowItemSearchKey = config.get("itemsearch","showkey", true, "If the Item Search is enabled show the key to disable it").getBoolean();
-
 		config.setCategoryComment("rendersettings", "Settings for lines & colors\nValues: 0xRRGGBB (Hex)");
 		render_chunkEdgeColor = config.get("rendersettings", "chunk_edge_color", 0xFF0000, "Color for the chunk edge").getInt();
 		render_chunkGridColor = config.get("rendersettings", "chunk_grid_color", 0x00FF00, "Color for the chunk grid").getInt();
