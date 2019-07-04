@@ -91,11 +91,11 @@ public class ChunkBoundsRenderer {
 
 		tess.draw();
 	}
-	
+
 	public static void renderGrid(double x0, double y0, double z0, double x1, double y1, double z1, double step) {
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder renderer = tess.getBuffer();
-		
+
 		renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
 		for (double x = x0; x <= x1; x+=step) {
 			renderer.pos(x, y0, z0).endVertex();
