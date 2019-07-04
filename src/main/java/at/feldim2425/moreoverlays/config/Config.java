@@ -2,14 +2,27 @@ package at.feldim2425.moreoverlays.config;
 
 import net.minecraft.init.Items;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 
-import static at.feldim2425.moreoverlays.config.ConfigHandler.config;
+import at.feldim2425.moreoverlays.config.Configuration;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Config {
+
+	@Nullable
+	private static Config instance;
+	public static final String CONFIG_FILENAME = "MoreOverlays.cfg";
+	private static final String configKeyPrefix = "config.moreoverlays";
+	private static Configuration config;
+	public static List<String> categories = new ArrayList<>();
 
 	public static int light_UpRange;
 	public static int light_DownRange;
@@ -31,7 +44,16 @@ public class Config {
 	public static int render_spawnAColor;
 	public static int render_spawnNColor;
 	public static float render_spawnLineWidth;
+	public static final Logger LOGGER = LogManager.getLogger();
 
+	public Config(File moreOverlaysConfigurationDir) {
+		instance = this;
+		final File configFile = new File(moreOverlaysConfigurationDir, Config.CONFIG_FILENAME);
+		LOGGER.debug(configFile.getAbsolutePath());
+		this.config = new Configuration(configFile, "0.4.0");
+		Config.getCategories(categories);
+		Config.loadValues();
+	}
 
 	public static void loadValues() {
 
@@ -54,9 +76,6 @@ public class Config {
 		render_spawnAColor = config.get("rendersettings", "spawn_always_color", 0xFF0000, "Color the X that marks \"Spawns always possible\"").getInt();
 		render_spawnNColor = config.get("rendersettings", "spawn_night_color", 0xFFFF00, "Color the X that marks \"Spawns at night possible\"").getInt();
 		render_spawnLineWidth = (float) config.get("rendersettings", "spawn_line_width", 2, "Line width for spawn indication").getDouble();
-
-		if (config.hasChanged())
-			config.save();
 	}
 
 	public static void getCategories(List<String> list) {

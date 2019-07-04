@@ -1,10 +1,15 @@
 package at.feldim2425.moreoverlays;
 
-import at.feldim2425.moreoverlays.config.ConfigHandler;
+import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
+import at.feldim2425.moreoverlays.events.EventBusHelper;
+import at.feldim2425.moreoverlays.gui.OverlayRenderEventHandler;
+import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
+import at.feldim2425.moreoverlays.startup.ClientLifecycleHandler;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,31 +20,18 @@ public class MoreOverlays {
 
 	public static final String MOD_ID = "moreoverlays";
 	public static final String NAME = "MoreOverlays";
-	public static final String VERSION = "1.14";
-	public static final String UPDATE_JSON = "https://raw.githubusercontent.com/feldim2425/Mod_Update-JSONs/master/MoreOverlays.json";
+	public static final Logger LOGGER = LogManager.getLogger(NAME);
 
+	public MoreOverlays() {
+		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		DistExecutor.runWhenOn(Dist.CLIENT, ()->()-> {
+			EventBusHelper.addLifecycleListener(modEventBus, FMLClientSetupEvent.class, setupEvent -> {
+				ClientLifecycleHandler clientLifecycleHandler = new ClientLifecycleHandler();
 
-	@SidedProxy(clientSide = "at.feldim2425.moreoverlays.Proxy")
-	public static Proxy proxy;
-
-	public static Logger logger = LogManager.getLogger(NAME);
-
-	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		ConfigHandler.init(event);
-		if (proxy != null)
-			proxy.preInit();
-	}
-
-	@Mod.EventHandler
-	public void init(FMLInitializationEvent event) {
-		if (proxy != null)
-			proxy.init();
-	}
-
-	@Mod.EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		if (proxy != null)
-			proxy.postInit();
+				LightOverlayHandler.init();
+				ChunkBoundsHandler.init();
+				OverlayRenderEventHandler.init();
+			});
+		});
 	}
 }
