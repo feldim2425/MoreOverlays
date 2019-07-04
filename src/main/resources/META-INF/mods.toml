@@ -43,13 +43,3 @@ displayName="More Overlays" #mandatory
 description='''
 Adds some overlays from NEI (Mob spawns, Chunk Bounds, Item Search).
 '''
-
-# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.jei]]
-    modId="forge" #mandatory
-    mandatory=false #mandatory
-    versionRange="[24.0.42,)" #mandatory
-    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
-    ordering="NONE"
-    # Side this dependency is applied on - BOTH, CLIENT or SERVER
-    side="BOTH"

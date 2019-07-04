@@ -16,7 +16,6 @@ import java.io.File;
 public class ClientLifecycleHandler {
 
 	private final Config config;
-	private static boolean enable_jei = false;
 
 	public ClientLifecycleHandler() {
 		File moreOverlaysConfigurationDir = new File(FMLPaths.CONFIGDIR.get().toFile(), MoreOverlays.MOD_ID);
@@ -29,7 +28,6 @@ public class ClientLifecycleHandler {
 				throw new RuntimeException("Could not create config directory " + moreOverlaysConfigurationDir, e);
 			}
 		}
-		enable_jei = ModList.get().isLoaded("jei");
 		config = new Config(moreOverlaysConfigurationDir);
 
 		KeyBindings.init();

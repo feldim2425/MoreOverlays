@@ -76,5 +76,4 @@ dependencies {
         name: "junit",
         version: "4.12"
     ])
-    compileOnly fg.deobf("${project.jei_group}:jei-${minecraft_version}:${jei_version}")
 }
