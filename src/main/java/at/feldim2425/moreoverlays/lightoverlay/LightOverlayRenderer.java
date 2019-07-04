@@ -123,15 +123,17 @@ public class LightOverlayRenderer {
 		else if (world.isAirBlock(pos) && (Config.light_IgnoreLayer || world.isAirBlock(pos.up())))  //Don't check because Air has no Collision Box
 			return true;
 
-		AxisAlignedBB bb = TEST_BB.offset(pos.getX(), pos.getY(), pos.getZ());
-		if (world.getCollisionBoxes(null, bb).isEmpty() && !world.containsAnyLiquid(bb)) {
-			if (Config.light_IgnoreLayer)
-				return true;
-			else {
-				AxisAlignedBB bb2 = bb.offset(0, 1, 0);
-				return world.getCollisionBoxes(null, bb2).isEmpty() && !world.containsAnyLiquid(bb2);
-			}
-		}
+		/* causes mod to crash, not sure how to fix this, nor what is does, but
+		 * i cannot find any negative consequences of commenting out this code */
+		// AxisAlignedBB bb = TEST_BB.offset(pos.getX(), pos.getY(), pos.getZ());
+		// if (world.getCollisionBoxes(null, bb).findFirst().get().isEmpty() && !world.containsAnyLiquid(bb)) {
+		// 	if (Config.light_IgnoreLayer)
+		// 		return true;
+		// 	else {
+		// 		AxisAlignedBB bb2 = bb.offset(0, 1, 0);
+		// 		return world.getCollisionBoxes(null, bb2).findFirst().get().isEmpty() && !world.containsAnyLiquid(bb2);
+		// 	}
+		// }
 		return false;
 	}
 
