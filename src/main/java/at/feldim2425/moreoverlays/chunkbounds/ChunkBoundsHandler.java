@@ -2,7 +2,7 @@ package at.feldim2425.moreoverlays.chunkbounds;
 
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChunkBoundsHandler {
 

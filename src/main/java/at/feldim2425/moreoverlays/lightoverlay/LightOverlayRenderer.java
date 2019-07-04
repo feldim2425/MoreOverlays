@@ -9,16 +9,17 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.EnumLightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -30,14 +31,14 @@ public class LightOverlayRenderer {
 	private final static ResourceLocation BLANK_TEX = new ResourceLocation(MoreOverlays.MOD_ID, "textures/blank.png");
 	private final static AxisAlignedBB TEST_BB = new AxisAlignedBB(0.6D / 2D, 0, 0.6D / 2D, 1D - 0.6D / 2D, 1D, 1D - 0.6D / 2D);
 	private static final List<Pair<BlockPos, Byte>> overlayCache = new LinkedList<>();
-	private static RenderManager render = Minecraft.getMinecraft().getRenderManager();
+	private static RenderManager render = Minecraft.getInstance().getRenderManager();
 
 
 	public static void renderOverlays() {
-		Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
+		Minecraft.getInstance().getTextureManager().bindTexture(BLANK_TEX);
 		GlStateManager.pushMatrix();
 		GL11.glLineWidth(Config.render_spawnLineWidth);
-		GlStateManager.translate(-render.viewerPosX, -render.viewerPosY, -render.viewerPosZ);
+		GlStateManager.translated(-render.viewerPosX, -render.viewerPosY, -render.viewerPosZ);
 
 		float ar = ((float) ((Config.render_spawnAColor >> 16) & 0xFF)) / 255F;
 		float ag = ((float) ((Config.render_spawnAColor >> 8) & 0xFF)) / 255F;
@@ -64,10 +65,10 @@ public class LightOverlayRenderer {
 
 
 	public synchronized static void refreshCache() {
-		if (Minecraft.getMinecraft().player == null)
+		if (Minecraft.getInstance().player == null)
 			return;
 
-		EntityPlayer player = Minecraft.getMinecraft().player;
+		EntityPlayer player = Minecraft.getInstance().player;
 		int px = (int) Math.floor(player.posX);
 		int py = (int) Math.floor(player.posY);
 		int pz = (int) Math.floor(player.posZ);
@@ -82,7 +83,7 @@ public class LightOverlayRenderer {
 					BlockPos pos1 = new BlockPos(px + xo, py, pz + zo);
 					Biome biome = player.world.getBiome(pos1);
 
-					if (biome.getSpawningChance() <= 0 || biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty() && !Loader.instance().isModLoaded("customspawner"))
+					if (biome.getSpawningChance() <= 0 || biome.getSpawns(EnumCreatureType.MONSTER).isEmpty() && !ModList.get().isLoaded("customspawner"))
 						continue;
 
 					for (int y = y1; y <= y2; y++) {
@@ -97,17 +98,18 @@ public class LightOverlayRenderer {
 	}
 
 	private static byte getSpawnModeAt(BlockPos pos, World world) {
-		if (world.getLightFor(EnumSkyBlock.BLOCK, pos) >= Config.light_SaveLevel)
+		if (world.getLightFor(EnumLightType.BLOCK, pos) >= Config.light_SaveLevel)
 			return 0;
 
 		IBlockState state = world.getBlockState(pos.down());
-		if (!state.getBlock().canCreatureSpawn(state, world, pos.down(), EntityLiving.SpawnPlacementType.ON_GROUND))
+		if (!state.getBlock().canCreatureSpawn(state, world, pos.down(), EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, EntityType.CREEPER)
+			&& !state.getBlock().canCreatureSpawn(state, world, pos.down(), EntitySpawnPlacementRegistry.SpawnPlacementType.ON_GROUND, EntityType.SPIDER))
 			return 0;
 
 		if (!checkCollision(pos, world))
 			return 0;
 
-		if (world.getLightFor(EnumSkyBlock.SKY, pos) >= Config.light_SaveLevel)
+		if (world.getLightFor(EnumLightType.SKY, pos) >= Config.light_SaveLevel)
 			return 1;
 
 		return 2;

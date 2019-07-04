@@ -7,8 +7,8 @@ import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class OverlayRenderEventHandler {
@@ -23,14 +23,14 @@ public class OverlayRenderEventHandler {
 	}
 
 	public static void init() {
-		MinecraftForge.EVENT_BUS.register(new OverlayRenderEventHandler(Loader.isModLoaded("cubicchunks")));
+		MinecraftForge.EVENT_BUS.register(new OverlayRenderEventHandler(ModList.get().isLoaded("cubicchunks")));
 	}
 
 	@SubscribeEvent
 	public void onOverlayRender(RenderGameOverlayEvent.Post action) {
 		if (regionInfo.isEmpty())
 			return;
-		Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = Minecraft.getInstance();
 		if (mc.gameSettings.showDebugInfo)
 			return;
 		int y = 0;
@@ -40,23 +40,23 @@ public class OverlayRenderEventHandler {
 
 	@SubscribeEvent
 	public void onClientTick(TickEvent.ClientTickEvent event) {
-		if (event.phase != TickEvent.Phase.END || Minecraft.getMinecraft().player == null)
+		if (event.phase != TickEvent.Phase.END || Minecraft.getInstance().player == null)
 			return;
 		if (ChunkBoundsHandler.getMode() != ChunkBoundsHandler.RenderMode.REGIONS) {
 			regionInfo.clear();
 			return;
 		}
 		boolean updateInfo = false;
-		if (playerPrevRegionPosX != Minecraft.getMinecraft().player.chunkCoordX >> 4) {
-			playerPrevRegionPosX = Minecraft.getMinecraft().player.chunkCoordX >> 4;
+		if (playerPrevRegionPosX != Minecraft.getInstance().player.chunkCoordX >> 4) {
+			playerPrevRegionPosX = Minecraft.getInstance().player.chunkCoordX >> 4;
 			updateInfo = true;
 		}
-		if (playerPrevRegionPosY != Minecraft.getMinecraft().player.chunkCoordY >> 4) {
-			playerPrevRegionPosY = Minecraft.getMinecraft().player.chunkCoordY >> 4;
+		if (playerPrevRegionPosY != Minecraft.getInstance().player.chunkCoordY >> 4) {
+			playerPrevRegionPosY = Minecraft.getInstance().player.chunkCoordY >> 4;
 			updateInfo = true;
 		}
-		if (playerPrevRegionPosZ != Minecraft.getMinecraft().player.chunkCoordZ >> 4) {
-			playerPrevRegionPosZ = Minecraft.getMinecraft().player.chunkCoordZ >> 4;
+		if (playerPrevRegionPosZ != Minecraft.getInstance().player.chunkCoordZ >> 4) {
+			playerPrevRegionPosZ = Minecraft.getInstance().player.chunkCoordZ >> 4;
 			updateInfo = true;
 		}
 		if (updateInfo) {

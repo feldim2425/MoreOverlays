@@ -3,7 +3,7 @@ package at.feldim2425.moreoverlays;
 import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
 import at.feldim2425.moreoverlays.gui.OverlayRenderEventHandler;
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.ModList;
 
 public class Proxy {
 
@@ -14,7 +14,7 @@ public class Proxy {
 	}
 
 	public void preInit() {
-		enable_jei = Loader.isModLoaded("jei");
+		enable_jei = ModList.get().isLoaded("jei");
 
 		KeyBindings.init();
 

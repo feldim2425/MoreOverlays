@@ -3,7 +3,7 @@ package at.feldim2425.moreoverlays.lightoverlay;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class LightOverlayHandler {
@@ -38,8 +38,8 @@ public class LightOverlayHandler {
 
 	@SubscribeEvent
 	public void onClientTick(TickEvent.ClientTickEvent event) {
-		if (Minecraft.getMinecraft().world != null && enabled && event.phase == TickEvent.Phase.END &&
-				(Minecraft.getMinecraft().currentScreen == null || !Minecraft.getMinecraft().currentScreen.doesGuiPauseGame())) {
+		if (Minecraft.getInstance().world != null && enabled && event.phase == TickEvent.Phase.END &&
+				(Minecraft.getInstance().currentScreen == null || !Minecraft.getInstance().currentScreen.doesGuiPauseGame())) {
 			LightOverlayRenderer.refreshCache();
 		}
 
