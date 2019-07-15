@@ -1,6 +1,7 @@
 package at.feldim2425.moreoverlays.config;
 
 import at.feldim2425.moreoverlays.MoreOverlays;
+import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -32,6 +33,7 @@ public class ConfigHandler {
 		if (!event.getModID().equals(MoreOverlays.MOD_ID))
 			return;
 		Config.loadValues();
+		LightOverlayHandler.reloadHandler();
 	}
 
 }

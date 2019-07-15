@@ -1,8 +1,5 @@
 package at.feldim2425.moreoverlays.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -10,6 +7,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OverlayRenderEventHandler {
 	private final List<String> regionInfo = new ArrayList<String>();

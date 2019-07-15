@@ -70,7 +70,7 @@ public class KeyBindings {
 	@SubscribeEvent(receiveCanceled = true)
 	public void onKeyEvent(InputEvent.KeyInputEvent event) {
 		if (lightOverlay.isPressed()) {
-			LightOverlayHandler.toggleMode();
+			LightOverlayHandler.setEnabled(!LightOverlayHandler.isEnabled());
 		}
 
 		if (chunkBounds.isPressed()) {
