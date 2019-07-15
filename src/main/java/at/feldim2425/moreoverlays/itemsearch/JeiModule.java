@@ -5,6 +5,7 @@ import mezz.jei.api.*;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.gui.overlay.IngredientListOverlay;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -14,6 +15,7 @@ public class JeiModule implements IModPlugin {
 
 	public static IIngredientListOverlay overlay;
 	public static IIngredientFilter filter;
+	private static ISubtypeRegistry subtypes;
 	private static IngredientListOverlay overlayInternal;
 	private static GuiTextField textField;
 
@@ -48,5 +50,26 @@ public class JeiModule implements IModPlugin {
 		overlay = jeiRuntime.getIngredientListOverlay();
 		filter = jeiRuntime.getIngredientFilter();
 		updateModule();
+	}
+
+	@Override
+	public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry){
+		subtypes = subtypeRegistry;
+	}
+
+	public static boolean areItemsEqualInterpreter(ItemStack stack1, ItemStack stack2){
+		if(subtypes == null){
+			return false;
+		}
+
+		String info1 = subtypes.getSubtypeInfo(stack1);
+		String info2 = subtypes.getSubtypeInfo(stack2);
+		if(info1 == null || info2 == null){
+			return false;
+		}
+		else {
+			System.out.println(info1);
+			return info1.equals(info2);
+		}
 	}
 }

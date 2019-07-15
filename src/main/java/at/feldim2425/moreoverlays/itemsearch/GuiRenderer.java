@@ -6,6 +6,7 @@ import at.feldim2425.moreoverlays.api.itemsearch.SlotHandler;
 import at.feldim2425.moreoverlays.config.Config;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import mezz.jei.plugins.vanilla.ingredients.enchant.EnchantDataHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -16,8 +17,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
@@ -37,9 +41,7 @@ public class GuiRenderer {
 	private static String lastFilterText = "";
 	private static boolean emptyFilter = true;
 	private static BiMap<Integer, IViewSlot> views = HashBiMap.create();
-	//private static String text = I18n.translateToLocal("gui." + MoreOverlays.MOD_ID + ".search.disabled");
 
-	//private int txtPosY = 0;
 	private boolean isCreative = false;
 	private boolean allowRender = false;
 	private int guiOffsetX = 0;
@@ -226,27 +228,12 @@ public class GuiRenderer {
 	private boolean isSearchedItem(ItemStack stack) {
 		if (emptyFilter) return true;
 		else if (stack.isEmpty()) return false;
-		ItemStack stack1;
 		for (Object ingredient : JeiModule.filter.getFilteredIngredients()) {
-			if (ingredient instanceof ItemStack) {
-				stack1 = (ItemStack) ingredient;
-			}
-			else {
-				continue;
-			}
-
-            if (stack1.isItemEqualIgnoreDurability(stack) && matchNBT(stack,stack1)) {
+			if(ItemUtils.ingredientMatches(ingredient, stack)){
 				return true;
 			}
         }
         return false;
-    }
-
-    private boolean matchNBT(ItemStack a, ItemStack b){
-        if(!Config.itemsearch_matchNbt.contains(a.getItem().getRegistryName() == null ? "" : a.getItem().getRegistryName().toString())){
-            return true;
-        }
-        return a.hasTagCompound() == b.hasTagCompound() && (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
     }
 
 	public void tick() {
