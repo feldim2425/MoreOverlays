@@ -6,6 +6,7 @@ import at.feldim2425.moreoverlays.gui.OverlayRenderEventHandler;
 import at.feldim2425.moreoverlays.itemsearch.GuiHandler;
 import at.feldim2425.moreoverlays.itemsearch.integration.MantleGuiModuleOverride;
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
+import at.feldim2425.moreoverlays.lightoverlay.integration.AlternateLightHandler;
 import net.minecraftforge.fml.common.Loader;
 
 public class Proxy {
@@ -25,6 +26,7 @@ public class Proxy {
 		ChunkBoundsHandler.init();
 		GuiHandler.init();
 		OverlayRenderEventHandler.init();
+		AlternateLightHandler.init();
 	}
 
 	public void init() {
@@ -32,7 +34,8 @@ public class Proxy {
 	}
 
 	public void postInit() {
-		if (enable_jei && Loader.isModLoaded("mantle"))
+		if (enable_jei && Loader.isModLoaded("mantle")) {
 			SlotHandler.INSTANCE.addPositionOverride(new MantleGuiModuleOverride());
+		}
 	}
 }
