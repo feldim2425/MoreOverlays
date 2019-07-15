@@ -10,7 +10,7 @@ import net.minecraft.world.biome.Biome;
 
 import java.util.List;
 
-public class MoCreaturesLightScanner extends LightScannerVanilla {
+public class CustomSpawnerLightScanner extends LightScannerVanilla {
 
 	@Override
 	public boolean shouldCheck(BlockPos pos, World world) {

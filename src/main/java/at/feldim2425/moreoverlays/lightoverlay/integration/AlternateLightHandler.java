@@ -18,7 +18,7 @@ public class AlternateLightHandler {
 		}
 
 		if(Loader.isModLoaded("customspawner")){
-			event.setScanner(MoCreaturesLightScanner.class);
+			event.setScanner(CustomSpawnerLightScanner.class);
 		}
 	}
 
