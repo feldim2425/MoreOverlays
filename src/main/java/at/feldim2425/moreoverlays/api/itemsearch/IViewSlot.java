@@ -1,6 +1,8 @@
 package at.feldim2425.moreoverlays.api.itemsearch;
 
 import net.minecraft.inventory.Slot;
+import org.lwjgl.util.vector.Vector2f;
+
 
 public interface IViewSlot {
 
@@ -10,14 +12,9 @@ public interface IViewSlot {
 	Slot getSlot();
 
 	/*
-	 * X Position relative to guiLeft
+	 * Position offset for the Gui
 	 */
-	int getRenderPosX(int guiLeft, int guiTop);
-
-	/*
-	 * Y Position relative to guiTop
-	 */
-	int getRenderPosY(int guiLeft, int guiTop);
+	Vector2f getRenderPos(int guiLeft, int guiTop);
 
 	/*
 	 * false if the ItemSearch should ignore this slot

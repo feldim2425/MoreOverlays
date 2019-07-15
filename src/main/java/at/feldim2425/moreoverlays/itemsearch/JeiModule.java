@@ -2,6 +2,7 @@ package at.feldim2425.moreoverlays.itemsearch;
 
 import at.feldim2425.moreoverlays.MoreOverlays;
 import mezz.jei.api.*;
+import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.gui.overlay.IngredientListOverlay;
 import net.minecraft.client.gui.GuiTextField;
 
@@ -9,7 +10,7 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 
 @JEIPlugin
-public class JeiModule extends BlankModPlugin {
+public class JeiModule implements IModPlugin {
 
 	public static IIngredientListOverlay overlay;
 	public static IIngredientFilter filter;

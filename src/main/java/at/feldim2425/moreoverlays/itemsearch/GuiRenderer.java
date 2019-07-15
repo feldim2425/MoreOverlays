@@ -20,6 +20,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -184,8 +185,9 @@ public class GuiRenderer {
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
 		for (Map.Entry<Integer, IViewSlot> slot : views.entrySet()) {
-			int px = slot.getValue().getRenderPosX(guiOffsetX, guiOffsetY);
-			int py = slot.getValue().getRenderPosY(guiOffsetX, guiOffsetY);
+			Vector2f posvec = slot.getValue().getRenderPos(guiOffsetX, guiOffsetY);
+			float px = posvec.x;
+			float py = posvec.y;
 			renderer.pos(px + 16 + guiOffsetX, py + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
 			renderer.pos(px + guiOffsetX, py + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
 			renderer.pos(px + guiOffsetX, py + 16 + guiOffsetY, OVERLAY_ZLEVEL).endVertex();

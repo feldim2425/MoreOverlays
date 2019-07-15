@@ -2,6 +2,7 @@ package at.feldim2425.moreoverlays.itemsearch;
 
 import at.feldim2425.moreoverlays.api.itemsearch.IViewSlot;
 import net.minecraft.inventory.Slot;
+import org.lwjgl.util.vector.Vector2f;
 
 public class DefaultSlotView implements IViewSlot {
 
@@ -17,13 +18,8 @@ public class DefaultSlotView implements IViewSlot {
 	}
 
 	@Override
-	public int getRenderPosX(int guiLeft, int guiTop) {
-		return slot.xPos;
-	}
-
-	@Override
-	public int getRenderPosY(int guiLeft, int guiTop) {
-		return slot.yPos;
+	public Vector2f getRenderPos(int guiLeft, int guiTop) {
+		return new Vector2f(slot.xPos,slot.yPos);
 	}
 
 	@Override

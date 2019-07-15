@@ -6,7 +6,7 @@ import net.minecraft.inventory.Slot;
 
 import java.util.ArrayList;
 
-public class SlotHandler {
+public final class SlotHandler {
 
 	public static final SlotHandler INSTANCE = new SlotHandler();
 
