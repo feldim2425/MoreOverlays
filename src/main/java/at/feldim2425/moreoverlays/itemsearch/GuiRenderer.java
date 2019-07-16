@@ -192,7 +192,7 @@ public class GuiRenderer {
 			//System.out.println(slot);
 			SlotViewWrapper wrapper;
 			if(!views.containsKey(slot)){
-				wrapper = new SlotViewWrapper(SlotHandler.INSTANCE.getViewSlot(container, GuiUtils.getCreativeSlot(slot)));
+				wrapper = new SlotViewWrapper(SlotHandler.INSTANCE.getViewSlot(container, slot));
 				views.put(slot, wrapper);
 			}
 			else {
