@@ -43,7 +43,6 @@ public class GuiRenderer {
 	private static boolean emptyFilter = true;
 	private static BiMap<Slot, SlotViewWrapper> views = HashBiMap.create();
 
-	private boolean isCreative = false;
 	private boolean allowRender = false;
 	private int guiOffsetX = 0;
 	private int guiOffsetY = 0;
@@ -59,7 +58,7 @@ public class GuiRenderer {
 	}
 
 	public void guiOpen(GuiScreen gui) {
-		isCreative = (gui instanceof GuiContainerCreative);
+
 	}
 
 	public void preDraw() {
@@ -144,8 +143,7 @@ public class GuiRenderer {
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1, 1, 1, 1);
 
-        /*if(highlightTicks>0 || !Config.itemsearch_FadeoutText || (Config.itemsearch_ShowItemSearchKey && enabled)) {
-		if (!enabled || isCreative || views == null || views.isEmpty())
+		if (!enabled || views == null || views.isEmpty())
 			return;
 
 		Tessellator tess = Tessellator.getInstance();
@@ -180,7 +178,7 @@ public class GuiRenderer {
 	}
 
 	public boolean canShowIn(GuiScreen gui) {
-		return (gui instanceof GuiContainer) && !isCreative && ((GuiContainer) gui).inventorySlots != null && !((GuiContainer) gui).inventorySlots.inventorySlots.isEmpty();
+		return (gui instanceof GuiContainer) && ((GuiContainer) gui).inventorySlots != null && !((GuiContainer) gui).inventorySlots.inventorySlots.isEmpty();
 	}
 
 	private void checkSlots(GuiContainer container) {
