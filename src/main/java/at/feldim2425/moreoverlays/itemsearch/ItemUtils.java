@@ -57,9 +57,6 @@ public final class ItemUtils {
 	}
 
 	public boolean matchNBT(ItemStack a, ItemStack b) {
-		if (!Config.itemsearch_matchNbt.contains(a.getItem().getRegistryName() == null ? "" : a.getItem().getRegistryName().toString())) {
-			return true;
-		}
 		return a.hasTagCompound() == b.hasTagCompound() && (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
 	}
 
