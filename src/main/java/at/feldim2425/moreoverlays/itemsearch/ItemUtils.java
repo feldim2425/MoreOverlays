@@ -56,7 +56,7 @@ public final class ItemUtils {
 		return enchantments;
 	}
 
-	public boolean matchNBT(ItemStack a, ItemStack b) {
+	public static boolean matchNBT(ItemStack a, ItemStack b) {
 		return a.hasTagCompound() == b.hasTagCompound() && (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
 	}
 

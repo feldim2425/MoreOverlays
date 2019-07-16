@@ -59,13 +59,13 @@ public class JeiModule implements IModPlugin {
 
 	public static boolean areItemsEqualInterpreter(ItemStack stack1, ItemStack stack2){
 		if(subtypes == null){
-			return false;
+			return ItemUtils.matchNBT(stack1, stack2);
 		}
 
 		String info1 = subtypes.getSubtypeInfo(stack1);
 		String info2 = subtypes.getSubtypeInfo(stack2);
 		if(info1 == null || info2 == null){
-			return false;
+			return ItemUtils.matchNBT(stack1, stack2);
 		}
 		else {
 			return info1.equals(info2);
