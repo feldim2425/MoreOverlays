@@ -68,7 +68,6 @@ public class JeiModule implements IModPlugin {
 			return false;
 		}
 		else {
-			System.out.println(info1);
 			return info1.equals(info2);
 		}
 	}

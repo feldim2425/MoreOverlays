@@ -3,6 +3,7 @@ package at.feldim2425.moreoverlays.itemsearch;
 import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.api.itemsearch.IViewSlot;
 import at.feldim2425.moreoverlays.api.itemsearch.SlotHandler;
+import at.feldim2425.moreoverlays.api.itemsearch.SlotViewWrapper;
 import at.feldim2425.moreoverlays.config.Config;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -40,7 +41,7 @@ public class GuiRenderer {
 
 	private static String lastFilterText = "";
 	private static boolean emptyFilter = true;
-	private static BiMap<Integer, IViewSlot> views = HashBiMap.create();
+	private static BiMap<Slot, SlotViewWrapper> views = HashBiMap.create();
 
 	private boolean isCreative = false;
 	private boolean allowRender = false;
@@ -51,19 +52,10 @@ public class GuiRenderer {
 		if (!canShowIn(gui)) {
 			return;
 		}
-		//txtPosY = gui.height  - 19 + (16- Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT)/2;
-		try {
-			Field left = ReflectionHelper.findField(GuiContainer.class, "field_147003_i", "guiLeft"); //Obfuscated -> guiLeft
-			left.setAccessible(true);
-			guiOffsetX = left.getInt(gui);
 
-			Field top = ReflectionHelper.findField(GuiContainer.class, "field_147009_r", "guiTop"); //Obfuscated -> guiTop
-			top.setAccessible(true);
-			guiOffsetY = top.getInt(gui);
-		} catch (Exception e) {
-			MoreOverlays.logger.error("Something went wrong. Tried to load gui coords with java reflection. Gui class: " + gui.getClass().getName());
-			e.printStackTrace();
-		}
+		guiOffsetX = GuiUtils.getGuiLeft((GuiContainer) gui);
+		guiOffsetY = GuiUtils.getGuiTop((GuiContainer) gui);
+
 	}
 
 	public void guiOpen(GuiScreen gui) {
@@ -153,26 +145,6 @@ public class GuiRenderer {
 		GlStateManager.color(1, 1, 1, 1);
 
         /*if(highlightTicks>0 || !Config.itemsearch_FadeoutText || (Config.itemsearch_ShowItemSearchKey && enabled)) {
-            int alpha = 255;
-            if(Config.itemsearch_FadeoutText && !(Config.itemsearch_ShowItemSearchKey && enabled)) {
-                alpha = (int) (((float) highlightTicks / (float) TEXT_FADEOUT) * 256);
-                alpha = Math.max(0, Math.min(255, alpha));
-            }
-            int width = Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
-            int color = 0x00ffffff | (alpha << 24);
-
-            GlStateManager.pushMatrix();
-            GlStateManager.enableBlend();
-            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-
-            Minecraft.getMinecraft().fontRenderer.drawString(text, (gui.width - width) / 2, txtPosY, color);
-
-            GlStateManager.disableBlend();
-            GlStateManager.popMatrix();
-
-        }*/
-
-
 		if (!enabled || isCreative || views == null || views.isEmpty())
 			return;
 
@@ -186,14 +158,16 @@ public class GuiRenderer {
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
-		for (Map.Entry<Integer, IViewSlot> slot : views.entrySet()) {
-			Vector2f posvec = slot.getValue().getRenderPos(guiOffsetX, guiOffsetY);
-			float px = posvec.x;
-			float py = posvec.y;
-			renderer.pos(px + 16 + guiOffsetX, py + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
-			renderer.pos(px + guiOffsetX, py + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
-			renderer.pos(px + guiOffsetX, py + 16 + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
-			renderer.pos(px + 16 + guiOffsetX, py + 16 + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
+		for (Map.Entry<Slot, SlotViewWrapper> slot : views.entrySet()) {
+			if(slot.getValue().isEnableOverlay()) {
+				Vector2f posvec = slot.getValue().getView().getRenderPos(guiOffsetX, guiOffsetY);
+				float px = posvec.x;
+				float py = posvec.y;
+				renderer.pos(px + 16 + guiOffsetX, py + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
+				renderer.pos(px + guiOffsetX, py + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
+				renderer.pos(px + guiOffsetX, py + 16 + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
+				renderer.pos(px + 16 + guiOffsetX, py + 16 + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
+			}
 		}
 
 		tess.draw();
@@ -217,11 +191,17 @@ public class GuiRenderer {
 			views.clear();
 		}
 		for (Slot slot : container.inventorySlots.inventorySlots) {
-			IViewSlot slotv = SlotHandler.INSTANCE.getViewSlot(container, slot);
-			if (!slotv.canSearch() || isSearchedItem(slot.getStack())) {
-				continue;
+			//System.out.println(slot);
+			SlotViewWrapper wrapper;
+			if(!views.containsKey(slot)){
+				wrapper = new SlotViewWrapper(SlotHandler.INSTANCE.getViewSlot(container, GuiUtils.getCreativeSlot(slot)));
+				views.put(slot, wrapper);
 			}
-			views.forcePut(slot.slotNumber, slotv);
+			else {
+				wrapper = views.get(slot);
+			}
+
+			wrapper.setEnableOverlay(wrapper.getView().canSearch() && !isSearchedItem(slot.getStack()));
 		}
 	}
 
@@ -246,6 +226,8 @@ public class GuiRenderer {
 
 		if (enabled && Minecraft.getMinecraft().currentScreen instanceof GuiContainer) {
 			checkSlots((GuiContainer) Minecraft.getMinecraft().currentScreen);
+			guiOffsetX = GuiUtils.getGuiLeft((GuiContainer) Minecraft.getMinecraft().currentScreen);
+			guiOffsetY = GuiUtils.getGuiTop((GuiContainer) Minecraft.getMinecraft().currentScreen);
 		}
 		else if (views != null) {
 			views.clear();

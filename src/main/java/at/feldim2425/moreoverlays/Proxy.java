@@ -4,6 +4,7 @@ import at.feldim2425.moreoverlays.api.itemsearch.SlotHandler;
 import at.feldim2425.moreoverlays.chunkbounds.ChunkBoundsHandler;
 import at.feldim2425.moreoverlays.gui.OverlayRenderEventHandler;
 import at.feldim2425.moreoverlays.itemsearch.GuiHandler;
+import at.feldim2425.moreoverlays.itemsearch.GuiUtils;
 import at.feldim2425.moreoverlays.itemsearch.integration.MantleGuiModuleOverride;
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
 import at.feldim2425.moreoverlays.lightoverlay.integration.AlternateLightHandler;
@@ -30,7 +31,7 @@ public class Proxy {
 	}
 
 	public void init() {
-
+		GuiUtils.initUtil();
 	}
 
 	public void postInit() {
