@@ -22,35 +22,44 @@ public class ChunkBoundsRenderer {
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
 		GlStateManager.pushMatrix();
-		//GlStateManager.disableDepth();
 		GL11.glLineWidth(Config.render_chunkLineWidth);
 		GlStateManager.translate(-render.viewerPosX, -render.viewerPosY, -render.viewerPosZ);
 
-		int h = player.world.getHeight();
-		int h0 = (int) player.posY;
-		int h1 = Math.min(h, h0 - 16);
-		int h2 = Math.min(h, h0 + 16);
-		int h3 = Math.min(h1, 0);
+		final int h = player.world.getHeight();
+		final int h0 = (int) player.posY;
+		final int h1 = Math.min(h, h0 - 16);
+		final int h2 = Math.min(h, h0 + 16);
+		final int h3 = Math.min(h1, 0);
 
-		int x0 = player.chunkCoordX * 16;
-		int x1 = x0 + 16;
-		int x2 = x0 + 8;
-		int z0 = player.chunkCoordZ * 16;
-		int z1 = z0 + 16;
-		int z2 = z0 + 8;
+		final int x0 = player.chunkCoordX * 16;
+		final int x1 = x0 + 16;
+		final int x2 = x0 + 8;
+		final int z0 = player.chunkCoordZ * 16;
+		final int z1 = z0 + 16;
+		final int z2 = z0 + 8;
 
-		int regionX = player.chunkCoordX >> 4;
-		int regionY = player.chunkCoordY >> 4;
-		int regionZ = player.chunkCoordZ >> 4;
+		int regionX = player.chunkCoordX / ChunkBoundsHandler.REGION_SIZEX;
+		int regionY = player.chunkCoordY / ChunkBoundsHandler.REGION_SIZEY_CUBIC;
+		int regionZ = player.chunkCoordZ / ChunkBoundsHandler.REGION_SIZEZ;
+
+		if(player.chunkCoordX < 0){
+			regionX--;
+		}
+		if(player.chunkCoordY < 0){
+			regionY--;
+		}
+		if(player.chunkCoordZ < 0){
+			regionZ--;
+		}
 		
-		int regionBorderX0 = regionX << 8;
-		int regionBorderY0 = regionY << 8;
-		int regionBorderZ0 = regionZ << 8;
-		int regionBorderX1 = ++regionX << 8;
-		int regionBorderY1 = ++regionY << 8;
-		int regionBorderZ1 = ++regionZ << 8;
+		final int regionBorderX0 = regionX * ChunkBoundsHandler.REGION_SIZEX * 16;
+		final int regionBorderY0 = regionY * ChunkBoundsHandler.REGION_SIZEY_CUBIC * 16;
+		final int regionBorderZ0 = regionZ * ChunkBoundsHandler.REGION_SIZEZ * 16;
+		final int regionBorderX1 = regionBorderX0 + (ChunkBoundsHandler.REGION_SIZEX * 16);
+		final int regionBorderY1 = regionBorderY0 + (ChunkBoundsHandler.REGION_SIZEY_CUBIC * 16);
+		final int regionBorderZ1 = regionBorderZ0 + (ChunkBoundsHandler.REGION_SIZEZ * 16);
 		
-		int radius = Config.chunk_EdgeRadius * 16;
+		final int radius = Config.chunk_EdgeRadius * 16;
 
 		GlStateManager.color(((float) ((Config.render_chunkEdgeColor >> 16) & 0xFF)) / 255F, ((float) ((Config.render_chunkEdgeColor >> 8) & 0xFF)) / 255F, ((float) (Config.render_chunkEdgeColor & 0xFF)) / 255F);
 		for (int xo = -16 - radius; xo <= radius; xo += 16) {
