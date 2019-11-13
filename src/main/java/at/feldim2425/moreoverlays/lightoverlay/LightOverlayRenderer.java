@@ -6,26 +6,31 @@ import at.feldim2425.moreoverlays.api.lightoverlay.ILightScanner;
 import at.feldim2425.moreoverlays.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 public class LightOverlayRenderer implements ILightRenderer {
 
 	private final static ResourceLocation BLANK_TEX = new ResourceLocation(MoreOverlays.MOD_ID, "textures/blank.png");
-	private static RenderManager render = Minecraft.getMinecraft().getRenderManager();
+	private static EntityRendererManager render = Minecraft.getInstance().getRenderManager();
 
 
 	public void renderOverlays(ILightScanner scanner) {
-		Minecraft.getMinecraft().renderEngine.bindTexture(BLANK_TEX);
+		Minecraft.getInstance().getTextureManager().bindTexture(BLANK_TEX);
 		GlStateManager.pushMatrix();
 		GL11.glLineWidth(Config.render_spawnLineWidth);
-		GlStateManager.translate(-render.viewerPosX, -render.viewerPosY, -render.viewerPosZ);
+
+		final Vec3d view = render.info.getProjectedView();
+		GlStateManager.translated(-view.x, -view.y, -view.z);
 
 		float ar = ((float) ((Config.render_spawnAColor >> 16) & 0xFF)) / 255F;
 		float ag = ((float) ((Config.render_spawnAColor >> 8) & 0xFF)) / 255F;

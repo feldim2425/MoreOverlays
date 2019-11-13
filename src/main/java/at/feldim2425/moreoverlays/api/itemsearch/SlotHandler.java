@@ -1,8 +1,8 @@
 package at.feldim2425.moreoverlays.api.itemsearch;
 
 import at.feldim2425.moreoverlays.itemsearch.DefaultSlotView;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.inventory.container.Slot;
 
 import java.util.ArrayList;
 
@@ -16,12 +16,12 @@ public final class SlotHandler {
 	 *  Register a IOverrideSlotPos for non GuiContainers
 	 */
 	public void addPositionOverride(IOverrideSlotPos slotPos) {
-		if (overrides.contains(slotPos) || slotPos instanceof GuiContainer)
+		if (overrides.contains(slotPos) || slotPos instanceof ContainerScreen<?>)
 			return;
 		overrides.add(slotPos);
 	}
 
-	public IViewSlot getViewSlot(GuiContainer container, Slot slot) {
+	public IViewSlot getViewSlot(ContainerScreen<?> container, Slot slot) {
 		if (container instanceof IOverrideSlotPos) {
 			IViewSlot slot1 = ((IOverrideSlotPos) container).getSlot(container, slot);
 			if (slot1 != null)

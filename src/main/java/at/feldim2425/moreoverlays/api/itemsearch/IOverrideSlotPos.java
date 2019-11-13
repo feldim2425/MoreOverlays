@@ -1,7 +1,7 @@
 package at.feldim2425.moreoverlays.api.itemsearch;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.inventory.container.Slot;
 
 /*
  * Can be implemented in the GuiContainer to Override the position of the slots
@@ -14,5 +14,5 @@ public interface IOverrideSlotPos {
 	 * Get the override
 	 * if the Handler cannot handle this Slot/Gui just return null
 	 */
-	IViewSlot getSlot(GuiContainer gui, Slot slot);
+	IViewSlot getSlot(ContainerScreen<?> gui, Slot slot);
 }

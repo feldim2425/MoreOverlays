@@ -1,14 +1,13 @@
 package at.feldim2425.moreoverlays.chunkbounds;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class ChunkBoundsHandler {
 	private int playerPrevRegionPosZ = Integer.MIN_VALUE;
 
 	public static void init() {
-		MinecraftForge.EVENT_BUS.register(new ChunkBoundsHandler(Loader.isModLoaded("cubicchunks")));
+		MinecraftForge.EVENT_BUS.register(new ChunkBoundsHandler(ModList.get().isLoaded("cubicchunks")));
 	}
 
 	public ChunkBoundsHandler(boolean modLoaded) {
@@ -61,7 +60,7 @@ public class ChunkBoundsHandler {
 		if (regionInfo.isEmpty()) {
 			return;
 		}
-		Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = Minecraft.getInstance();
 		if (mc.gameSettings.showDebugInfo) {
 			return;
 		}
@@ -73,7 +72,7 @@ public class ChunkBoundsHandler {
 
 	@SubscribeEvent
 	public void onClientTick(TickEvent.ClientTickEvent event) {
-		if (event.phase != TickEvent.Phase.END || Minecraft.getMinecraft().player == null) {
+		if (event.phase != TickEvent.Phase.END || Minecraft.getInstance().player == null) {
 			return;
 		}
 		if (ChunkBoundsHandler.getMode() != ChunkBoundsHandler.RenderMode.REGIONS) {
@@ -83,7 +82,7 @@ public class ChunkBoundsHandler {
 			playerPrevRegionPosZ = 0;
 			return;
 		}
-		final EntityPlayer player = Minecraft.getMinecraft().player;
+		final PlayerEntity player = Minecraft.getInstance().player;
 		boolean updateInfo = regionInfo.isEmpty();
 
 		int newRegionX = player.chunkCoordX / REGION_SIZEX;

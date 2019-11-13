@@ -1,24 +1,22 @@
 package at.feldim2425.moreoverlays.itemsearch;
 
-import at.feldim2425.moreoverlays.Proxy;
+import at.feldim2425.moreoverlays.ClientRegistrationHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.lwjgl.input.Mouse;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GuiHandler {
 
 	private long firstClick = 0;
 
 	public static void init() {
-		if (Proxy.isJeiInstalled())
+		if (ClientRegistrationHandler.isJeiInstalled())
 			MinecraftForge.EVENT_BUS.register(new GuiHandler());
 	}
 
@@ -39,14 +37,17 @@ public class GuiHandler {
 	}
 
 	@SubscribeEvent
-	public void onGuiClick(GuiScreenEvent.MouseInputEvent.Pre event) {
-		GuiTextField searchField = JeiModule.getJEITextField();
-		if (searchField != null && Mouse.getEventButton() == 0 && Mouse.getEventButtonState() && GuiRenderer.INSTANCE.canShowIn(event.getGui())) {
-			GuiScreen guiScreen = event.getGui();
-			int x = Mouse.getEventX() * guiScreen.width / guiScreen.mc.displayWidth;
-			int y = guiScreen.height - Mouse.getEventY() * guiScreen.height / guiScreen.mc.displayHeight - 1;
+	public void onGuiClick(GuiScreenEvent.MouseClickedEvent.Pre event) {
+		TextFieldWidget searchField = JeiModule.getJEITextField();
+		//Minecraft mc = Minecraft.getInstance();
+		if (searchField != null && event.getButton() == 0 && GuiRenderer.INSTANCE.canShowIn(event.getGui())) {
+			//Screen guiScreen = event.getGui();
+			//int x = event.getMouseX() * guiScreen.width / mc.displayWidth;
+			//int y = guiScreen.height - event.getMouseY() * guiScreen.height / mc.displayHeight - 1;
+			int x = (int) event.getMouseX();
+			int y = (int) event.getMouseY();
 
-			if (x > searchField.x && x < searchField.x + searchField.width && y > searchField.y && y < searchField.y + searchField.height) {
+			if (x > searchField.x && x < searchField.x + searchField.getWidth() && y > searchField.y && y < searchField.y + searchField.getHeight()) {
 				long now = System.currentTimeMillis();
 				if (now - firstClick < 1000) {
 					GuiRenderer.INSTANCE.toggleMode();
@@ -76,7 +77,7 @@ public class GuiHandler {
 
 	@SubscribeEvent
 	public void onClientTick(TickEvent.ClientTickEvent event) {
-		if (event.phase != TickEvent.Phase.END || Minecraft.getMinecraft().player == null)
+		if (event.phase != TickEvent.Phase.END || Minecraft.getInstance().player == null)
 			return;
 		GuiRenderer.INSTANCE.tick();
 	}

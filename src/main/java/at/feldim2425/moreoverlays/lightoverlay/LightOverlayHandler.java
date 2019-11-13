@@ -8,8 +8,9 @@ import at.feldim2425.moreoverlays.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
 import org.apache.logging.log4j.message.FormattedMessage;
 
 public class LightOverlayHandler {
@@ -57,9 +58,9 @@ public class LightOverlayHandler {
 
 	@SubscribeEvent
 	public void onClientTick(TickEvent.ClientTickEvent event) {
-		if (Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().player != null && enabled && event.phase == TickEvent.Phase.END &&
-				(Minecraft.getMinecraft().currentScreen == null || !Minecraft.getMinecraft().currentScreen.doesGuiPauseGame())) {
-			scanner.update(Minecraft.getMinecraft().player);
+		if (Minecraft.getInstance().world != null && Minecraft.getInstance().player != null && enabled && event.phase == TickEvent.Phase.END &&
+				(Minecraft.getInstance().currentScreen == null || !Minecraft.getInstance().currentScreen.isPauseScreen())) {
+			scanner.update(Minecraft.getInstance().player);
 		}
 
 	}

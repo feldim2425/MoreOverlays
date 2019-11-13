@@ -2,8 +2,7 @@ package at.feldim2425.moreoverlays.lightoverlay.integration;
 
 import at.feldim2425.moreoverlays.api.lightoverlay.LightOverlayReloadHandlerEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class AlternateLightHandler {
 
@@ -17,9 +16,11 @@ public class AlternateLightHandler {
 			return;
 		}
 
-		if(Loader.isModLoaded("customspawner")){
+		/*
+		if(ModList.get().isLoaded("customspawner")){
 			event.setScanner(CustomSpawnerLightScanner.class);
 		}
+		*/
 	}
 
 }

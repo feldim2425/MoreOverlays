@@ -1,8 +1,8 @@
 package at.feldim2425.moreoverlays.api.lightoverlay;
 
 import at.feldim2425.moreoverlays.config.Config;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -16,7 +16,7 @@ public abstract class LightScannerBase implements ILightScanner {
 	protected List<Pair<BlockPos, Byte>> overlayCache = new ArrayList<>();
 
 	@Override
-	public void update(EntityPlayer player) {
+	public void update(PlayerEntity player) {
 		int px = (int) Math.floor(player.posX);
 		int py = (int) Math.floor(player.posY);
 		int pz = (int) Math.floor(player.posZ);
@@ -57,7 +57,7 @@ public abstract class LightScannerBase implements ILightScanner {
 			return true;
 		}
 		Biome biome = world.getBiome(pos);
-		return biome.getSpawningChance() > 0 && !biome.getSpawnableList(EnumCreatureType.MONSTER).isEmpty();
+		return biome.getSpawningChance() > 0 && !biome.getSpawns(EntityClassification.MONSTER).isEmpty();
 	}
 
 	public abstract byte getSpawnModeAt(BlockPos pos, World world);

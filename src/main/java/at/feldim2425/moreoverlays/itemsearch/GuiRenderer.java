@@ -1,34 +1,26 @@
 package at.feldim2425.moreoverlays.itemsearch;
 
-import at.feldim2425.moreoverlays.MoreOverlays;
-import at.feldim2425.moreoverlays.api.itemsearch.IViewSlot;
-import at.feldim2425.moreoverlays.api.itemsearch.SlotHandler;
-import at.feldim2425.moreoverlays.api.itemsearch.SlotViewWrapper;
-import at.feldim2425.moreoverlays.config.Config;
+import java.util.Map;
+
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import mezz.jei.plugins.vanilla.ingredients.enchant.EnchantDataHelper;
+import com.mojang.blaze3d.platform.GlStateManager;
+
+import org.lwjgl.opengl.GL11;
+
+import at.feldim2425.moreoverlays.api.itemsearch.SlotHandler;
+import at.feldim2425.moreoverlays.api.itemsearch.SlotViewWrapper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemEnchantedBook;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector2f;
-
-import java.lang.reflect.Field;
-import java.util.Map;
+import net.minecraft.util.math.Vec2f;
 
 public class GuiRenderer {
 
@@ -47,24 +39,24 @@ public class GuiRenderer {
 	private int guiOffsetX = 0;
 	private int guiOffsetY = 0;
 
-	public void guiInit(GuiScreen gui) {
+	public void guiInit(Screen gui) {
 		if (!canShowIn(gui)) {
 			return;
 		}
 
-		guiOffsetX = GuiUtils.getGuiLeft((GuiContainer) gui);
-		guiOffsetY = GuiUtils.getGuiTop((GuiContainer) gui);
+		guiOffsetX = GuiUtils.getGuiLeft((ContainerScreen<?>) gui);
+		guiOffsetY = GuiUtils.getGuiTop((ContainerScreen<?>) gui);
 
 	}
 
-	public void guiOpen(GuiScreen gui) {
+	public void guiOpen(Screen gui) {
 
 	}
 
 	public void preDraw() {
-		GuiScreen guiscr = Minecraft.getMinecraft().currentScreen;
+		Screen guiscr = Minecraft.getInstance().currentScreen;
 
-		GuiTextField textField = JeiModule.getJEITextField();
+		TextFieldWidget textField = JeiModule.getJEITextField();
 
 		if (canShowIn(guiscr)) {
 			allowRender = true;
@@ -75,29 +67,29 @@ public class GuiRenderer {
 	}
 
 	public void postDraw() {
-		GuiScreen guiscr = Minecraft.getMinecraft().currentScreen;
+		Screen guiscr = Minecraft.getInstance().currentScreen;
 
 		if (allowRender && canShowIn(guiscr)) {
 			allowRender = false;
-			drawSlotOverlay((GuiContainer) guiscr);
+			drawSlotOverlay((ContainerScreen<?>) guiscr);
 		}
 	}
 
-	private void drawSearchFrame(GuiTextField textField) {
+	private void drawSearchFrame(TextFieldWidget textField) {
 		RenderHelper.disableStandardItemLighting();
-		GlStateManager.enableAlpha();
-		GlStateManager.enableDepth();
-		GlStateManager.disableTexture2D();
-		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.enableAlphaTest();
+		GlStateManager.enableDepthTest();
+		GlStateManager.disableTexture();
+		GlStateManager.color4f(1, 1, 1, 1);
 		GlStateManager.pushMatrix();
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder buffer = tess.getBuffer();
-		GlStateManager.color(1, 1, 0, 1);
+		GlStateManager.color4f(1, 1, 0, 1);
 
 		float x = textField.x + 2;
 		float y = textField.y + 2;
-		float width = textField.width - 4;
-		float height = textField.height - 4;
+		float width = textField.getWidth() - 4;
+		float height = textField.getHeight() - 4;
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		buffer.pos(x + width + FRAME_RADIUS, y - FRAME_RADIUS, 1000).endVertex();
@@ -121,27 +113,28 @@ public class GuiRenderer {
 		buffer.pos(x + width + FRAME_RADIUS, y + height, 1000).endVertex();
 
 		tess.draw();
-		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.color4f(1, 1, 1, 1);
 		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 	}
 
 	public void renderTooltip(ItemStack stack) {
-		GuiScreen guiscr = Minecraft.getMinecraft().currentScreen;
+		Screen guiscr = Minecraft.getInstance().currentScreen;
 		if (allowRender && canShowIn(guiscr)) {
-			GuiContainer gui = (GuiContainer) guiscr;
-			if (gui.getSlotUnderMouse() != null && gui.getSlotUnderMouse().getHasStack() && gui.getSlotUnderMouse().getStack().equals(stack)) {
+			ContainerScreen<?> gui = (ContainerScreen<?>) guiscr;
+			if (gui.getSlotUnderMouse() != null && gui.getSlotUnderMouse().getHasStack()
+					&& gui.getSlotUnderMouse().getStack().equals(stack)) {
 				allowRender = false;
-				drawSlotOverlay((GuiContainer) guiscr);
+				drawSlotOverlay((ContainerScreen<?>) guiscr);
 			}
 		}
 	}
 
-	private void drawSlotOverlay(GuiContainer gui) {
+	private void drawSlotOverlay(ContainerScreen<?> gui) {
 		RenderHelper.disableStandardItemLighting();
-		GlStateManager.enableAlpha();
-		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.enableAlphaTest();
+		GlStateManager.color4f(1, 1, 1, 1);
 
 		if (!enabled || views == null || views.isEmpty())
 			return;
@@ -151,14 +144,14 @@ public class GuiRenderer {
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
-		GlStateManager.disableTexture2D();
-		GlStateManager.color(0, 0, 0, 0.5F);
+		GlStateManager.disableTexture();
+		GlStateManager.color4f(0, 0, 0, 0.5F);
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
 		for (Map.Entry<Slot, SlotViewWrapper> slot : views.entrySet()) {
-			if(slot.getValue().isEnableOverlay()) {
-				Vector2f posvec = slot.getValue().getView().getRenderPos(guiOffsetX, guiOffsetY);
+			if (slot.getValue().isEnableOverlay()) {
+				Vec2f posvec = slot.getValue().getView().getRenderPos(guiOffsetX, guiOffsetY);
 				float px = posvec.x;
 				float py = posvec.y;
 				renderer.pos(px + 16 + guiOffsetX, py + guiOffsetY, OVERLAY_ZLEVEL).endVertex();
@@ -170,25 +163,25 @@ public class GuiRenderer {
 
 		tess.draw();
 
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		GlStateManager.popMatrix();
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		GlStateManager.disableBlend();
 	}
 
-	public boolean canShowIn(GuiScreen gui) {
-		return (gui instanceof GuiContainer) && ((GuiContainer) gui).inventorySlots != null && !((GuiContainer) gui).inventorySlots.inventorySlots.isEmpty();
+	public boolean canShowIn(Screen gui) {
+		return (gui instanceof ContainerScreen<?>) && ((ContainerScreen<?>) gui).getContainer() != null && !((ContainerScreen<?>) gui).getContainer().inventorySlots.isEmpty();
 	}
 
-	private void checkSlots(GuiContainer container) {
+	private void checkSlots(ContainerScreen<?> container) {
 		if (views == null) {
 			views = HashBiMap.create();
 		}
 		else {
 			views.clear();
 		}
-		for (Slot slot : container.inventorySlots.inventorySlots) {
+		for (Slot slot : container.getContainer().inventorySlots) {
 			//System.out.println(slot);
 			SlotViewWrapper wrapper;
 			if(!views.containsKey(slot)){
@@ -215,17 +208,19 @@ public class GuiRenderer {
     }
 
 	public void tick() {
-		if (!canShowIn(Minecraft.getMinecraft().currentScreen))
+		final Screen screen = Minecraft.getInstance().currentScreen;
+		if (!canShowIn(screen))
 			return;
 		if (enabled && !JeiModule.filter.getFilterText().equals(lastFilterText)) {
 			lastFilterText = JeiModule.filter.getFilterText();
 			emptyFilter = lastFilterText.replace(" ", "").isEmpty();
 		}
 
-		if (enabled && Minecraft.getMinecraft().currentScreen instanceof GuiContainer) {
-			checkSlots((GuiContainer) Minecraft.getMinecraft().currentScreen);
-			guiOffsetX = GuiUtils.getGuiLeft((GuiContainer) Minecraft.getMinecraft().currentScreen);
-			guiOffsetY = GuiUtils.getGuiTop((GuiContainer) Minecraft.getMinecraft().currentScreen);
+		
+		if (enabled && screen instanceof ContainerScreen<?>) {
+			checkSlots((ContainerScreen<?>) screen);
+			guiOffsetX = GuiUtils.getGuiLeft((ContainerScreen<?>)screen);
+			guiOffsetY = GuiUtils.getGuiTop((ContainerScreen<?>) screen);
 		}
 		else if (views != null) {
 			views.clear();

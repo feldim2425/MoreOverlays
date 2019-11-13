@@ -2,23 +2,24 @@ package at.feldim2425.moreoverlays.config;
 
 import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigHandler {
 
+	private static final ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
+	public static ForgeConfigSpec CLIENT_CONFIG;
+
 	public static final String CONFIG_FILENAME = "MoreOverlays.cfg";
-	public static Configuration config;
 	public static List<String> categories = new ArrayList<>();
 
-	public static void init(FMLPreInitializationEvent event) {
+	public static void initClientConfig(ModLoadingContext ctx) {
 		File configFile = new File(event.getModConfigurationDirectory(), CONFIG_FILENAME);
 		config = new Configuration(configFile);
 

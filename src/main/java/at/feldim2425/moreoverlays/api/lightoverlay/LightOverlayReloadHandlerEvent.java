@@ -1,6 +1,6 @@
 package at.feldim2425.moreoverlays.api.lightoverlay;
 
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 public class LightOverlayReloadHandlerEvent extends Event {
 

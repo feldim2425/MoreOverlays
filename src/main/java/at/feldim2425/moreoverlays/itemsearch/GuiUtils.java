@@ -1,13 +1,10 @@
 package at.feldim2425.moreoverlays.itemsearch;
 
 import at.feldim2425.moreoverlays.MoreOverlays;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.inventory.Slot;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 
 import java.lang.reflect.Field;
-import java.util.*;
 
 public class GuiUtils {
 
@@ -16,12 +13,12 @@ public class GuiUtils {
 
 	public static void initUtil(){
 		try {
-			fieldLeft = ReflectionHelper.findField(GuiContainer.class, "field_147003_i", "guiLeft");
+			fieldLeft = ObfuscationReflectionHelper.findField(ContainerScreen.class, "field_147003_i");
 			fieldLeft.setAccessible(true);
 
-			fieldTop = ReflectionHelper.findField(GuiContainer.class, "field_147009_r", "guiTop");
+			fieldTop = ObfuscationReflectionHelper.findField(ContainerScreen.class, "field_147009_r");
 			fieldTop.setAccessible(true);
-		} catch (ReflectionHelper.UnableToFindFieldException e) {
+		} catch (ObfuscationReflectionHelper.UnableToFindFieldException e) {
 			MoreOverlays.logger.error("Tried to load gui coordinate fields for reflection");
 			e.printStackTrace();
 			fieldTop = null;
@@ -29,7 +26,7 @@ public class GuiUtils {
 		}
 	}
 
-	public static int getGuiTop(GuiContainer container){
+	public static int getGuiTop(ContainerScreen<?> container){
 		if(fieldTop == null){
 			return 0;
 		}
@@ -42,7 +39,7 @@ public class GuiUtils {
 		return 0;
 	}
 
-	public static int getGuiLeft(GuiContainer container){
+	public static int getGuiLeft(ContainerScreen<?> container){
 		if(fieldLeft == null){
 			return 0;
 		}

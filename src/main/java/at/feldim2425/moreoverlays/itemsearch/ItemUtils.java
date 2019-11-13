@@ -1,18 +1,18 @@
 package at.feldim2425.moreoverlays.itemsearch;
 
-import at.feldim2425.moreoverlays.config.Config;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.item.ItemEnchantedBook;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
+import net.minecraft.item.EnchantedBookItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 
 public final class ItemUtils {
 
@@ -22,9 +22,9 @@ public final class ItemUtils {
 			return stack1.isItemEqualIgnoreDurability(stack) && JeiModule.areItemsEqualInterpreter(stack1, stack);
 		}
 		else if(ingredient instanceof EnchantmentData){
-			NBTTagList tags;
-			if (stack.getItem() instanceof ItemEnchantedBook) {
-				tags = ItemEnchantedBook.getEnchantments(stack);
+			ListNBT tags;
+			if (stack.getItem() instanceof EnchantedBookItem) {
+				tags = EnchantedBookItem.getEnchantments(stack);
 			}
 			else {
 				tags = stack.getEnchantmentTagList();
@@ -36,15 +36,15 @@ public final class ItemUtils {
 		return false;
 	}
 
-	public static Collection<EnchantmentData> getEnchantmentData(@Nullable NBTTagList nbtList) {
+	public static Collection<EnchantmentData> getEnchantmentData(@Nullable ListNBT nbtList) {
 		if(nbtList == null){
 			return Collections.emptySet();
 		}
 
 		Collection<EnchantmentData> enchantments = new HashSet<>();
-		for (NBTBase nbt : nbtList) {
-			if (nbt instanceof NBTTagCompound) {
-				NBTTagCompound nbttagcompound = (NBTTagCompound) nbt;
+		for (INBT nbt : nbtList) {
+			if (nbt instanceof CompoundNBT) {
+				CompoundNBT nbttagcompound = (CompoundNBT) nbt;
 				int id = nbttagcompound.getShort("id");
 				int level = nbttagcompound.getShort("lvl");
 				Enchantment enchantment = Enchantment.getEnchantmentByID(id);
@@ -57,7 +57,7 @@ public final class ItemUtils {
 	}
 
 	public static boolean matchNBT(ItemStack a, ItemStack b) {
-		return a.hasTagCompound() == b.hasTagCompound() && (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
+		return a.hasTag() == b.hasTag() && (!a.hasTag() || a.getTag().equals(b.getTag()));
 	}
 
 	private ItemUtils(){
