@@ -1,0 +1,12 @@
+{
+    "key.moreoverlays.category": "MoreOverlays",
+    "key.moreoverlays.chunkbounds.desc": "Показать/Спрятать границы чанков",
+    "key.moreoverlays.lightoverlay.desc": "Показать/Спрятать метки темноты",
+
+    "gui.config.moreoverlays.tile": "Настройки MoreOverlays",
+    
+    "config.moreoverlays.category.chunkbounds": "Границы чанков",
+    "config.moreoverlays.category.lightoverlay": "Метки темноты",
+    "config.moreoverlays.category.itemsearch": "Поиск предметов",
+    "config.moreoverlays.category.rendersettings": "Настройки графики"
+}
