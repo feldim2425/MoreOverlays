@@ -19,7 +19,7 @@ issueTrackerURL="https://github.com/feldim2425/MoreOverlays/issues"
 [[dependencies.moreoverlays]]
     modId="forge"
     mandatory=true 
-    versionRange="[28,)" 
+    versionRange="[28.1.85,)" 
     ordering="NONE"
     side="BOTH"
 [[dependencies.moreoverlays]]
