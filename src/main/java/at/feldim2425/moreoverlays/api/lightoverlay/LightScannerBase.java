@@ -21,12 +21,12 @@ public abstract class LightScannerBase implements ILightScanner {
 		int py = (int) Math.floor(player.posY);
 		int pz = (int) Math.floor(player.posZ);
 
-		int y1 = py - Config.light_DownRange;
-		int y2 = py + Config.light_UpRange;
+		int y1 = py - Config.light_DownRange.get();
+		int y2 = py + Config.light_UpRange.get();
 
 		overlayCache.clear();
-		for (int xo = -Config.light_HRange; xo <= Config.light_HRange; xo++) {
-			for (int zo = -Config.light_HRange; zo <= Config.light_HRange; zo++) {
+		for (int xo = -Config.light_HRange.get(); xo <= Config.light_HRange.get(); xo++) {
+			for (int zo = -Config.light_HRange.get(); zo <= Config.light_HRange.get(); zo++) {
 				BlockPos pos1 = new BlockPos(px + xo, py, pz + zo);
 				if(!shouldCheck(pos1, player.world)){
 					continue;
@@ -53,7 +53,7 @@ public abstract class LightScannerBase implements ILightScanner {
 	}
 
 	public boolean shouldCheck(BlockPos pos, World world){
-		if(Config.light_IgnoreSpawn){
+		if(Config.light_IgnoreSpawn.get()){
 			return true;
 		}
 		Biome biome = world.getBiome(pos);

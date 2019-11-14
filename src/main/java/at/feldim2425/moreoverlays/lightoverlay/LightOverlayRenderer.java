@@ -27,18 +27,18 @@ public class LightOverlayRenderer implements ILightRenderer {
 	public void renderOverlays(ILightScanner scanner) {
 		Minecraft.getInstance().getTextureManager().bindTexture(BLANK_TEX);
 		GlStateManager.pushMatrix();
-		GL11.glLineWidth(Config.render_spawnLineWidth);
+		GL11.glLineWidth((float)(double)Config.render_spawnLineWidth.get());
 
 		final Vec3d view = render.info.getProjectedView();
 		GlStateManager.translated(-view.x, -view.y, -view.z);
 
-		float ar = ((float) ((Config.render_spawnAColor >> 16) & 0xFF)) / 255F;
-		float ag = ((float) ((Config.render_spawnAColor >> 8) & 0xFF)) / 255F;
-		float ab = ((float) (Config.render_spawnAColor & 0xFF)) / 255F;
+		float ar = ((float) ((Config.render_spawnAColor.get() >> 16) & 0xFF)) / 255F;
+		float ag = ((float) ((Config.render_spawnAColor.get() >> 8) & 0xFF)) / 255F;
+		float ab = ((float) (Config.render_spawnAColor.get() & 0xFF)) / 255F;
 
-		float nr = ((float) ((Config.render_spawnNColor >> 16) & 0xFF)) / 255F;
-		float ng = ((float) ((Config.render_spawnNColor >> 8) & 0xFF)) / 255F;
-		float nb = ((float) (Config.render_spawnNColor & 0xFF)) / 255F;
+		float nr = ((float) ((Config.render_spawnNColor.get() >> 16) & 0xFF)) / 255F;
+		float ng = ((float) ((Config.render_spawnNColor.get() >> 8) & 0xFF)) / 255F;
+		float nb = ((float) (Config.render_spawnNColor.get() & 0xFF)) / 255F;
 
 
 		for (Pair<BlockPos, Byte> entry : scanner.getLightModes()) {

@@ -25,7 +25,7 @@ public class ChunkBoundsRenderer {
 
 		Minecraft.getInstance().getTextureManager().bindTexture(BLANK_TEX);
 		GlStateManager.pushMatrix();
-		GL11.glLineWidth(Config.render_chunkLineWidth);
+		GL11.glLineWidth((float)(double)Config.render_chunkLineWidth.get());
 
 		final Vec3d view = render.info.getProjectedView();
 		GlStateManager.translated(-view.x, -view.y, -view.z);
@@ -64,29 +64,32 @@ public class ChunkBoundsRenderer {
 		final int regionBorderY1 = regionBorderY0 + (ChunkBoundsHandler.REGION_SIZEY_CUBIC * 16);
 		final int regionBorderZ1 = regionBorderZ0 + (ChunkBoundsHandler.REGION_SIZEZ * 16);
 		
-		final int radius = Config.chunk_EdgeRadius * 16;
+		final int radius = Config.chunk_EdgeRadius.get() * 16;
+		final int renderColorEdge = Config.render_chunkEdgeColor.get();
+		final int renderColorMiddle = Config.render_chunkMiddleColor.get();
+		final int renderColorGrid = Config.render_chunkGridColor.get();
 
-		GlStateManager.color3f(((float) ((Config.render_chunkEdgeColor >> 16) & 0xFF)) / 255F, ((float) ((Config.render_chunkEdgeColor >> 8) & 0xFF)) / 255F, ((float) (Config.render_chunkEdgeColor & 0xFF)) / 255F);
+		GlStateManager.color3f(((float) ((renderColorEdge >> 16) & 0xFF)) / 255F, ((float) ((renderColorEdge >> 8) & 0xFF)) / 255F, ((float) (renderColorEdge & 0xFF)) / 255F);
 		for (int xo = -16 - radius; xo <= radius; xo += 16) {
 			for (int yo = -16 - radius; yo <= radius; yo += 16) {
 				renderEdge(x0 - xo, z0 - yo, h3, h);
 			}
 		}
 
-		if (Config.chunk_ShowMiddle) {
-			GlStateManager.color3f(((float) ((Config.render_chunkMiddleColor >> 16) & 0xFF)) / 255F, ((float) ((Config.render_chunkMiddleColor >> 8) & 0xFF)) / 255F, ((float) (Config.render_chunkMiddleColor & 0xFF)) / 255F);
+		if (Config.chunk_ShowMiddle.get()) {
+			GlStateManager.color3f(((float) ((renderColorMiddle >> 16) & 0xFF)) / 255F, ((float) ((renderColorMiddle >> 8) & 0xFF)) / 255F, ((float) (renderColorMiddle & 0xFF)) / 255F);
 			renderEdge(x2, z2, h3, h);
 		}
 
 		if (ChunkBoundsHandler.getMode() == ChunkBoundsHandler.RenderMode.GRID) {
-			GlStateManager.color3f(((float) ((Config.render_chunkGridColor >> 16) & 0xFF)) / 255F, ((float) ((Config.render_chunkGridColor >> 8) & 0xFF)) / 255F, ((float) (Config.render_chunkGridColor & 0xFF)) / 255F);
+			GlStateManager.color3f(((float) ((renderColorGrid >> 16) & 0xFF)) / 255F, ((float) ((renderColorGrid >> 8) & 0xFF)) / 255F, ((float) (renderColorGrid & 0xFF)) / 255F);
 			renderGrid(x0, h1, z0 - 0.005, x0, h2, z1 + 0.005, 1.0);
 			renderGrid(x1, h1, z0 - 0.005, x1, h2, z1 + 0.005, 1.0);
 			renderGrid(x0 - 0.005, h1, z0, x1 + 0.005, h2, z0, 1.0);
 			renderGrid(x0 - 0.005, h1, z1, x1 + 0.005, h2, z1, 1.0);
 		}
 		else if(ChunkBoundsHandler.getMode() == ChunkBoundsHandler.RenderMode.REGIONS) {
-			GlStateManager.color3f(((float) ((Config.render_chunkGridColor >> 16) & 0xFF)) / 255F, ((float) ((Config.render_chunkGridColor >> 8) & 0xFF)) / 255F, ((float) (Config.render_chunkGridColor & 0xFF)) / 255F);
+			GlStateManager.color3f(((float) ((renderColorGrid >> 16) & 0xFF)) / 255F, ((float) ((renderColorGrid >> 8) & 0xFF)) / 255F, ((float) (renderColorGrid & 0xFF)) / 255F);
 			renderGrid(regionBorderX0 - 0.005, regionBorderY0 - 0.005, regionBorderZ0 - 0.005, regionBorderX1 + 0.005,
 					regionBorderY1 + 0.005, regionBorderZ1 + 0.005, 16.0);
 		}
