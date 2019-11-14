@@ -101,10 +101,10 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
+    compile fg.deobf("mezz.jei:jei-${jei_version}")
+    //runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
     
-    runtimeOnly fg.deobf("slimeknights.mantle:Mantle:${mantle_version}")
+    compile fg.deobf("slimeknights.mantle:Mantle:${mantle_version}")
     //provided files("libs/CustomMobSpawner-3.11.4.jar")
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
