@@ -8,10 +8,7 @@ import at.feldim2425.moreoverlays.itemsearch.integration.MantleModuleScreenOverr
 import at.feldim2425.moreoverlays.lightoverlay.LightOverlayHandler;
 import at.feldim2425.moreoverlays.lightoverlay.integration.AlternateLightHandler;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@Mod.EventBusSubscriber(modid = MoreOverlays.MOD_ID)
 public final class ClientRegistrationHandler {
 
 	private static boolean enable_jei = false;
@@ -20,9 +17,8 @@ public final class ClientRegistrationHandler {
 		return enable_jei;
 	}
 
-	public static void onClientSetup(FMLClientSetupEvent event) {
+	public static void setupClient() {
 		enable_jei = ModList.get().isLoaded("jei");
-
 		KeyBindings.init();
 
 		LightOverlayHandler.init();
