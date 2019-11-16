@@ -46,7 +46,7 @@ public class Config {
 		chunk_ShowMiddle = builder.comment("Show the middle of the current Chunk (yellow line)").define("middle", true);
 		builder.pop();
 		
-		builder.comment("Settings for the chunk bounds overlay").push("chunkbounds");
+		builder.comment("Settings for the chunk bounds overlay").push("rendersettings");
 		render_chunkEdgeColor = builder.comment("Color for the chunk edge").defineInRange("chunk_edge_color", 0xFF0000, 0, 0xFFFFFF);
 		render_chunkGridColor = builder.comment("Color for the chunk grid").defineInRange("chunk_grid_color", 0x00FF00, 0, 0xFFFFFF);
 		render_chunkMiddleColor = builder.comment("Color for the middle chunk line").defineInRange("chunk_mid_color", 0xFFFF00, 0, 0xFFFFFF);
