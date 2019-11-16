@@ -34,9 +34,7 @@ public class MoreOverlays {
 		modBus.addListener(this::onClientInit);
 
 		Config.initialize();
-		ctx.registerConfig(ModConfig.Type.CLIENT, Config.config_client);
-
-		Config.load(Config.config_client, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + ".toml"));
+		ctx.registerConfig(ModConfig.Type.CLIENT, Config.config_client, MOD_ID + ".toml");
 
 		ctx.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> this::openSettings);
 	}
