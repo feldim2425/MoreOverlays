@@ -4,7 +4,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import at.feldim2425.moreoverlays.config.Config;
+import at.feldim2425.moreoverlays.gui.ConfigScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -33,9 +37,15 @@ public class MoreOverlays {
 		ctx.registerConfig(ModConfig.Type.CLIENT, Config.config_client);
 
 		Config.load(Config.config_client, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + ".toml"));
+
+		ctx.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> this::openSettings);
 	}
 
 	public void onClientInit(FMLClientSetupEvent event){
 		ClientRegistrationHandler.setupClient();
+	}
+
+	public Screen openSettings(Minecraft mc, Screen modlist){
+		return new ConfigScreen(Config.config_client, MOD_ID);
 	}
 }
