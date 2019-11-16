@@ -10,12 +10,14 @@ import java.util.stream.Collectors;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
+import com.mojang.blaze3d.platform.GlStateManager;
 
 import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.gui.ConfigScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.list.AbstractOptionList;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -202,9 +204,18 @@ public class ConfigOptionList extends AbstractOptionList<ConfigOptionList.Option
             this.mouseOver = mouseOver;
         }
 
+        /*
+         * This is part of the "hacky" way to render tooltips above the other entries.
+         * The values to render are stored by the render() method and after that the ConfigOptionList iterates over the entries again
+         * to call this runRenderTooltip() which calls the renderTooltip() method with the stored parameters.
+         * Not the best way but AbstractOptionList doesn't seem to have any better hooks to do that.
+         * A custom Implementation would be better but I'm too lazy to do that
+         */
         public void runRenderTooltip(){
             if(this.mouseOver){
                 this.renderTooltip(this.rowTop, this.rowLeft, this.rowWidth, this.itemHeight, this.mouseX, this.mouseY);
+                RenderHelper.disableStandardItemLighting();
+                GlStateManager.disableLighting();
             }
         }
 

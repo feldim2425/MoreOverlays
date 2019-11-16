@@ -9,7 +9,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
 
 public class OptionCategory extends ConfigOptionList.OptionEntry {
 
@@ -24,10 +23,15 @@ public class OptionCategory extends ConfigOptionList.OptionEntry {
             list.push(path);
         });
 
-        tooltip = new ArrayList<>(2);
-        tooltip.add(ChatFormatting.RED.toString() + name);
+        String[] lines = null;
         if(comment != null){
-            tooltip.add(ChatFormatting.YELLOW + comment);
+            lines = comment.split("\\n");
+        }
+
+        tooltip = new ArrayList<>(lines.length + 1);
+        tooltip.add(ChatFormatting.RED.toString() + name);
+        for(final String line : lines){
+            tooltip.add(ChatFormatting.YELLOW.toString() + line);
         }
     }
 
@@ -43,9 +47,6 @@ public class OptionCategory extends ConfigOptionList.OptionEntry {
 
     protected void renderTooltip(int rowTop, int rowLeft, int rowWidth, int itemHeight,int mouseX, int mouseY){
         this.getConfigOptionList().getScreen().renderTooltip(tooltip, mouseX, mouseY);
-            
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableLighting();
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
