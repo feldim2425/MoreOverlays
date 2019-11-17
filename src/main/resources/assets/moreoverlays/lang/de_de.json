@@ -2,8 +2,11 @@
     "key.moreoverlays.category": "More Overlays",
     "key.moreoverlays.chunkbounds.desc": "Zeige/Verstecke Chunk Grenzen",
     "key.moreoverlays.lightoverlay.desc": "Zeige/Verstecke dunkle Stellen",
-
+    
     "gui.config.moreoverlays.tile": "MoreOverlays Einstellungen",
+    "gui.config.moreoverlays.reset_config": "Einstellung zurücksetzen",
+    "gui.config.moreoverlays.undo": "Änderung zurücksetzen",
+    "gui.config.moreoverlays.save": "Speichern",
 
     "config.moreoverlays.category.lightoverlay": "Licht-Overlay",
     "config.moreoverlays.category.chunkbounds": "Chunk Grenzen",

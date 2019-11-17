@@ -1,10 +1,5 @@
 package at.feldim2425.moreoverlays.config;
 
-import java.nio.file.Path;
-
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
-
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class Config {

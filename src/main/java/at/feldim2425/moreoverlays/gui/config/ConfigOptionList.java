@@ -16,12 +16,15 @@ import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.gui.ConfigScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
+import net.minecraft.client.gui.INestedGuiEventHandler;
 import net.minecraft.client.gui.widget.list.AbstractOptionList;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
+// TODO: As I wrote this system I noticed, that the way AbstractOptionList renders items and passes events is not optimal for this purpose
+// Rendering is done in one pass therefore Tooltips will usually be rendered below other items further down and events are only passed
+// to the hoverd / selected item which makes unfocosing of textfields a challange. Custom system needed.
 public class ConfigOptionList extends AbstractOptionList<ConfigOptionList.OptionEntry> {
 
     public static final String UNDO_CHAR = "\u21B6";
@@ -60,7 +63,7 @@ public class ConfigOptionList extends AbstractOptionList<ConfigOptionList.Option
 
     @Override
     public int getRowWidth() {
-        return super.getRowWidth() + 32;
+        return super.getRowWidth() + 64;
     }
 
     @Override
@@ -147,11 +150,22 @@ public class ConfigOptionList extends AbstractOptionList<ConfigOptionList.Option
         setPath(tmp);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
+        boolean flag = super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);
+        OptionEntry selected = this.getEntryAtPosition(p_mouseClicked_1_, p_mouseClicked_3_);
+        for(final OptionEntry entry : this.children()){
+            if(entry != selected){
+                entry.setFocused(null);
+            }
+        }
+        
+        return flag;
+    }
+
     public void refreshEntries() {
         this.clearEntries();
         for (final Map.Entry<String, Object> cEntry : this.currentMap.entrySet()) {
-            final Object value = cEntry.getValue();
             final List<String> fullPath = new ArrayList<>(this.configPath.size() + 1);
             fullPath.addAll(this.configPath);
             fullPath.add(cEntry.getKey());
@@ -161,12 +175,15 @@ public class ConfigOptionList extends AbstractOptionList<ConfigOptionList.Option
                 comment = this.comments.getComment(fullPath);
             }
 
-            if (value instanceof UnmodifiableConfig) {
+            if (cEntry.getValue() instanceof UnmodifiableConfig) {
                 final String name = I18n.format(categoryTitleKey(fullPath));
                 this.addEntry(new OptionCategory(this, Arrays.asList(cEntry.getKey()), name, comment));
             }
+            else if(cEntry.getValue() instanceof ForgeConfigSpec.BooleanValue){
+                this.addEntry(new OptionBoolean(this, (ForgeConfigSpec.BooleanValue)cEntry.getValue(), (ForgeConfigSpec.ValueSpec)rootConfig.getSpec().get(fullPath)));
+            }
             else {
-                this.addEntry(new OptionGeneric(this, (ConfigValue<?>)value));
+                this.addEntry(new OptionGeneric<>(this, (ForgeConfigSpec.ConfigValue<?>)cEntry.getValue(), (ForgeConfigSpec.ValueSpec)rootConfig.getSpec().get(fullPath)));
             }
         }
     }
@@ -183,10 +200,57 @@ public class ConfigOptionList extends AbstractOptionList<ConfigOptionList.Option
         return this.modId;
     }
 
-    public abstract static class OptionEntry extends AbstractOptionList.Entry<ConfigOptionList.OptionEntry> {
+    public boolean isSaveable(){
+        boolean hasChanges = false;
+        for(final OptionEntry entry : this.children()){
+            if(!entry.isValid()){
+                return false;
+            }
+            hasChanges = hasChanges || entry.hasChanges();
+        }
+        return hasChanges;
+    }
+
+    public boolean isResettable(){
+        boolean resettable = false;
+        for(final OptionEntry entry : this.children()){
+            resettable = resettable || entry.isResettable();
+        }
+        return resettable;
+    }
+
+    public boolean isUndoable(){
+        boolean hasChanges = false;
+        for(final OptionEntry entry : this.children()){
+            hasChanges = hasChanges || entry.hasChanges();
+        }
+        return hasChanges;
+    }
+
+    public void reset(){
+        for(final OptionEntry entry : this.children()){
+            entry.reset();
+        }
+    }
+
+    public void undo(){
+        for(final OptionEntry entry : this.children()){
+            entry.undo();
+        }
+    }
+
+    public void save() {
+        for(final OptionEntry entry : this.children()){
+            entry.save();
+        }
+	}
+
+    public abstract static class OptionEntry extends AbstractOptionList.Entry<ConfigOptionList.OptionEntry> implements INestedGuiEventHandler{
         private ConfigOptionList optionList;
 
-        private int rowTop, rowLeft, rowWidth, itemHeight, mouseX,  mouseY;
+        protected int rowTop, rowLeft;
+
+        private int rowWidth, itemHeight, mouseX,  mouseY;
         private boolean mouseOver;
 
         public OptionEntry(ConfigOptionList list) {
@@ -194,7 +258,8 @@ public class ConfigOptionList extends AbstractOptionList<ConfigOptionList.Option
         }
 
         @Override
-        public void render(int itemindex, int rowTop, int rowLeft, int rowWidth, int itemHeight,int mouseX, int mouseY, boolean mouseOver, float partialTick){
+        public void render(int itemindex, int rowTop, int rowLeft, int rowWidth, int itemHeight, int mouseX, int mouseY,
+                boolean mouseOver, float partialTick) {
             this.rowTop = rowTop;
             this.rowLeft = rowLeft;
             this.rowWidth = rowWidth;
@@ -202,7 +267,17 @@ public class ConfigOptionList extends AbstractOptionList<ConfigOptionList.Option
             this.mouseX = mouseX;
             this.mouseY = mouseY;
             this.mouseOver = mouseOver;
+
+            mouseX -= rowLeft;
+            mouseY -= rowTop;
+            GlStateManager.translatef(rowLeft, rowTop, 0);
+            renderControls(rowTop, rowLeft, rowWidth, itemHeight, mouseX, mouseY, mouseOver, partialTick);
+            
+            GlStateManager.translatef(-rowLeft, -rowTop, 0);
         }
+
+        protected abstract void renderControls(int rowTop, int rowLeft, int rowWidth, int itemHeight, int mouseX, int mouseY,
+        boolean mouseOver, float partialTick);
 
         /*
          * This is part of the "hacky" way to render tooltips above the other entries.
@@ -229,6 +304,57 @@ public class ConfigOptionList extends AbstractOptionList<ConfigOptionList.Option
 
         public ConfigOptionList getConfigOptionList() {
             return this.optionList;
+        }
+
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            return super.mouseClicked(mouseX - this.rowLeft, mouseY - this.rowTop, button);
+        }
+
+        @Override
+        public boolean mouseReleased(double mouseX, double mouseY, int button) {
+            return super.mouseReleased(mouseX - this.rowLeft, mouseY - this.rowTop, button);
+        }
+
+        @Override
+        public boolean mouseDragged(double fromX, double fromY, int button, double toX, double toY) {
+            return super.mouseDragged(fromX - this.rowLeft, fromY - this.rowTop, button, toX - this.rowLeft, toY - this.rowTop);
+        }
+
+        @Override
+        public boolean isDragging(){
+            return false;
+        }
+
+        @Override
+        public void setDragging(boolean dragging){
+
+        }
+
+        @Override
+        public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+            return super.mouseScrolled(mouseX - this.rowLeft, mouseY - this.rowTop, amount);
+        }
+
+        public boolean isValid(){
+            return true;
+        }
+    
+        public boolean hasChanges(){
+            return false;
+        }
+
+        public boolean isResettable(){
+            return false;
+        }
+
+        public void reset(){
+        }
+
+        public void undo(){
+        }
+        
+        public void save() {
         }
     }
 
