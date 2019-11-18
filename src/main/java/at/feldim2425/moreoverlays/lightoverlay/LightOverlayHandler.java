@@ -66,10 +66,8 @@ public class LightOverlayHandler {
 	}
 
 
-
-
 	private static void reloadHandlerInternal() {
-		LightOverlayReloadHandlerEvent event = new LightOverlayReloadHandlerEvent(Config.light_IgnoreSpawn.get(), LightOverlayRenderer.class, LightScannerVanilla.class);
+		LightOverlayReloadHandlerEvent event = new LightOverlayReloadHandlerEvent(Config.light_IgnoreSpawnList.get(), LightOverlayRenderer.class, LightScannerVanilla.class);
 		MinecraftForge.EVENT_BUS.post(event);
 
 		if(renderer == null || renderer.getClass() != event.getRenderer()){

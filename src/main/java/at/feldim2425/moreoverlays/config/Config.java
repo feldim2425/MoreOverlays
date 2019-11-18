@@ -9,7 +9,8 @@ public class Config {
 	public static ForgeConfigSpec.IntValue light_DownRange;
 	public static ForgeConfigSpec.IntValue light_HRange;
 	public static ForgeConfigSpec.BooleanValue light_IgnoreLayer;
-	public static ForgeConfigSpec.BooleanValue light_IgnoreSpawn;
+	public static ForgeConfigSpec.BooleanValue light_IgnoreSpawnList;
+	public static ForgeConfigSpec.BooleanValue light_SimpleEntityCheck;
 	public static ForgeConfigSpec.IntValue light_SaveLevel;
 
 	public static ForgeConfigSpec.IntValue chunk_EdgeRadius;
@@ -32,7 +33,8 @@ public class Config {
 		light_DownRange = builder.comment("Range of the lightoverlay (negative Y)").defineInRange("downrange", 16, 0, Integer.MAX_VALUE);
 		light_HRange = builder.comment("Range of the lightoverlay (Horizontal N,E,S,W)").defineInRange("hrange", 16, 0, Integer.MAX_VALUE);
 		light_IgnoreLayer = builder.comment("Ignore if there in no 2 Block space to spawn. (Less lag if true)").define("ignoreLayer", false);
-		light_IgnoreSpawn = builder.comment("Ignore if mobs can actually spawn and just go by light value").define("ignoreSpawns", false);
+		light_IgnoreSpawnList = builder.comment("Ignore if mobs can actually spawn according to other mods and biome spawn lists and just go by light value").define("ignoreSpawnList", false);
+		light_SimpleEntityCheck = builder.comment("Blocks can allow/disallow spawns for different entity types. The check for this isn't very performat.\nSetting this to true will increase performance but decrease accuracy.").define("simpleCheck", false);
 		light_SaveLevel = builder.comment("Minimum save light level where no mobs can spawn").defineInRange("saveLevel", 8, 0, Integer.MAX_VALUE);
 		builder.pop();
 

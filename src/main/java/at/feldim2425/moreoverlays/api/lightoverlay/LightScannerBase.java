@@ -53,7 +53,7 @@ public abstract class LightScannerBase implements ILightScanner {
 	}
 
 	public boolean shouldCheck(BlockPos pos, World world){
-		if(Config.light_IgnoreSpawn.get()){
+		if(Config.light_IgnoreSpawnList.get()){
 			return true;
 		}
 		Biome biome = world.getBiome(pos);
