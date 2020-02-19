@@ -43,6 +43,6 @@ public class MoreOverlays {
 	}
 
 	public Screen openSettings(Minecraft mc, Screen modlist){
-		return new ConfigScreen(Config.config_client, MOD_ID);
+		return new ConfigScreen(modlist, Config.config_client, MOD_ID);
 	}
 }
