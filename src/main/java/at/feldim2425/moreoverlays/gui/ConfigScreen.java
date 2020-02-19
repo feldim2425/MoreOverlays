@@ -41,8 +41,16 @@ public class ConfigScreen extends Screen {
 
     @Override
     protected void init() {
-        this.optionList = new ConfigOptionList(this.minecraft, this.modId, this);
-
+        if (this.optionList == null) {
+    		this.optionList = new ConfigOptionList(this.minecraft, this.modId, this);
+    		
+    		if(pathCache.isEmpty()){
+                this.optionList.setConfiguration(configSpec);
+            }
+            else {
+                this.optionList.setConfiguration(configSpec, this.pathCache);
+            }            
+    	}
         final int buttonY = this.height - 32 + (32-20)/2;
 
         this.btnReset = new Button(this.width-40, buttonY, 20, 20, ConfigOptionList.RESET_CHAR,
@@ -61,13 +69,7 @@ public class ConfigScreen extends Screen {
         this.btnUndo.active = false;
         this.btnSave.active = false;
 
-
-        if(pathCache.isEmpty()){
-            this.optionList.setConfiguration(configSpec);
-        }
-        else {
-            this.optionList.setConfiguration(configSpec, this.pathCache);
-        }
+        this.optionList.updateGui();
     }
     
     private void back() {    	    	

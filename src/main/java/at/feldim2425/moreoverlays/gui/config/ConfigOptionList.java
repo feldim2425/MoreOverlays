@@ -65,6 +65,11 @@ public class ConfigOptionList extends AbstractOptionList<ConfigOptionList.Option
     public int getRowWidth() {
         return super.getRowWidth() + 64;
     }
+    
+    public void updateGui() {
+    	this.updateSize(this.parent.width, this.parent.height, 43, this.parent.height - 32);
+    }
+
 
     @Override
     protected void renderDecorations(int p_renderDecorations_1_, int p_renderDecorations_2_) {
