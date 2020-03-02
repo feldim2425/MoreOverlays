@@ -5,6 +5,7 @@ import java.util.List;
 
 import at.feldim2425.moreoverlays.MoreOverlays;
 import at.feldim2425.moreoverlays.gui.config.ConfigOptionList;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
@@ -26,11 +27,13 @@ public class ConfigScreen extends Screen {
     private String txtUndo = "";
     private String txtReset = "";
     
+    private Screen modListScreen;
 
-    public ConfigScreen(ForgeConfigSpec spec, String modId) {
+    public ConfigScreen(Screen modListScreen, ForgeConfigSpec spec, String modId) {
         super(new TranslationTextComponent("gui.config."+modId+".tile"));
+        this.modListScreen = modListScreen;
         this.configSpec = spec;
-        this.modId = modId;
+        this.modId = modId;        
 
         this.txtReset = I18n.format("gui.config." + MoreOverlays.MOD_ID + ".reset_config");
         this.txtUndo = I18n.format("gui.config." + MoreOverlays.MOD_ID + ".undo");
@@ -38,8 +41,16 @@ public class ConfigScreen extends Screen {
 
     @Override
     protected void init() {
-        this.optionList = new ConfigOptionList(this.minecraft, this.modId, this);
-
+        if (this.optionList == null) {
+    		this.optionList = new ConfigOptionList(this.minecraft, this.modId, this);
+    		
+    		if(pathCache.isEmpty()){
+                this.optionList.setConfiguration(configSpec);
+            }
+            else {
+                this.optionList.setConfiguration(configSpec, this.pathCache);
+            }            
+    	}
         final int buttonY = this.height - 32 + (32-20)/2;
 
         this.btnReset = new Button(this.width-40, buttonY, 20, 20, ConfigOptionList.RESET_CHAR,
@@ -58,16 +69,19 @@ public class ConfigScreen extends Screen {
         this.btnUndo.active = false;
         this.btnSave.active = false;
 
-
-        if(pathCache.isEmpty()){
-            this.optionList.setConfiguration(configSpec);
-        }
-        else {
-            this.optionList.setConfiguration(configSpec, this.pathCache);
-        }
+        this.optionList.updateGui();
     }
     
-    @Override
+    private void back() {    	    	
+        if(!this.optionList.getCurrentPath().isEmpty()){
+            this.optionList.pop();           
+        }
+        else {
+        	Minecraft.getInstance().displayGuiScreen(modListScreen);
+        }
+	}
+
+	@Override
     public void render(int mouseX, int mouseY, float partialTick) {
         this.renderBackground();
         this.optionList.render(mouseX, mouseY, partialTick);
@@ -117,9 +131,9 @@ public class ConfigScreen extends Screen {
 
     @Override
     public boolean keyPressed(int key, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if(key == 256 && !this.optionList.getCurrentPath().isEmpty()){
-            this.optionList.pop();
-            return true;
+        if (key == 256) {
+        	this.back();
+        	return true;
         }
         else {
             return super.keyPressed(key, p_keyPressed_2_, p_keyPressed_3_);
