@@ -24,6 +24,6 @@ public class CustomSpawnerLightScanner extends LightScannerVanilla {
 		}
 		List<Biome.SpawnListEntry> possibleSpawns = CustomSpawner.instance().getPossibleCustomCreatures(world, environment.entitySpawnTypes.get("MONSTER"), pos.getX(), pos.getY(), pos.getZ());
 
-		return !possibleSpawns.isEmpty();
+		return possibleSpawns != null && !possibleSpawns.isEmpty();
 	}
 }
